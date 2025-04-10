@@ -1,10 +1,10 @@
 # LCOM Project
 
-LCOM Project for group GRUPO_2LEIC&lt;m&gt;&lt;n&gt;_&lt;p&gt;.
+LCOM Project for group GRUPO_2LEIC14_4.
 
 Group members:
 
-1. &lt;first name&gt; &lt;family name&gt; (&lt;email address&gt;)
-2. &lt;first name&gt; &lt;family name&gt; (&lt;email address&gt;)
-3. &lt;first name&gt; &lt;family name&gt; (&lt;email address&gt;)
-4. &lt;first name&gt; &lt;family name&gt; (&lt;email address&gt;)
+1. Miguel Valente (*up201704608@up.pt*)
+2. Ana Carolina (*up202108757@up.pt*)
+3. Tiago OLiveira (*up202007448@up.pt*)
+4. Gabriel Sousa (*up202108816@up.pt*)
