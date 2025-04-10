@@ -6,5 +6,11 @@
   "editor.tabSize": 2,
   "editor.wordWrap": "bounded",
   "editor.wordWrapColumn": 100,
-  "files.associations": { },
+  "files.associations": {
+    "*.embeddedhtml": "html",
+    "*.pl": "prolog",
+    "keyboard.h": "c",
+    "lcf.h": "c"
+  },
+  "makefile.configureOnOpen": true,
 }

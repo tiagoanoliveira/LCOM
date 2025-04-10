@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 
+extern uint32_t sys_inb_counter;
+
 int(util_get_LSB)(uint16_t val, uint8_t *lsb) {
   if (lsb == NULL) return 1;
 
@@ -26,6 +28,8 @@ int (util_sys_inb)(int port, uint8_t *value) {
   int result = sys_inb(port, &val);
 
   *value = (uint8_t)val;
+
+  sys_inb_counter++;
 
   return result;
 }
