@@ -1,0 +1,419 @@
+Recebi interrupção do teclado
+Breakcode: 0x9c
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Makecode: 0x1f
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Breakcode: 0x9f
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Makecode: 0x30
+Recebi interrupção do teclado
+Makecode: 0x24
+Recebi interrupção do teclado
+Breakcode: 0xa4
+Recebi interrupção do teclado
+Breakcode: 0xb0
+Recebi interrupção do teclado
+Makecode: 0x1f
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Makecode: 0x17
+Recebi interrupção do teclado
+Breakcode: 0x9f
+Recebi interrupção do teclado
+Makecode: 0x23
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Makecode: 0x30
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Breakcode: 0xa3
+Recebi interrupção do teclado
+Breakcode: 0x97
+Recebi interrupção do teclado
+Breakcode: 0xb0
+Recebi interrupção do teclado
+Makecode: 0x1f
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Makecode: 0x17
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Makecode: 0x30
+Recebi interrupção do teclado
+Breakcode: 0x97
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Breakcode: 0x9f
+Recebi interrupção do teclado
+Breakcode: 0xb0
+Recebi interrupção do teclado
+Makecode: 0x17
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Makecode: 0x1f
+Recebi interrupção do teclado
+Makecode: 0x30
+Recebi interrupção do teclado
+Breakcode: 0x97
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Breakcode: 0x9f
+Recebi interrupção do teclado
+Makecode: 0x17
+Recebi interrupção do teclado
+Breakcode: 0xb0
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Makecode: 0x1f
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Breakcode: 0x97
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Makecode: 0x2f
+Recebi interrupção do teclado
+Breakcode: 0x9f
+Recebi interrupção do teclado
+Makecode: 0x30
+Recebi interrupção do teclado
+Breakcode: 0xb0
+Recebi interrupção do teclado
+Breakcode: 0xaf
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Makecode: 0x17
+Recebi interrupção do teclado
+Makecode: 0x26
+Recebi interrupção do teclado
+Breakcode: 0xa6
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Breakcode: 0x97
+Recebi interrupção do teclado
+Makecode: 0x2f
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Makecode: 0x17
+Recebi interrupção do teclado
+Breakcode: 0x97
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Makecode: 0x1f
+Recebi interrupção do teclado
+Breakcode: 0xaf
+Recebi interrupção do teclado
+Makecode: 0x17
+Recebi interrupção do teclado
+Makecode: 0x26
+Recebi interrupção do teclado
+Breakcode: 0xa6
+Recebi interrupção do teclado
+Breakcode: 0x97
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Breakcode: 0x9f
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Makecode: 0x2f
+Recebi interrupção do teclado
+Breakcode: 0xaf
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Makecode: 0x26
+Recebi interrupção do teclado
+Makecode: 0x17
+Recebi interrupção do teclado
+Makecode: 0x23
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Breakcode: 0xa3
+Recebi interrupção do teclado
+Breakcode: 0xa6
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Breakcode: 0x97
+Recebi interrupção do teclado
+Makecode: 0x30
+Recebi interrupção do teclado
+Makecode: 0x1f
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Makecode: 0x26
+Recebi interrupção do teclado
+Makecode: 0x17
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Breakcode: 0x97
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Breakcode: 0x9f
+Recebi interrupção do teclado
+Breakcode: 0xa6
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Makecode: 0x1f
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Breakcode: 0x9f
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Breakcode: 0xb0
+Recebi interrupção do teclado
+Makecode: 0x17
+Recebi interrupção do teclado
+Makecode: 0x1f
+Recebi interrupção do teclado
+Makecode: 0x15
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Makecode: 0x2f
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Breakcode: 0x97
+Recebi interrupção do teclado
+Breakcode: 0x95
+Recebi interrupção do teclado
+Breakcode: 0x9f
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Breakcode: 0xaf
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Makecode: 0x1f
+Recebi interrupção do teclado
+Makecode: 0x16
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Makecode: 0x15
+Recebi interrupção do teclado
+Makecode: 0x25
+Recebi interrupção do teclado
+Breakcode: 0xa5
+Recebi interrupção do teclado
+Makecode: 0x2f
+Recebi interrupção do teclado
+Breakcode: 0x95
+Recebi interrupção do teclado
+Breakcode: 0x96
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Breakcode: 0x9f
+Recebi interrupção do teclado
+Breakcode: 0xaf
+Recebi interrupção do teclado
+Makecode: 0x16
+Recebi interrupção do teclado
+Makecode: 0x15
+Recebi interrupção do teclado
+Makecode: 0x2f
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Breakcode: 0x96
+Recebi interrupção do teclado
+Breakcode: 0x95
+Recebi interrupção do teclado
+Breakcode: 0xaf
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Makecode: 0x12
+Recebi interrupção do teclado
+Makecode: 0x15
+Recebi interrupção do teclado
+Makecode: 0x17
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Breakcode: 0x97
+Recebi interrupção do teclado
+Makecode: 0x2f
+Recebi interrupção do teclado
+Breakcode: 0x95
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Breakcode: 0xaf
+Recebi interrupção do teclado
+Breakcode: 0x92
+Recebi interrupção do teclado
+Makecode: 0x26
+Recebi interrupção do teclado
+Makecode: 0x25
+Recebi interrupção do teclado
+Makecode: 0x23
+Recebi interrupção do teclado
+Makecode: 0x15
+Recebi interrupção do teclado
+Breakcode: 0xa6
+Recebi interrupção do teclado
+Breakcode: 0xa3
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Makecode: 0x12
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Breakcode: 0x95
+Recebi interrupção do teclado
+Breakcode: 0xa5
+Recebi interrupção do teclado
+Makecode: 0x2f
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Breakcode: 0x92
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Makecode: 0x17
+Recebi interrupção do teclado
+Breakcode: 0x97
+Recebi interrupção do teclado
+Breakcode: 0xaf
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Makecode: 0x12
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Makecode: 0x17
+Recebi interrupção do teclado
+Breakcode: 0x97
+Recebi interrupção do teclado
+Makecode: 0x2f
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Breakcode: 0x92
+Recebi interrupção do teclado
+Breakcode: 0xaf
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Makecode: 0x12
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Breakcode: 0x92
+Recebi interrupção do teclado
+Makecode: 0x15
+Recebi interrupção do teclado
+Makecode: 0x25
+Recebi interrupção do teclado
+Breakcode: 0x95
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Breakcode: 0xa5
+Recebi interrupção do teclado
+Makecode: 0x21
+Recebi interrupção do teclado
+Makecode: 0x1e
+Recebi interrupção do teclado
+Breakcode: 0xa1
+Recebi interrupção do teclado
+Makecode: 0x17
+Recebi interrupção do teclado
+Breakcode: 0x9e
+Recebi interrupção do teclado
+Breakcode: 0x97
+Recebi interrupção do teclado
+Makecode: 0x23
+Recebi interrupção do teclado
+Makecode: 0x24
+Recebi interrupção do teclado
+Breakcode: 0xa3
+Recebi interrupção do teclado
+Breakcode: 0xa4
+Recebi interrupção do teclado
+Makecode: 0x1f
+Recebi interrupção do teclado
+Breakcode: 0x9f
+Recebi interrupção do teclado
+Makecode: 0x23
+Recebi interrupção do teclado
+Breakcode: 0xa3
+Recebi interrupção do teclado
+Makecode: 0x01
+Recebi interrupção do teclado
+Breakcode: 0x81
+sys_inb_calls: 418
