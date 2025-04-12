@@ -101,9 +101,9 @@ Para configurar o timer com este valor, temos que usar o _**sys_outb**_. Mas ess
 > **_Então porque não definimos a variável counter como uma variável de 8 bits?_** 
 Porque não é possivel alojar um número tão grande como uma divisão de 1193182 por 60 em apenas 8 bits!
 
-Por esse mesmo motivo é que não só temos que separar os 16 bits em 8+8 (ou **MSB+LSB**) como ainda temos que garantir que o valor da frequency nunca é menor do que 19 (pois se for 18 counter é 66288 e o máximo suportado por uma variável de 16 bits é 65535). 
+Por esse mesmo motivo é que não só temos que separar os 16 bits em 8+8 (ou **MSB+LSB**) como ainda temos que garantir que o valor da frequency nunca é menor do que 19 (pois se for 18, counter é 66288 e o máximo suportado por uma variável de 16 bits é 65535). 
 
-Para enviar os 8 bits mais significativos (Most Significant Bits ou MSB) seguido dos 8 bits menos significativos (Less Significant Bits ou LSB), temos que definir duas funções para o efeito. Estas devem ser incluídas no utils.c.
+Para enviar os 8 bits mais significativos (Most Significant Bits ou MSB) seguido dos 8 bits menos significativos (Less Significant Bits ou LSB), temos que definir duas funções para o efeito. Estas devem ser incluídas no utils.c:
 ~~~C
 int(util_get_LSB)(uint16_t val, uint8_t *lsb) {
   if (lsb == NULL) return 1; //Verificar se o lsb é válido
@@ -177,7 +177,7 @@ A palavra de controlo inclui:
 
 Tal como já foi visto na **Nota #2**, irei agora mostrar na prática como se processa todos os cálculos, incluindo a aplicação do "LSB followed by MSB" no _configuration command_.
 ~~~C
-  //Ler a configuração atual para preservar alguns bits
+  //Ler a configuração atual para preservar alguns bits (ver nota 3)
   uint8_t st;
   if ((timer_get_conf(timer, &st)) != 0) return 1;
 
@@ -206,7 +206,11 @@ Tal como já foi visto na **Nota #2**, irei agora mostrar na prática como se pr
   if ((sys_outb(TIMER_0 + timer, msb)) != 0) return 1;
 ~~~
 
-Como penso ser óbvio, devem implementar uma configuração semelhante a esta no timer_set_frequency.
+Como penso ser óbvio, devem implementar uma configuração semelhante a esta no _timer_set_frequency_, no _timer.c_
+
+### Nota #3: Regra básica de configuração de um timer
+
+Sempre que quisermos enviar uma nova configuração para um timer, não só devemos avisar o registo de controlo como também devemos consultar primeiro qual a configuração que lá está e alterar nessa configuração apenas o necessário para evitar erros desnecesários. É por isso mesmo que chamamos a função _timer_get_config_ dentro da função _timer_set_frequency_
 
 ## **4. Leitura da configuração**
 
@@ -261,16 +265,67 @@ int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field fiel
 //Para alterar a configuração (frequência) de um dado timer 
 int (timer_set_frequency)(uint8_t timer, uint32_t freq)
 ~~~
-Mas como fazemos para implementar cada uma destas funções?
+Mas como fazemos para implementar cada uma destas funções? Abaixo deixo os passos necessários a cumprir em cada uma das funções. Se mesmo assim não compreenderes, consulta o meu [_timer.c_](https://github.com/tiagoleic02/LCOM/blob/master/lab2/timer.c). Tenta consultar este ficheiro unicamente **em último recurso** e, se possível, apenas para confirmar se o teu código ficou conforme esperado. Copiar na íntegra o seu conteúdo não te vai tornar expert na matéria ou um excelente profissional.
 
-## **6. Interrupções**
+### **1. _timer_get_conf_**
+
+Os passos a cumprir são:
+- Certificar que os argumentos recebidos são todos válidos;
+- Preparar comando Read-Back para ler o status do timer especifico;
+- Enviar comando para o registo de controlo;
+- Ler o status do timer selecionado.
+
+### **2. _timer_display_conf_**
+
+Os passos a cumprir são:
+- Certificar que os argumentos são todos válidos
+- Criar uma _union_ do tipo **timer_status_field_val** - esta _union_ é semelhante às structs de C++ e está definida em LCF;
+- Passar a informação da _union_ do tipo **timer_status_field** para a _union_ do tipo **timer_status_field_val**; 
+- Exibir a informação formatada via _timer_print_config_, usando a nova _union_ **timer_status_field_val**.
+
+### **3. _timer_set_config_**
+
+Os passos a cumprir são:
+- Certificar que os argumentos são todos válidos, sem esquecer o que falamos sobre os valores mínimos da frequência na **Nota #2**;
+- Ler a configuração atual para preservar alguns bits;
+- Calcular o valor de contagem baseado na frequência;
+- Preparar o comando para configurar o timer, preservando os 4 bits inferiores, definindo corretamente o modo de acesso e o timer que queremos;
+- Enviar o comando para o registo de controlo;
+- Obter o LSB e MSB do valor de contagem;
+- Enviar o valor de contagem para o timer;
+
+### Nota #4: Rigor na escrita de funções
+
+Muitas vezes, por estarmos habituados a desenvolver programas simples — com poucas funções e baseados apenas em variáveis locais — acabamos por não verificar se os **atributos ou funções que usamos são válidos.** No entanto, em programação de sistemas (como nos laboratórios que realizamos), todos os **argumentos e chamadas a funções** podem **falhar por múltiplos motivos** (parâmetros inválidos, falhas de hardware, permissões, etc.).
+
+Por isso, é essencial **adotar a semântica comum dos valores de retorno das system calls POSIX**, ou seja:
+
+    - Retornar 0 em caso de sucesso;
+    - Retornar um valor diferente de 0 (tipicamente 1) em caso de erro.
+
+Além disso, é boa prática:
+
+    - Verificar explicitamente os valores de retorno das funções;
+    - Usar mensagens de erro informativas (por exemplo com perror() ou strerror() em C).
+
+## **6. Interrupções** [*1](https://github.com/tiagoleic02/LCOM/tree/master/lab2#refer%C3%AAncias)
+
+A interação entre o CPU e os dispositivos I/O pode ser de duas formas:
+
+`Polling`: o CPU monitoriza o estado do dispositivo periodicamente e quando este tiver alguma informação útil ao sistema essa informação é tratada. Desvantagem: *busy waiting*, gasta muitos ciclos de relógio só na monitorização. É usado principalmente em dispositivos de baixa frequência de utilização.
+
+`Interrupções`: é o dispositivo que inicia a interação. Quando este tiver alguma informação útil ao sistema envia um sinal (um booleano por exemplo) através de uma interrupt request line específica, `IRQ_LINE`.
+
+<p align="center">
+  <img src="../resources/images/PollingInterrupts.png" alt="Diferenças entre Polling e Interrupções">
+  <p align="center">Diferenças entre Polling e Interrupções (ver referência 1)</p>
 
 Para ativar as interrupções é necessário subscrevê-las por meio de uma system call e antes de acabar o programa deve-se desligar as interrupções usando outra, para garantir a reposição do estado inicial da máquina. Por norma o bit de interrupção é definido pelo módulo que gere o próprio dispositivo, para que seja independente do programa.
 
 ### Algumas notas sobre a função sys_irqsetpolicy:
 Estrutura
 ~~~C
-int sys_irqsetpolicy(int irq, int policy, int *hook_id);_
+int sys_irqsetpolicy(int irq, int policy, int *hook_id);
 ~~~
 **1. irq:**
 
@@ -312,4 +367,6 @@ Importância:
 
 ## Referências:
 
-1. Fabio Sá, repositório pessoal do [GitHub](https://github.com/Fabio-A-Sa/Y2S2-LabComputadores/tree/main/Labs/lab2#para-configurar-o-timer---configuration-command). A informação presente na nota 2 é da autoria do Fábio tendo apenas sido **adaptada** por mim.
+1. Fabio Sá, repositório pessoal do [GitHub](https://github.com/Fabio-A-Sa/Y2S2-LabComputadores/tree/main/Labs/lab2#para-configurar-o-timer---configuration-command). A informação presente na nota 2 e na explicação sobre o que são interrupções é da autoria do Fábio tendo apenas sido **adaptada** por mim.
+2. Slides aulas teóricas de LCOM 2024/2025. Esses slides ficarão guardados na pasta resources/slides para referência futura (e porque, por vezes, os docentes gostam de ocultar o conteúdo do Moodle...)
+3. 'Documentation for Lab2' - disponível na respetiva página web [aqui](https://pages.up.pt/~up722898/aulas/lcom2425/lab2/lab2.html)
