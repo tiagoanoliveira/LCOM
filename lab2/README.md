@@ -5,7 +5,7 @@
 Devemos implementar três funções de teste principais:
 - **timer_test_read_config:** para ler e mostrar a configuração do timer;
 - **timer_test_time_base:** para configurar um timer com uma frequência específica;
-- **timer_test_int:** para testar a gestão de interrupções do timer (vamos ver o que é isso mais adiante)
+- **timer_test_int:** para testar a gestão de interrupções do timer (vamos ver o que é isso no ponto #7)
 
 Para implementar as duas primeiras funções recomendo a leitura atenta na íntegra dos pontos 2 a 5.
 
@@ -52,7 +52,7 @@ int sys_outb(uint8_t port, uint32_t command);
 sys_outb(0x43, 0x36); // Envia um comando de configuração para o registo de controlo
 sys_outb(0x40, 0x9C); // Define parte do valor inicial no Timer 0
 ~~~
-#### 🔼 _sys_inb_ — **Lê informação do timer**
+#### 🔼 _sys_inb_ — **Recebe informação do timer**
 ~~~C
 int sys_inb(uint8_t port, uint32_t *value);
 ~~~
@@ -271,32 +271,43 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq)
 
 ### **1. _timer_get_conf_**
 
-Os passos a cumprir são:
-- Certificar que os argumentos recebidos são todos válidos;
-- Preparar comando Read-Back para ler o status do timer especifico;
-- Enviar comando para o registo de controlo;
-- Ler o status do timer selecionado.
+1. Certificar que os argumentos recebidos são todos válidos;
+2. Preparar comando Read-Back para ler o status do timer especifico;
+3. Enviar comando para o registo de controlo;
+4. Ler o status do timer selecionado.
 
 ### **2. _timer_display_conf_**
 
-Os passos a cumprir são:
-- Certificar que os argumentos são todos válidos
-- Criar uma _union_ do tipo **timer_status_field_val** - esta _union_ é semelhante às structs de C++ e está definida em LCF;
-- Passar a informação da _union_ do tipo **timer_status_field** para a _union_ do tipo **timer_status_field_val**; 
-- Exibir a informação formatada via _timer_print_config_, usando a nova _union_ **timer_status_field_val**.
+1. Certificar que os argumentos são todos válidos;
+2. Criar uma _union_ do tipo **timer_status_field_val** - esta _union_ é semelhante às structs de C++ e está definida em LCF;
+3. Passar a informação da _union_ do tipo **timer_status_field** para a _union_ do tipo **timer_status_field_val**;
+4. Exibir a informação formatada via _timer_print_config_, usando a nova _union_ **timer_status_field_val**.
 
 ### **3. _timer_set_config_**
 
-Os passos a cumprir são:
-- Certificar que os argumentos são todos válidos, sem esquecer o que falamos sobre os valores mínimos da frequência na **Nota #2**;
-- Ler a configuração atual para preservar alguns bits;
-- Calcular o valor de contagem baseado na frequência;
-- Preparar o comando para configurar o timer, preservando os 4 bits inferiores, definindo corretamente o modo de acesso e o timer que queremos;
-- Enviar o comando para o registo de controlo;
-- Obter o LSB e MSB do valor de contagem;
-- Enviar o valor de contagem para o timer;
+1. Certificar que os argumentos são todos válidos, sem esquecer o que falamos sobre os valores mínimos da frequência na **Nota #2**;
+2. Ler a configuração atual para preservar alguns bits;
+3. Calcular o valor de contagem baseado na frequência;
+4. Preparar o comando para configurar o timer, preservando os 4 bits inferiores, definindo corretamente o modo de acesso e o timer que queremos;
+5. Enviar o comando para o registo de controlo;
+6. Obter o LSB e MSB do valor de contagem;
+7. Enviar o valor de contagem para o timer;
+
+Depois de configuradas as 3 funções, chegou a altura de passar para o _lab2.c_ onde devemos configurar as funções _timer_test_read_config_ e _timer_test_time_base_.
+
+### **4. _timer_test_read_config_**
+
+1. Certificar que os argumentos são todos válidos;
+2. Ler a configuração do timer (status byte) via _timer_get_conf_;
+3. Chamar _timer_display_conf_ para exibir a configuração.
+
+## **5. _timer_test_time_base_**
+
+1. Certificar que os argumentos são todos válidos;
+2. Configurar a frequência do timer usando _timer_set_frequency_.
 
 Como deves ter reparado, existem mais funções no _timer.c_ para implementar, funções essas que irão permitir construir a função _timer_test_int_. Para isso temos que falar primeiro de [Interrupções](https://github.com/tiagoleic02/LCOM/blob/master/lab2/README.md#6-interrup%C3%A7%C3%B5es-1)
+
 ### Nota #4: Rigor na escrita de funções
 
 Muitas vezes, por estarmos habituados a desenvolver programas simples — com poucas funções e baseados apenas em variáveis locais — acabamos por não verificar se os **atributos ou funções que usamos são válidos.** No entanto, em programação de sistemas (como nos laboratórios que realizamos), todos os **argumentos e chamadas a funções** podem **falhar por múltiplos motivos** (parâmetros inválidos, falhas de hardware, permissões, etc.).
@@ -310,6 +321,7 @@ Além disso, é boa prática:
 
     - Verificar explicitamente os valores de retorno das funções;
     - Usar mensagens de erro informativas (por exemplo com perror() ou strerror() em C).
+
 
 ## **6. Interrupções**
 
@@ -396,6 +408,59 @@ Importância:
 - É necessário para desativar a interrupção posteriormente (em sys_irqrmpolicy());
 - É usado para identificar qual o dispositivo que gerou uma interrupção (quando múltiplos dispositivos compartilham o mesmo IRQ);
 - Serve como um ‘token’ que conecta o manipulador ao sistema de interrupções;
+
+## **7. Implementação do _timer_test_int_**
+
+Esta função já é dada praticamente concluída - basta consultar o ponto 5.2 da secção "Minix 3 Notes" da documentação para os labs fornecida (ver [referência 3](https://github.com/tiagoleic02/LCOM/tree/master/lab2#refer%C3%AAncias))
+
+De forma resumida, deves:
+1. Subscrever as interrupções usando _timer_subscribe_int_;
+2. Fazer um loop de processamento de instruções;
+3. Desativar as interrupções usando _timer_unsubscrive_int_.
+
+No final, a função deve ficar com o seguinte aspeto:
+
+~~~C
+int(timer_test_int)(uint8_t time) {
+  uint8_t irq_set;
+
+  if (timer_subscribe_int(&irq_set) != 0) return 1;   //Subscrever interrupções
+
+  //declaração de variáveis uteis para o ciclo while
+  int ipc_status, r;
+  message msg;
+  int seconds = 0;   //Reiniciar contador que vai ser usado para o loop
+
+  //Loop de processamento de interrupções
+  while (seconds < time) {
+    //Receber mensagem
+    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+      printf("driver_receive failed with: %d", r);
+      continue;
+    }
+    if (is_ipc_notify(ipc_status)) { //Notificação recebida
+      switch (_ENDPOINT_P(msg.m_source)) {
+        case HARDWARE: //Notificação de interrupção do hardware
+          if (msg.m_notify.interrupts & irq_set) { //subscreve a interrupção
+            timer_int_handler();
+            if (counter % 60 == 0) {
+              timer_print_elapsed_time();
+              seconds++;
+            }
+          }
+          break;
+        default:
+          break; //não é esperado mais nenhuma notificação
+      }
+    }
+  }
+
+  if ((timer_unsubscribe_int()) != 0) return 1;   //Desativação das interrupções
+
+  return 0;
+}
+~~~
+
 
 ## Referências:
 
