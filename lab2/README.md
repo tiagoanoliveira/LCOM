@@ -315,11 +315,11 @@ Além disso, é boa prática:
 
 As interrupções são mecanismos fundamentais nos sistemas computacionais modernos que **permitem a comunicação entre hardware e software de forma eficiente**. Sem elas, a comunicação entre o CPU e os dispositivos I/O tem que ser feita via **polling**, em que o CPU monitoriza o estado do dispositivo periodicamente e quando este tiver alguma informação útil ao sistema essa informação é tratada - desaconselhado geralmente, **pois gasta muitos ciclos de relógio na monitorização**.
 
-### **O que são interrupções?**
+### **_O que são interrupções?_**
 
 Uma interrupção é um sinal enviado ao processador que indica a ocorrência de um evento que requer atenção imediata. Quando uma interrupção ocorre, o processador "interrompe" o que estava a fazer, salva o estado atual e transfere o controlo para uma rotina específica chamada "manipulador de interrupção" (interrupt handler).
 
-### **Para que servem as interrupções?**
+### **_Para que servem as interrupções?_**
 
 As interrupções servem para permitir que o processador:
 1. **Responda a eventos assíncronos:** Eventos que ocorrem independentemente da execução do programa atual (como pressionar uma tecla ou receber dados pela rede);
@@ -327,7 +327,7 @@ As interrupções servem para permitir que o processador:
 3. **Gerencie múltiplas tarefas:** Permite que o sistema operacional alterne entre diferentes programas e processos, implementando multitarefa;
 4. **Lide com erros e exceções:** Permite que o sistema detete e responda a condições excecionais como divisão por zero ou acesso inválido à memória.
 
-### **Tipos de interrupções**
+### **_Tipos de interrupções_**
 
 1. **Interrupções de ‘hardware’:** Geradas por dispositivos externos como teclado, mouse, timer, discos, placas de rede, etc;
 2. **Interrupções de ‘software’ (traps):** Geradas intencionalmente por programas para solicitar serviços ao sistema operativo (system calls);
@@ -337,12 +337,25 @@ Para ativar as interrupções é necessário subscrevê-las por meio de uma syst
 
 Para esse efeito usamos 3 funções:
 
-1. **_timer_subscribe_int_**: Esta função regista um manipulador de interrupção para o timer, informando o sistema operativo que o programa deseja ser notificado quando interrupções do timer ocorrerem;
-2. **_timer_int_handler_**: Manipulador de interrupção que será executado cada vez que o timer gerar uma interrupção;
+1. **_timer_subscribe_int_**: Esta função regista um manipulador de interrupção para o timer, subscrevendo a interrupção através da função _sys_irqsetpolicy_ (ver nota #5) ;
+2. **_timer_int_handler_**: Manipulador de interrupção que será executado cada vez que o timer gerar uma interrupção. Serve para incrementar o contador a cada interrupção;
 3. **_timer_unsubscribe_int_**: Esta função cancela o registo do manipulador de interrupção, comunicando ao sistema que o programa não deseja receber mais notificações de interrupções do timer.
 
 ### Nota #5: função sys_irqsetpolicy
-Estrutura
+
+Esta função, tal como a função _sys_irqrmpolicy(&hook_id)_ já está pré-definida, pois faz parte do Minix. Esta é uma função que regista o programa (ou driver) como um manipulador de interrupções para um dispositivo em específico. Em termos simples:
+- Estabelece uma conexão entre um evento de hardware (interrupção) e o código que deve ser executado quando esse evento ocorre;
+- Informa ao sistema operativo que o programa quer ser notificado quando uma determinada interrupção acontecer.
+
+#### O que faz esta função no backstage?
+
+Quando esta função é chamada, o sistema operativo:
+1. **Regista o driver/programa:** Adiciona o programa/driver à lista de serviços que devem ser notificados quando a interrupção especificada ocorrer;
+2. **Configura o harware:** Programa o controlador de interrupções (PIC - Programmable Interrupt Controller) para permitir interrupções na linha IRQ solicitada; 
+3. **Atribui um identificador único:** Gera e retorna um ID exclusivo (através do parâmetro hook_id) que será usado para identificar a interrupção e respetivo driver/programa; 
+4. **Estabelece políticas:** Configura como o sistema deve lidar com essa interrupção com base na política especificada.
+
+#### Estrutura
 ~~~C
 int sys_irqsetpolicy(int irq, int policy, int *hook_id);
 ~~~
@@ -386,6 +399,6 @@ Importância:
 
 ## Referências:
 
-1. Fabio Sá, repositório pessoal do [GitHub](https://github.com/Fabio-A-Sa/Y2S2-LabComputadores/tree/main/Labs/lab2#para-configurar-o-timer---configuration-command). A informação presente na nota 2 e na explicação sobre o que são interrupções é da autoria do Fábio tendo apenas sido **adaptada** por mim.
+1. Fabio Sá, repositório pessoal do [GitHub](https://github.com/Fabio-A-Sa/Y2S2-LabComputadores/tree/main/Labs/lab2#para-configurar-o-timer---configuration-command). A informação presente na nota 2 e na explicação sobre como funcionam as interrupções são da autoria do Fábio tendo apenas sido **adaptada** por mim.
 2. Slides aulas teóricas de LCOM 2024/2025. Esses slides ficarão guardados na pasta resources/slides para referência futura (e porque, por vezes, os docentes gostam de ocultar o conteúdo do Moodle...)
 3. 'Documentation for Lab2' - disponível na respetiva página web [aqui](https://pages.up.pt/~up722898/aulas/lcom2425/lab2/lab2.html)
