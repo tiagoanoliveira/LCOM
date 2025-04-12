@@ -33,13 +33,19 @@ O temporizador tem 3 contadores de 16 bits (uint16_t), cada um com uma função 
 ~~~
 ### **💬 Comunicação com o i8254 em C**
 
-Para enviar ou receber dados destes registos, usamos duas system calls:
+Quando falamos em comunicar com o timer, falamos em duas hipóteses:
+- Receber informações do timer;
+- Enviar informações (alterar configurações) do timer;
+
+Em qualquer comunicação com o timer temos **sempre** que informar o regiisto de controlo (0x43) para ele 'ficar a contar' com o que pretendemos fazer. Só depois de o registo de controlo ter do lado dele a informação daquilo que pretendemos fazer (enviar ou receber a configuração de um timer especifico p.e.) é que podemos efetivamente recolher ou enviar essa informação.
+
+Para isso, usamos duas system calls:
 
 #### 🔽 _sys_outb_ — **Envia comandos/informações para o timer**
 ~~~C
 int sys_outb(uint8_t port, uint32_t command);
 ~~~
-**Para que serve:** enviar configurações para os timers (por exemplo, definir como contam ou com que frequência).
+**Para que serve:** enviar configurações para os timers (por exemplo, definir como contam ou com que frequência) ou para o registo de controlo.
 
 **Exemplo:**
 ~~~C
@@ -58,7 +64,7 @@ uint32_t val;
 sys_inb(0x40, &val);  // Lê o valor atual do Timer 0 e guarda em val
 ~~~
 
-### Nota importante:
+### Nota #1 - Função _util_sys_inb_:
 
 Repara que o comando sys_inb que lê informações do timer recebe um valor através de um apontador de 32 bits. No entanto é dispensável esses 32 bits pois no contexto de LCOM apenas são necessários 8 e essa diferença leva muitas vezes a erros desnecessários.
 > **_Qual a alternativa para evitar esses erros?_**   --> Implementar uma função auxiliar que receba esse apontador e converta em 8 bits
@@ -71,6 +77,15 @@ int (util_sys_inb)(int port, uint8_t *value) {
   return result; //retornar para esta nova função o mesmo valor que a função original também retornava
 }
 ~~~
+
+### Nota #2 - Configuração da frequência do timer usando MSB e LSB
+Como já deves ter percebido, no caso de querermos alterar a configuração/frequência de um timer, após passar a informação para o registo de controlo sobre a alteração que pretendemos fazer, é necessário injetar o valor inicial no timer da porta correspondente (0x40, 0x41 ou 0x42).
+
+Cada contador tem um valor interno que é decrementado de acordo com a frequência do CPU. No caso do MINIX é decrementado 1193182 vezes por segundo. Sempre que o valor do contador fica a 0 o dispositivo notifica o CPU (gera uma interrupção, veremos no ponto 6 o que é) e volta ao valor original.
+
+Por exemplo, para um CPU de frequência 100 Hz e um Timer de 4 Hz precisamos de ter o contador com valor 25. Esquema ilustrativo:
+
+
 ### Resumindo...
 
 - Cada timer tem o seu endereço (0x40, 0x41, 0x42);
@@ -170,9 +185,12 @@ Já vimos toda a base que precisamos para implementar as duas primeiras funçõe
 
 Apesar de ambas virem pré-definidas no lab2.c, para que as mesmas funcionem é preciso implementar funções importantes, como:
 ~~~C
-int (timer_get_conf)(uint8_t timer, uint8_t *st) //Para obter a configuração atual de um dado timer
-int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field field) //Para mostrar a configuração atual de um dado timer, traduzindo a configuração obtida interpretando cada um dos bits segundo a tabela de Read-Back Command
-int (timer_set_frequency)(uint8_t timer, uint32_t freq) //Para alterar a configuração (frequência) de um dado timer
+//Para obter a configuração atual de um dado timer
+int (timer_get_conf)(uint8_t timer, uint8_t *st)
+//Para mostrar a configuração atual de um dado timer, traduzindo a configuração obtida interpretando cada um dos bits segundo a tabela de Read-Back Command
+int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field field)
+//Para alterar a configuração (frequência) de um dado timer 
+int (timer_set_frequency)(uint8_t timer, uint32_t freq)
 ~~~
 Mas como fazemos para implementar cada uma destas funções?
 
