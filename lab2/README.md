@@ -106,8 +106,45 @@ A palavra de controlo inclui:
 |       |    1    |      BCD (4 digits)       |
 +-------+---------+---------------------------+
 ~~~
+## 4. Leitura da configuração
 
-## **INTERRUPÇÕES**
+Tal como quando vamos escrever, para ler a configuração de um timer é necessário usar o comando Read-Back.
+Para ler temos então que:
+1. _Escrever o comando Read-Back no registo de controlo._
+
+### _Read-Back Command Format_
+~~~lua
++-------+---------+-----------------------------------+
+|  Bit  |  Value  |              Função               |
++-------+---------+-----------------------------------+
+|  7,6  |         |         Read-Back Command         |
++-------+---------+-----------------------------------+
+|       |    11   |                                   |
++-------+---------+-----------------------------------+
+|   5   |         |              COUNT                |
++-------+---------+-----------------------------------+
+|       |    0    |        Read counter value         |
++-------+---------+-----------------------------------+
+|   4   |         |              STATUS               |
++-------+---------+-----------------------------------+
+|       |    0    |       Read programmed mode        |
++-------+---------+-----------------------------------+
+|   3   |         |          Select Timer 2           |
++-------+---------+-----------------------------------+
+|       |    1    |                Yes                |
++-------+---------+-----------------------------------+
+|   2   |         |          Select Timer 1           |
++-------+---------+-----------------------------------+
+|       |    1    |                Yes                |
++-------+---------+-----------------------------------+
+|   1   |         |          Select Timer 0           |
++-------+---------+-----------------------------------+
+|       |    1    |                Yes                |
++-------+---------+-----------------------------------+
+|   0   |         |             Reserved              |
++-------+---------+-----------------------------------+
+~~~
+## **5. Interrupções**
 
 Para ativar as interrupções é necessário subscrevê-las através de uma system call e antes de acabar o programa deve-se
 desligar as interrupções usando outra, para garantir a reposição do estado inicial da máquina. Por norma o bit de
