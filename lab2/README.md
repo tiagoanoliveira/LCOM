@@ -5,7 +5,7 @@
 Devemos implementar três funções de teste principais:
 - **timer_test_read_config:** para ler e mostrar a configuração do timer;
 - **timer_test_time_base:** para configurar um timer com uma frequência específica;
-- **timer_test_int:** para testar a gestão de interrupções do timer (vamos ver o que é isso mais à frente)
+- **timer_test_int:** para testar a gestão de interrupções do timer (vamos ver o que é isso mais adiante)
 
 Para implementar as duas primeiras funções recomendo a leitura atenta na íntegra dos pontos 2 a 5.
 
@@ -15,7 +15,7 @@ Para a última função, não só é necessário compreender como funciona a com
 
 ### **📌 O que é?**
 
-O temporizador do computador, conhecido como i8254, é um dos componentes de hardware mais simples que conseguimos programar em linguagem C.
+O temporizador do computador, conhecido como i8254, é um dos componentes de _‘hardware’_ mais simples que conseguimos programar em linguagem C.
 
 ### **🧱 Estrutura do i8254**
 
@@ -37,7 +37,7 @@ Quando falamos em comunicar com o timer, falamos em duas hipóteses:
 - Receber informações do timer;
 - Enviar informações (alterar configurações) do timer;
 
-Em qualquer comunicação com o timer temos **sempre** que informar o regiisto de controlo (0x43) para ele 'ficar a contar' com o que pretendemos fazer. Só depois de o registo de controlo ter do lado dele a informação daquilo que pretendemos fazer (enviar ou receber a configuração de um timer especifico p.e.) é que podemos efetivamente recolher ou enviar essa informação.
+Em qualquer comunicação com o timer temos **sempre** que informar o registo de controlo (0x43) para ele 'ficar a contar' com o que pretendemos fazer. Só após o registo de controlo ter do lado dele a informação daquilo que pretendemos fazer (enviar ou receber a configuração de um timer especifico p.e.) é que podemos efetivamente recolher ou enviar essa informação.
 
 Para isso, usamos duas system calls:
 
@@ -66,8 +66,8 @@ sys_inb(0x40, &val);  // Lê o valor atual do Timer 0 e guarda em val
 
 ### Nota #1 - Função _util_sys_inb_:
 
-Repara que o comando sys_inb que lê informações do timer recebe um valor através de um apontador de 32 bits. No entanto é dispensável esses 32 bits pois no contexto de LCOM apenas são necessários 8 e essa diferença leva muitas vezes a erros desnecessários.
-> **_Qual a alternativa para evitar esses erros?_**   --> Implementar uma função auxiliar que receba esse apontador e converta em 8 bits
+Repara que o comando sys_inb que lê informações do timer recebe um valor por um apontador de 32 bits. No entanto, é dispensável esses 32 bits, pois no contexto de LCOM apenas são necessários 8 e essa diferença leva muitas vezes a erros desnecessários.
+> **_Qual a alternativa para evitar esses erros?_** --> Implementar uma função auxiliar que receba esse apontador e converta em 8 bits
 ~~~C
 int (util_sys_inb)(int port, uint8_t *value) {
   if(value == NULL) return 1;
@@ -78,13 +78,15 @@ int (util_sys_inb)(int port, uint8_t *value) {
 }
 ~~~
 
-### Nota #2 - Configuração da frequência do timer usando MSB e LSB
+### Nota #2 - Configuração da frequência do timer usando MSB e LSB [*1]()
 Como já deves ter percebido, no caso de querermos alterar a configuração/frequência de um timer, após passar a informação para o registo de controlo sobre a alteração que pretendemos fazer, é necessário injetar o valor inicial no timer da porta correspondente (0x40, 0x41 ou 0x42).
 
-Cada contador tem um valor interno que é decrementado de acordo com a frequência do CPU. No caso do MINIX é decrementado 1193182 vezes por segundo. Sempre que o valor do contador fica a 0 o dispositivo notifica o CPU (gera uma interrupção, veremos no ponto 6 o que é) e volta ao valor original.
+Cada contador tem um valor interno que é decrementado conforme a frequência do CPU. No caso do MINIX é decrementado 1193182 vezes por segundo. Sempre que o valor do contador fica a 0 o dispositivo notifica o CPU (gera uma interrupção, veremos no ponto 6 o que é) e volta ao valor original.
 
 Por exemplo, para um CPU de frequência 100 Hz e um Timer de 4 Hz precisamos de ter o contador com valor 25. Esquema ilustrativo:
-
+<p align="center">
+  <img src="../resources/images/Counter.png" alt="gráfico do calculo do contador">
+  <p align="center">Cálculo do valor do contador interno (ver referência 1)</p>
 
 ### Resumindo...
 
@@ -107,7 +109,7 @@ A palavra de controlo inclui:
 - Bits 3, 2, 1: Modo de operação (011 para modo 3 que será o que vamos usar maioritariamente);
 - Bit 0: Base de contagem (0 para binário, 1 para BCD).
 
-### _Configuration Comand:_
+### _Configuration Command:_
 ~~~lua
 +-------+---------+---------------------------+
 |  Bit  |  Value  |         Função            |
@@ -181,7 +183,7 @@ Para ler temos então que:
 
 ## **5. Implementação**
 
-Já vimos toda a base que precisamos para implementar as duas primeiras funções referidas no ponto 2.
+Já vimos toda a base que precisamos para implementar as duas primeiras funções referidas no ponto 1.
 
 Apesar de ambas virem pré-definidas no lab2.c, para que as mesmas funcionem é preciso implementar funções importantes, como:
 ~~~C
@@ -196,13 +198,11 @@ Mas como fazemos para implementar cada uma destas funções?
 
 ## **6. Interrupções**
 
-Para ativar as interrupções é necessário subscrevê-las através de uma system call e antes de acabar o programa deve-se
-desligar as interrupções usando outra, para garantir a reposição do estado inicial da máquina. Por norma o bit de
-interrupção é definido pelo módulo que gere o próprio dispositivo, para que seja independente do programa.
+Para ativar as interrupções é necessário subscrevê-las por meio de uma system call e antes de acabar o programa deve-se desligar as interrupções usando outra, para garantir a reposição do estado inicial da máquina. Por norma o bit de interrupção é definido pelo módulo que gere o próprio dispositivo, para que seja independente do programa.
 
 ### Algumas notas sobre a função sys_irqsetpolicy:
 Estrutura
-~~~cpp
+~~~C
 int sys_irqsetpolicy(int irq, int policy, int *hook_id);_
 ~~~
 **1. irq:**
@@ -236,10 +236,13 @@ Usamos a primeira opção para que o timer continue a gerar interrupções autom
 Uso:
 - Entrada/Saída: É um parâmetro passado por referência;
 - Antes de ser chamado: Inicializamos com o número da IRQ (hook_id = TIMER0_IRQ);
-- Depois de chamado: O sistema modifica o valor para um ID único.
+- Após ser chamado: O sistema modifica o valor para um ID único.
 
 Importância:
 - É necessário para desativar a interrupção posteriormente (em sys_irqrmpolicy());
 - É usado para identificar qual o dispositivo que gerou uma interrupção (quando múltiplos dispositivos compartilham o mesmo IRQ);
-- Serve como um token que conecta o manipulador ao sistema de interrupções;
+- Serve como um ‘token’ que conecta o manipulador ao sistema de interrupções;
 
+## Referências:
+
+1. Fabio Sá, repositório pessoal do [GitHub](https://github.com/Fabio-A-Sa/Y2S2-LabComputadores/tree/main/Labs/lab2#para-configurar-o-timer---configuration-command). A informação presente na nota 2 é da autoria do Fábio tendo apenas sido **adaptada** por mim.
