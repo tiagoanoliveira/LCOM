@@ -256,16 +256,18 @@ Para ler temos então que:
 
 Já vimos toda a base que precisamos para implementar as duas primeiras funções referidas no ponto 1.
 
-Apesar de ambas virem pré-definidas no lab2.c, para que as mesmas funcionem é preciso implementar funções importantes, como:
+Apesar de ambas virem pré-definidas no lab2.c, para que as mesmas funcionem é preciso implementar funções importantes no timer.c, como:
 ~~~C
 //Para obter a configuração atual de um dado timer
 int (timer_get_conf)(uint8_t timer, uint8_t *st)
+
 //Para mostrar a configuração atual de um dado timer, traduzindo a configuração obtida interpretando cada um dos bits segundo a tabela de Read-Back Command
 int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field field)
+
 //Para alterar a configuração (frequência) de um dado timer 
 int (timer_set_frequency)(uint8_t timer, uint32_t freq)
 ~~~
-Mas como fazemos para implementar cada uma destas funções? Abaixo deixo os passos necessários a cumprir em cada uma das funções. Se mesmo assim não compreenderes, consulta o meu [_timer.c_](https://github.com/tiagoleic02/LCOM/blob/master/lab2/timer.c). Tenta consultar este ficheiro unicamente **em último recurso** e, se possível, apenas para confirmar se o teu código ficou conforme esperado. Copiar na íntegra o seu conteúdo não te vai tornar expert na matéria ou um excelente profissional.
+> Mas como fazemos para implementar cada uma destas funções? Abaixo deixo os passos necessários a cumprir em cada uma das funções. Se mesmo assim não compreenderes, consulta o meu [_timer.c_](https://github.com/tiagoleic02/LCOM/blob/master/lab2/timer.c). Tenta consultar este ficheiro unicamente **em último recurso** e, se possível, apenas para confirmar se o teu código ficou conforme esperado. _Copiar na íntegra o seu conteúdo não te vai tornar expert na matéria ou um excelente profissional._
 
 ### **1. _timer_get_conf_**
 
@@ -294,6 +296,7 @@ Os passos a cumprir são:
 - Obter o LSB e MSB do valor de contagem;
 - Enviar o valor de contagem para o timer;
 
+Como deves ter reparado, existem mais funções no _timer.c_ para implementar, funções essas que irão permitir construir a função _timer_test_int_. Para isso temos que falar primeiro de [Interrupções](https://github.com/tiagoleic02/LCOM/blob/master/lab2/README.md#6-interrup%C3%A7%C3%B5es-1)
 ### Nota #4: Rigor na escrita de funções
 
 Muitas vezes, por estarmos habituados a desenvolver programas simples — com poucas funções e baseados apenas em variáveis locais — acabamos por não verificar se os **atributos ou funções que usamos são válidos.** No entanto, em programação de sistemas (como nos laboratórios que realizamos), todos os **argumentos e chamadas a funções** podem **falhar por múltiplos motivos** (parâmetros inválidos, falhas de hardware, permissões, etc.).
@@ -308,21 +311,37 @@ Além disso, é boa prática:
     - Verificar explicitamente os valores de retorno das funções;
     - Usar mensagens de erro informativas (por exemplo com perror() ou strerror() em C).
 
-## **6. Interrupções** [*1](https://github.com/tiagoleic02/LCOM/tree/master/lab2#refer%C3%AAncias)
+## **6. Interrupções**
 
-A interação entre o CPU e os dispositivos I/O pode ser de duas formas:
+As interrupções são mecanismos fundamentais nos sistemas computacionais modernos que **permitem a comunicação entre hardware e software de forma eficiente**. Sem elas, a comunicação entre o CPU e os dispositivos I/O tem que ser feita via **polling**, em que o CPU monitoriza o estado do dispositivo periodicamente e quando este tiver alguma informação útil ao sistema essa informação é tratada - desaconselhado geralmente, **pois gasta muitos ciclos de relógio na monitorização**.
 
-`Polling`: o CPU monitoriza o estado do dispositivo periodicamente e quando este tiver alguma informação útil ao sistema essa informação é tratada. Desvantagem: *busy waiting*, gasta muitos ciclos de relógio só na monitorização. É usado principalmente em dispositivos de baixa frequência de utilização.
+### **O que são interrupções?**
 
-`Interrupções`: é o dispositivo que inicia a interação. Quando este tiver alguma informação útil ao sistema envia um sinal (um booleano por exemplo) através de uma interrupt request line específica, `IRQ_LINE`.
+Uma interrupção é um sinal enviado ao processador que indica a ocorrência de um evento que requer atenção imediata. Quando uma interrupção ocorre, o processador "interrompe" o que estava a fazer, salva o estado atual e transfere o controlo para uma rotina específica chamada "manipulador de interrupção" (interrupt handler).
 
-<p align="center">
-  <img src="../resources/images/PollingInterrupts.png" alt="Diferenças entre Polling e Interrupções">
-  <p align="center">Diferenças entre Polling e Interrupções (ver referência 1)</p>
+### **Para que servem as interrupções?**
+
+As interrupções servem para permitir que o processador:
+1. **Responda a eventos assíncronos:** Eventos que ocorrem independentemente da execução do programa atual (como pressionar uma tecla ou receber dados pela rede);
+2. **Utilize hardware de forma eficiente:** Em vez de verificar constantemente (polling) se um dispositivo precisa de atenção, o processador pode executar outras tarefas e ser notificado apenas quando necessário;
+3. **Gerencie múltiplas tarefas:** Permite que o sistema operacional alterne entre diferentes programas e processos, implementando multitarefa;
+4. **Lide com erros e exceções:** Permite que o sistema detete e responda a condições excecionais como divisão por zero ou acesso inválido à memória.
+
+### **Tipos de interrupções**
+
+1. **Interrupções de ‘hardware’:** Geradas por dispositivos externos como teclado, mouse, timer, discos, placas de rede, etc;
+2. **Interrupções de ‘software’ (traps):** Geradas intencionalmente por programas para solicitar serviços ao sistema operativo (system calls);
+3. **Exceções:** Geradas pelo próprio processador quando deteta condições anormais durante a execução (‘overflow’, divisão por zero, etc.).
 
 Para ativar as interrupções é necessário subscrevê-las por meio de uma system call e antes de acabar o programa deve-se desligar as interrupções usando outra, para garantir a reposição do estado inicial da máquina. Por norma o bit de interrupção é definido pelo módulo que gere o próprio dispositivo, para que seja independente do programa.
 
-### Algumas notas sobre a função sys_irqsetpolicy:
+Para esse efeito usamos 3 funções:
+
+1. **_timer_subscribe_int_**: Esta função regista um manipulador de interrupção para o timer, informando o sistema operativo que o programa deseja ser notificado quando interrupções do timer ocorrerem;
+2. **_timer_int_handler_**: Manipulador de interrupção que será executado cada vez que o timer gerar uma interrupção;
+3. **_timer_unsubscribe_int_**: Esta função cancela o registo do manipulador de interrupção, comunicando ao sistema que o programa não deseja receber mais notificações de interrupções do timer.
+
+### Nota #5: função sys_irqsetpolicy
 Estrutura
 ~~~C
 int sys_irqsetpolicy(int irq, int policy, int *hook_id);
