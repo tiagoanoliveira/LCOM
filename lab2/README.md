@@ -1,13 +1,17 @@
 # **Lab 2 - Timer**
 
-## 1. Funções de teste esperadas
+## **1. Funções de teste esperadas**
 
 Devemos implementar três funções de teste principais:
 - **timer_test_read_config:** para ler e mostrar a configuração do timer;
 - **timer_test_time_base:** para configurar um timer com uma frequência específica;
 - **timer_test_int:** para testar a gestão de interrupções do timer (vamos ver o que é isso mais à frente)
 
-## 2. Funcionamento do Timer (i8254)
+Para implementar as duas primeiras funções recomendo a leitura atenta na íntegra dos pontos 2 a 5.
+
+Para a última função, não só é necessário compreender como funciona a comunicação com os timers como também é preciso perceber o que são interrupções e como são abordadas. Para tal recomendo a leitura dpo ponto 6.
+
+## **2. Funcionamento do Timer (i8254)**
 
 ### **📌 O que é?**
 
@@ -53,6 +57,20 @@ int sys_inb(uint8_t port, uint32_t *value);
 uint32_t val;
 sys_inb(0x40, &val);  // Lê o valor atual do Timer 0 e guarda em val
 ~~~
+
+### Nota importante:
+
+Repara que o comando sys_inb que lê informações do timer recebe um valor através de um apontador de 32 bits. No entanto é dispensável esses 32 bits pois no contexto de LCOM apenas são necessários 8 e essa diferença leva muitas vezes a erros desnecessários.
+> **_Qual a alternativa para evitar esses erros?_**   --> Implementar uma função auxiliar que receba esse apontador e converta em 8 bits
+~~~C
+int (util_sys_inb)(int port, uint8_t *value) {
+  if(value == NULL) return 1;
+  uint32_t temp;
+  int result = sys_inb(port, &temp); //Chamada do sys_inb para ler da porta
+  *value = (uint8_t)temp; //Converter o valor de temp para uint8_t - é este o objetivo desta função!
+  return result; //retornar para esta nova função o mesmo valor que a função original também retornava
+}
+~~~
 ### Resumindo...
 
 - Cada timer tem o seu endereço (0x40, 0x41, 0x42);
@@ -62,7 +80,7 @@ sys_inb(0x40, &val);  // Lê o valor atual do Timer 0 e guarda em val
   - sys_inb() → para ler os valores dos timers.
 - O temporizador é independente da velocidade do processador, o que permite medir o tempo com fiabilidade.
 
-## 3. Programação do Timer
+## **3. Programação do Timer**
 
 Para programar um timer é necessário:
 - **Escrever um código de 8 bits no registo de controlo 0x43** (especificando o modo de operação);
@@ -106,7 +124,7 @@ A palavra de controlo inclui:
 |       |    1    |      BCD (4 digits)       |
 +-------+---------+---------------------------+
 ~~~
-## 4. Leitura da configuração
+## **4. Leitura da configuração**
 
 Tal como quando vamos escrever, para ler a configuração de um timer é necessário usar o comando Read-Back.
 Para ler temos então que:
@@ -144,7 +162,21 @@ Para ler temos então que:
 |   0   |         |             Reserved              |
 +-------+---------+-----------------------------------+
 ~~~
-## **5. Interrupções**
+2. _Ler os 8 bits do timer selecionado através do comando **sys_inb**._
+
+## **5. Implementação**
+
+Já vimos toda a base que precisamos para implementar as duas primeiras funções referidas no ponto 2.
+
+Apesar de ambas virem pré-definidas no lab2.c, para que as mesmas funcionem é preciso implementar funções importantes, como:
+~~~C
+int (timer_get_conf)(uint8_t timer, uint8_t *st) //Para obter a configuração atual de um dado timer
+int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field field) //Para mostrar a configuração atual de um dado timer, traduzindo a configuração obtida interpretando cada um dos bits segundo a tabela de Read-Back Command
+int (timer_set_frequency)(uint8_t timer, uint32_t freq) //Para alterar a configuração (frequência) de um dado timer
+~~~
+Mas como fazemos para implementar cada uma destas funções?
+
+## **6. Interrupções**
 
 Para ativar as interrupções é necessário subscrevê-las através de uma system call e antes de acabar o programa deve-se
 desligar as interrupções usando outra, para garantir a reposição do estado inicial da máquina. Por norma o bit de
