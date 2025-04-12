@@ -78,7 +78,7 @@ int (util_sys_inb)(int port, uint8_t *value) {
 }
 ~~~
 
-### Nota #2 - Configuração da frequência do timer usando MSB e LSB [*1]()
+### Nota #2 - Configuração da frequência do timer usando MSB e LSB [*1](https://github.com/tiagoleic02/LCOM/tree/master/lab2#refer%C3%AAncias)
 Como já deves ter percebido, no caso de querermos alterar a configuração/frequência de um timer, após passar a informação para o registo de controlo sobre a alteração que pretendemos fazer, é necessário injetar o valor inicial no timer da porta correspondente (0x40, 0x41 ou 0x42).
 
 Cada contador tem um valor interno que é decrementado conforme a frequência do CPU. No caso do MINIX é decrementado 1193182 vezes por segundo. Sempre que o valor do contador fica a 0 o dispositivo notifica o CPU (gera uma interrupção, veremos no ponto 6 o que é) e volta ao valor original.
@@ -87,6 +87,37 @@ Por exemplo, para um CPU de frequência 100 Hz e um Timer de 4 Hz precisamos de 
 <p align="center">
   <img src="../resources/images/Counter.png" alt="gráfico do calculo do contador">
   <p align="center">Cálculo do valor do contador interno (ver referência 1)</p>
+
+Para alterar a frequência do timer selecionado, de modo a conseguirmos por exemplo contar segundos (com uma frequência de 60Hz) através das interrupções geradas, devemos calcular o valor interno.
+
+~~~C
+#define TIMER_FREQUENCY 1193182
+uint16_t frequency = 60;
+uint16_t counter = TIMER_FREQUENCY / frequency;
+~~~
+
+Para configurar o timer com este valor, temos que usar o _**sys_outb**_. Mas essa função só aceita valores de 8 bits...
+
+> **_Então porque não definimos a variável counter como uma variável de 8 bits?_** 
+Porque não é possivel alojar um número tão grande como uma divisão de 1193182 por 60 em apenas 8 bits!
+
+Por esse mesmo motivo é que não só temos que separar os 16 bits em 8+8 (ou **MSB+LSB**) como ainda temos que garantir que o valor da frequency nunca é menor do que 19 (pois se for 18 counter é 66288 e o máximo suportado por uma variável de 16 bits é 65535). 
+
+Para enviar os 8 bits mais significativos (Most Significant Bits ou MSB) seguido dos 8 bits menos significativos (Less Significant Bits ou LSB), temos que definir duas funções para o efeito. Estas devem ser incluídas no utils.c.
+~~~C
+int(util_get_LSB)(uint16_t val, uint8_t *lsb) {
+  if (lsb == NULL) return 1; //Verificar se o lsb é válido
+  *lsb = (uint8_t)(val & 0xFF);  //Passar para o lsb os 8 bits menos significativos de val; podemos omitir 0xFF
+  return 0;
+}
+
+int(util_get_MSB)(uint16_t val, uint8_t *msb) {
+  if (msb == NULL) return 1;
+  *msb = (uint8_t)((val >> 8) & 0xFF); //Deslocar 8 bits e passar tal como no lsb os restantes 8 bits do val para o msb
+  return 0;
+}
+~~~
+O resto é feito pelo _Configuration Command_, que veremos no ponto seguinte o que faz e de que forma envia o MSB + LSB.
 
 ### Resumindo...
 
@@ -141,6 +172,42 @@ A palavra de controlo inclui:
 |       |    1    |      BCD (4 digits)       |
 +-------+---------+---------------------------+
 ~~~
+
+> Como devemos proceder para alterar a frequência de um timer usando um valor de 16 bits?
+
+Tal como já foi visto na **Nota #2**, irei agora mostrar na prática como se processa todos os cálculos, incluindo a aplicação do "LSB followed by MSB" no _configuration command_.
+~~~C
+  //Ler a configuração atual para preservar alguns bits
+  uint8_t st;
+  if ((timer_get_conf(timer, &st)) != 0) return 1;
+
+  // Calcular o valor de contagem baseado na frequência
+  uint16_t initial_count = TIMER_FREQ / freq;
+
+  // Preparar o comando para configurar o timer
+  uint8_t ctrl_word = (st & 0x0F) | TIMER_LSB_MSB;  // Preservar os 4 bits inferiores e definir modo de acesso
+
+  // Selecionar o timer correto
+  switch (timer) {
+    case 0: ctrl_word |= TIMER_SEL0; break;
+    case 1: ctrl_word |= TIMER_SEL1; break;
+    case 2: ctrl_word |= TIMER_SEL2; break;
+  }
+  //Enviar o comando para o registo de controlo
+  if ((sys_outb(TIMER_CTRL, ctrl_word)) != 0) return 1;
+
+  //Obter o LSB e MSB do valor de contagem
+  uint8_t lsb, msb;
+  util_get_LSB(initial_count, &lsb);
+  util_get_MSB(initial_count, &msb);
+
+  //Enviar o valor de contagem para o timer
+  if ((sys_outb(TIMER_0 + timer, lsb)) != 0) return 1;
+  if ((sys_outb(TIMER_0 + timer, msb)) != 0) return 1;
+~~~
+
+Como penso ser óbvio, devem implementar uma configuração semelhante a esta no timer_set_frequency.
+
 ## **4. Leitura da configuração**
 
 Tal como quando vamos escrever, para ler a configuração de um timer é necessário usar o comando Read-Back.
