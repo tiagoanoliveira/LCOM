@@ -9,7 +9,7 @@ Devemos implementar três funções de teste principais:
 
 Para implementar as duas primeiras funções recomendo a leitura atenta na íntegra dos pontos 2 a 5.
 
-Para a última função, não só é necessário compreender como funciona a comunicação com os timers como também é preciso perceber o que são interrupções e como são abordadas. Para tal recomendo a leitura dpo ponto 6.
+Para a última função, não só é necessário compreender como funciona a comunicação com os timers como também é preciso perceber o que são interrupções e como são abordadas. Para tal recomendo a leitura do [ponto 6](https://github.com/tiagoleic02/LCOM/tree/master/lab2#6-interrup%C3%A7%C3%B5es).
 
 ## **2. Funcionamento do Timer (i8254)**
 
