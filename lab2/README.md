@@ -9,11 +9,11 @@ Devemos implementar três funções de teste principais:
 
 ## 2. Funcionamento do Timer (i8254)
 
-#### **📌 O que é?**
+### **📌 O que é?**
 
 O temporizador do computador, conhecido como i8254, é um dos componentes de hardware mais simples que conseguimos programar em linguagem C.
 
-#### **🧱 Estrutura do i8254**
+### **🧱 Estrutura do i8254**
 
 O temporizador tem 3 contadores de 16 bits (uint16_t), cada um com uma função específica:
 ~~~lua
@@ -27,11 +27,11 @@ O temporizador tem 3 contadores de 16 bits (uint16_t), cada um com uma função 
 |  Control   |    0x43    | Registo de controlo (envio de comandos)   |
 +------------+------------+-------------------------------------------+
 ~~~
-#### **💬 Comunicação com o i8254 em C**
+### **💬 Comunicação com o i8254 em C**
 
 Para enviar ou receber dados destes registos, usamos duas system calls:
 
-🔽 _sys_outb_ — **Envia comandos/informações para o timer**
+#### 🔽 _sys_outb_ — **Envia comandos/informações para o timer**
 ~~~C
 int sys_outb(uint8_t port, uint32_t command);
 ~~~
@@ -42,7 +42,25 @@ int sys_outb(uint8_t port, uint32_t command);
 sys_outb(0x43, 0x36); // Envia um comando de configuração para o registo de controlo
 sys_outb(0x40, 0x9C); // Define parte do valor inicial no Timer 0
 ~~~
+#### 🔼 _sys_inb_ — **Lê informação do timer**
+~~~C
+int sys_inb(uint8_t port, uint32_t *value);
+~~~
+**Para que serve:** consultar o valor atual de um dos timers.
 
+**Exemplo:**
+~~~C
+uint32_t val;
+sys_inb(0x40, &val);  // Lê o valor atual do Timer 0 e guarda em val
+~~~
+### Resumindo...
+
+- Cada timer tem o seu endereço (0x40, 0x41, 0x42);
+- O registo 0x43 serve para dizer ao temporizador como se deve comportar;
+- Usamos:
+  - sys_outb() → para escrever nos timers ou no registo de controlo;
+  - sys_inb() → para ler os valores dos timers.
+- O temporizador é independente da velocidade do processador, o que permite medir o tempo com fiabilidade.
 
 ## 3. Programação do Timer
 
@@ -56,7 +74,38 @@ A palavra de controlo inclui:
 - Bits 3, 2, 1: Modo de operação (011 para modo 3 que será o que vamos usar maioritariamente);
 - Bit 0: Base de contagem (0 para binário, 1 para BCD).
 
-
+### _Configuration Comand:_
+~~~lua
++-------+---------+---------------------------+
+|  Bit  |  Value  |         Função            |
++-------+---------+---------------------------+
+|  7,6  |         |     Counter selecion      |
++-------+---------+---------------------------+
+|       |    00   |            0              |
+|       |    01   |            1              |
+|       |    10   |            2              |
++-------+---------+---------------------------+
+|  5,4  |         |   Counter initialization  |
++-------+---------+---------------------------+
+|       |    01   |           LSB             |
+|       |    10   |           MSB             |
+|       |    11   |    LSB folowed by MSB     |
++-------+---------+---------------------------+
+| 3,2,1 |         |   Counter initialization  |
++-------+---------+---------------------------+
+|       |   000   |            0              |
+|       |   001   |            1              |
+|       |   x10   |            2              |
+|       |   x11   |            3              |
+|       |   100   |            4              |
+|       |   101   |            5              |
++-------+---------+---------------------------+
+|   0   |         |           BCD             |
++-------+---------+---------------------------+
+|       |    0    |     Binary (16 bits)      |
+|       |    1    |      BCD (4 digits)       |
++-------+---------+---------------------------+
+~~~
 
 ## **INTERRUPÇÕES**
 
