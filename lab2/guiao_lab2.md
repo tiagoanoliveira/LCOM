@@ -9,18 +9,54 @@ Devemos implementar três funções de teste principais:
 
 ## 2. Funcionamento do Timer (i8254)
 
-O PC possui um circuito integrado i8254 com 3 timers independentes. Cada timer tem um contador de 16 bits que é decrementado a cada pulso de clock. Neste laboratório vamos utilizar principalmente o timer 0 e o modo de operação 3 (gerador de onda quadrada).
-Os endereços de I/O do i8254 são: 0x43 (registo de controlo) e 0x40, 0x41, 0x42 (registo para os timers 0, 1 e 2).
+#### **📌 O que é?**
+
+O temporizador do computador, conhecido como i8254, é um dos componentes de hardware mais simples que conseguimos programar em linguagem C.
+
+#### **🧱 Estrutura do i8254**
+
+O temporizador tem 3 contadores de 16 bits (uint16_t), cada um com uma função específica:
+~~~lua
++------------+------------+-------------------------------------------+
+|   Timer    |  Endereço  |                 Função                    |
++------------+------------+-------------------------------------------+
+|  Timer 0   |    0x40    | Fornece uma base de tempo ao sistema      |
+|  Timer 1   |    0x41    | Faz refresh da memória DRAM               |
+|  Timer 2   |    0x42    | Gera tons/frequências para os speakers    |
++------------+------------+-------------------------------------------+
+|  Control   |    0x43    | Registo de controlo (envio de comandos)   |
++------------+------------+-------------------------------------------+
+~~~
+#### **💬 Comunicação com o i8254 em C**
+
+Para enviar ou receber dados destes registos, usamos duas system calls:
+
+🔽 _sys_outb_ — **Envia comandos/informações para o timer**
+~~~C
+int sys_outb(uint8_t port, uint32_t command);
+~~~
+**Para que serve:** enviar configurações para os timers (por exemplo, definir como contam ou com que frequência).
+
+**Exemplo:**
+~~~C
+sys_outb(0x43, 0x36); // Envia um comando de configuração para o registo de controlo
+sys_outb(0x40, 0x9C); // Define parte do valor inicial no Timer 0
+~~~
+
 
 ## 3. Programação do Timer
 
 Para programar um timer é necessário:
-- Escrever uma palavra de controlo no registo de controlo (especificando o modo de operação);
-- Carregar o valor inicial do contador;
+- **Escrever um código de 8 bits no registo de controlo 0x43** (especificando o modo de operação);
+- **Carregar o valor inicial do contador;**
+
+A palavra de controlo inclui:
+- Bits 7,6: Seleção do contador (00 para timer 0, 01 para timeer 1, 10 para timer 2);
+- Bits 5,4: Modo de inicialização (01 só LSB, 10 só MSB, 11 LSB seguido de MSB*);
+- Bits 3, 2, 1: Modo de operação (011 para modo 3 que será o que vamos usar maioritariamente);
+- Bit 0: Base de contagem (0 para binário, 1 para BCD).
 
 
-
-.
 
 ## **INTERRUPÇÕES**
 
