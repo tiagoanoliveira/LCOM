@@ -301,7 +301,7 @@ Depois de configuradas as 3 funções, chegou a altura de passar para o _lab2.c_
 2. Ler a configuração do timer (status byte) via _timer_get_conf_;
 3. Chamar _timer_display_conf_ para exibir a configuração.
 
-## **5. _timer_test_time_base_**
+### **5. _timer_test_time_base_**
 
 1. Certificar que os argumentos são todos válidos;
 2. Configurar a frequência do timer usando _timer_set_frequency_.
@@ -355,7 +355,7 @@ Para esse efeito usamos 3 funções:
 
 ### Nota #5: função sys_irqsetpolicy
 
-Esta função, tal como a função _sys_irqrmpolicy(&hook_id)_ já está pré-definida, pois faz parte do Minix. Esta é uma função que regista o programa (ou driver) como um manipulador de interrupções para um dispositivo em específico. Em termos simples:
+Esta função, tal como a função _sys_irqrmpolicy()_ já está pré-definida no Minix. Esta é uma função que regista o programa (ou driver) como um manipulador de interrupções para um dispositivo em específico. Em termos simples:
 - Estabelece uma conexão entre um evento de hardware (interrupção) e o código que deve ser executado quando esse evento ocorre;
 - Informa ao sistema operativo que o programa quer ser notificado quando uma determinada interrupção acontecer.
 
@@ -415,7 +415,7 @@ Esta função já é dada praticamente concluída - basta consultar o ponto 5.2 
 
 De forma resumida, deves:
 1. Subscrever as interrupções usando _timer_subscribe_int_;
-2. Fazer um loop de processamento de instruções;
+2. Fazer um loop de processamento de instruções tal e qual como consta no ponto 5.2. de "Minix 3 Notes";
 3. Desativar as interrupções usando _timer_unsubscrive_int_.
 
 No final, a função deve ficar com o seguinte aspeto:
@@ -517,6 +517,6 @@ Para maior fiabilidade, é recomendado repetir os testes várias vezes, especial
 
 ## Referências:
 
-1. Fabio Sá, repositório pessoal do [GitHub](https://github.com/Fabio-A-Sa/Y2S2-LabComputadores/tree/main/Labs/lab2#para-configurar-o-timer---configuration-command). A informação presente na nota 2 e na explicação sobre como funcionam as interrupções são da autoria do Fábio tendo apenas sido **adaptada** por mim.
+1. Fabio Sá, repositório pessoal do [GitHub](https://github.com/Fabio-A-Sa/Y2S2-LabComputadores/tree/main/Labs/lab2#para-configurar-o-timer---configuration-command). A informação presente na nota 2 e na explicação sobre como funcionam as interrupções foram adaptadas do repositório do Fábio, sendo que a imagem usada também é da sua autoria.
 2. Slides aulas teóricas de LCOM 2024/2025. Esses slides ficarão guardados na pasta resources/slides para referência futura (e porque, por vezes, os docentes gostam de ocultar o conteúdo do Moodle...)
 3. 'Documentation for Lab2' - disponível na respetiva página web [aqui](https://pages.up.pt/~up722898/aulas/lcom2425/lab2/lab2.html)
