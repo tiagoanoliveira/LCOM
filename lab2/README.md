@@ -460,7 +460,60 @@ int(timer_test_int)(uint8_t time) {
   return 0;
 }
 ~~~
+## **8. Compilação**
 
+O processo de compilação é direto graças ao Makefile fornecido. Este Makefile está configurado para compilar o programa usando os arquivos de código-fonte especificados na variável SRCS (lab2.c, timer.c e utils.c).
+
+Antes de avançares, certifica-te que tens:
+- **i8254.h:** Para constantes e macros úteis relacionadas com o _timer_;
+- **utils.c:** Para implementar funções auxiliares (MSB, LSB e util_sys_inb);
+- **timer.c:** Para implementar as funções do módulo i8254;
+- **lab2.c:** Para implementar as funções solicitadas no enunciado do lab2.
+
+Para compilar o programa deves fazer no Minix (ou via SSH):
+~~~C
+minix$ make clean
+minix$ make
+~~~
+O comando _**make clean**_ remove todos os arquivos objeto (.o) gerados por compilações anteriores, enquanto _**make**_ compila os arquivos fonte modificados desde a última compilação.
+
+## **9. Teste do código**
+
+A biblioteca LCF (LCOM Framework) fornece um modo de teste para verificar se o teu código funciona como esperado. Para testar, usa o comando _lcom_run_ com argumentos específicos:
+
+~~~C
+ minix$ lcom_run lab2 
+~~~
+
+Sem argumentos, este comando mostrará informações sobre como usar o programa. Para testes específicos:
+
+### 1. **Testar a configuração do timer (_timer_test_read_config_):**
+
+~~~C
+minix$ lcom_run lab2 "config <timer> <field> -t <test_no>"
+~~~
+- **'timer':** 0, 1 ou 2 (qual timer ler);
+- **'field':** all, init, mode ou base (qual campo exibir);
+- **'test_no':** 0, 1, 2 ou 3 (tipo de teste).
+
+### **2. Testar a base de tempo (_timer_test_time_base_):**
+
+~~~C
+minix$ lcom_run lab2 "time <timer> <frequency> -t 0"
+~~~
+- **'timer':** 0, 1 ou 2;
+- **'timer':** frequência em HZ.
+
+### **3. Testar as interrupções (_timer_test_int_):**
+
+~~~C
+minix$ lcom_run lab2 "int <time> -t <test_no>"
+~~~
+- **'time':** duração em segundos;
+- **'test_no':** 0 ou 1.
+
+Nota que, para o teste de interrupções, não é necessário especificar o timer, pois apenas o Timer 0 é usado para medição de tempo.
+Para maior fiabilidade, é recomendado repetir os testes várias vezes, especialmente quando usando o valor 0 para <test_no>, que pode produzir comportamentos aleatórios.
 
 ## Referências:
 
