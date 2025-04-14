@@ -2,14 +2,14 @@
 #include <stdint.h>
 
 int(util_get_LSB)(uint16_t val, uint8_t *lsb) {
-  if (lsb == NULL) return 1; //Verificar se o lsb é válido
-  *lsb = (uint8_t)(val & 0xFF);  //Passar para o lsb os 8 bits menos significativos de val; podemos omitir 0xFF
+  if (lsb == NULL) return 1; // Verificar se o apontador lsb é válido
+  *lsb = (uint8_t)(val & 0xFF);  // Passar para o lsb apenas os 8 bits menos significativos de val;
   return 0;
 }
 
 int(util_get_MSB)(uint16_t val, uint8_t *msb) {
-  if (msb == NULL) return 1;
-  *msb = (uint8_t)((val >> 8) & 0xFF); //Deslocar 8 bits e passar tal como no lsb os restantes 8 bits do val para o msb
+  if (msb == NULL) return 1; // Verificar se o apontador msb é válido
+  *msb = (uint8_t)(val >> 8); //Deslocar 8 bits para a direita e passar tal como no lsb os restantes 8 bits do val para o msb
   return 0;
 }
 
