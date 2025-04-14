@@ -58,7 +58,7 @@ int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field fiel
 
 int (timer_set_frequency)(uint8_t timer, uint32_t TIMER_freq) {
   if (timer < 0 || timer > 2) return 1;
-  if (freq < 19 || freq > CPU_FREQ) return 1; //freq não pode ser menor que 19 senão gera-se um valor com mais de 16 bits
+  if (TIMER_freq < 19 || TIMER_freq > CPU_FREQ) return 1; //TIMER_freq não pode ser menor que 19 senão gera-se um valor com mais de 16 bits
 
   //Ler a configuração atual para preservar alguns bits
   uint8_t st;

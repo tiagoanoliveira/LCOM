@@ -10,8 +10,10 @@ Neste laboratório é esperado que implementes as seguintes funções de teste p
 
 ## 2. Criar o ficheiro i8042
 
-No ponto 3.2. da documentação de apoio para o [Lab3](https://pages.up.pt/~up722898/aulas/lcom2425/lab3/lab3_03.html) é fornecido uma descrição funcional do i8042, incluindo com detalhe todos os comandos possíveis do mesmo. Como é espectável não precisamos de todos, daí que deixo abaixo o conteúdo espectável do [i8042.h](https://github.com/tiagoleic02/LCOM/blob/master/lab3/i8042.h):
+No ponto 3.2. da documentação de apoio para o [Lab3](https://pages.up.pt/~up722898/aulas/lcom2425/lab3/lab3_03.html) é fornecido uma descrição funcional do i8042, incluindo com detalhe todos os comandos possíveis do mesmo. Como é expectável, não precisamos de todos, daí que deixo abaixo o conteúdo necesário para o [i8042.h](https://github.com/tiagoleic02/LCOM/blob/master/lab3/i8042.h):
+~~~C
 
+~~~
 ...
 
 > Quais os conhecimentos-base que devo ter para este lab?

@@ -145,31 +145,32 @@ A palavra de controlo inclui:
 +-------+---------+---------------------------+
 |  Bit  |  Value  |         Função            |
 +-------+---------+---------------------------+
-|  7,6  |         |     Counter selecion      |
+|  7,6  |         |      Timer selecion       |
 +-------+---------+---------------------------+
 |       |    00   |            0              |
 |       |    01   |            1              |
 |       |    10   |            2              |
 +-------+---------+---------------------------+
-|  5,4  |         |   Counter initialization  |
+|  5,4  |         |    Modes of Read/Write    |
 +-------+---------+---------------------------+
-|       |    01   |           LSB             |
-|       |    10   |           MSB             |
-|       |    11   |    LSB folowed by MSB     |
+|       |    00   |          Latch            | Apenas Leitura
+|       |    01   |           LSB             | Escrever só LSB
+|       |    10   |           MSB             | Escrever só MSB
+|       |    11   |    LSB folowed by MSB     | Escrever LSB e depois MSB
 +-------+---------+---------------------------+
-| 3,2,1 |         |   Counter initialization  |
+| 3,2,1 |         |      Operation Mode       |
 +-------+---------+---------------------------+
-|       |   000   |            0              |
-|       |   001   |            1              |
-|       |   x10   |            2              |
-|       |   x11   |            3              |
-|       |   100   |            4              |
-|       |   101   |            5              |
+|       |   000   |            0              | Interrupção terminal (one-shot)
+|       |   001   |            1              | Programável em tempo (retriggerable)
+|       |   x10   |            2              | Modo Rate Generator
+|       |   x11   |            3              | Modo Square Wave Generator (onda quadrada) <- vamos usar sempre este
+|       |   100   |            4              | Software Triggered Strobe
+|       |   101   |            5              | Hardware Triggered Strobe
 +-------+---------+---------------------------+
 |   0   |         |           BCD             |
 +-------+---------+---------------------------+
 |       |    0    |     Binary (16 bits)      |
-|       |    1    |      BCD (4 digits)       |
+|       |    1    |      BCD (4 digits)       | (raramente usado
 +-------+---------+---------------------------+
 ~~~
 
