@@ -4,20 +4,20 @@
 #include <lcom/lcf.h>
 
 /* Portas I/O */
-#define KBC_CMD_REG     0x64  /* Registo de comandos do KBC (escrita) */
-#define KBC_STATUS_REG  0x64  /* Registo de estado do KBC (leitura) */
-#define KBC_OUTPUT_BUF     0x60  /* Buffer de saída do KBC */
-#define KBC_INPUT_BUF      0x60  /* Buffer de entrada do KBC */
+#define KBC_CMD_REG       0x64  /* Registo de comandos do KBC (escrita) */
+#define KBC_STATUS_REG    0x64  /* Registo de estado do KBC (leitura) */
+#define KBC_OUTPUT_BUF    0x60  /* Buffer de saída do KBC */
+#define KBC_INPUT_BUF     0x60  /* Buffer de entrada do KBC */
 
 /* Bits do registo de estado */
-#define KBC_OUTPUT_BUFFER_FULL         BIT(0) /* Output Buffer Full - tem dados para ler */
-#define KBC_INPUT_BUFFER_FULL         BIT(1) /* Input Buffer Full - não pode receber comandos */
-#define KBC_STATUS_SYS         BIT(2) /* System Flag */
-#define KBC_STATUS_A2          BIT(3) /* A2 Input Line */
-#define KBC_STATUS_INH         BIT(4) /* Keyboard Inhibited */
-#define KBC_STATUS_AUX         BIT(5) /* Mouse Data */
-#define KBC_STATUS_TIMEOUT_ERR     BIT(6) /* Timeout Error */
-#define KBC_STATUS_PARITY_ERR      BIT(7) /* Parity Error */
+#define KBC_OUTPUT_BUFFER_FULL  BIT(0) /* Output Buffer Full - tem dados para ler */
+#define KBC_INPUT_BUFFER_FULL   BIT(1) /* Input Buffer Full - não pode receber comandos */
+#define KBC_STATUS_SYS          BIT(2) /* System Flag */
+#define KBC_STATUS_A2           BIT(3) /* A2 Input Line */
+#define KBC_STATUS_INH          BIT(4) /* Keyboard Inhibited */
+#define KBC_STATUS_AUX          BIT(5) /* Mouse Data */
+#define KBC_STATUS_TIMEOUT_ERR  BIT(6) /* Timeout Error */
+#define KBC_STATUS_PARITY_ERR   BIT(7) /* Parity Error */
 
 /* Comandos para o KBC */
 #define KBC_READ_CMD    0x20  /* Ler byte de comando */

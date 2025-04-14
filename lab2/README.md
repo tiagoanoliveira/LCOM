@@ -49,8 +49,8 @@ int sys_outb(uint8_t port, uint32_t command);
 
 **Exemplo:**
 ~~~C
-sys_outb(0x43, 0x36); // Envia um comando de configuração para o registo de controlo
-sys_outb(0x40, 0x9C); // Define parte do valor inicial no Timer 0
+sys_outb(0x43, 0x36); // Envia um comando de configuração para o registo de controlo, informando o mesmo do que pretendemos fazer (neste caso, alterar a configuração do timer 0)
+sys_outb(0x40, 0x9C); // Altera o valor do timer 0, enviando-lhe uma nova configuração
 ~~~
 #### 🔼 _sys_inb_ — **Recebe informação do timer**
 ~~~C
