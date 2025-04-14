@@ -56,16 +56,16 @@ int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field fiel
   return 0;
 }
 
-int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
+int (timer_set_frequency)(uint8_t timer, uint32_t TIMER_freq) {
   if (timer < 0 || timer > 2) return 1;
-  if (freq < 19 || freq > TIMER_FREQ) return 1; //freq não pode ser menor que 19 senão gera-se um valor com mais de 16 bits
+  if (freq < 19 || freq > CPU_FREQ) return 1; //freq não pode ser menor que 19 senão gera-se um valor com mais de 16 bits
 
   //Ler a configuração atual para preservar alguns bits
   uint8_t st;
   if ((timer_get_conf(timer, &st)) != 0) return 1;
 
   // Calcular o valor de contagem baseado na frequência
-  uint16_t initial_count = TIMER_FREQ / freq;
+  uint16_t initial_count = CPU_FREQ / TIMER_freq;
 
   // Preparar o comando para configurar o timer
   uint8_t ctrl_word = (st & 0x0F) | TIMER_LSB_MSB;  // Preservar os 4 bits inferiores e definir modo de acesso

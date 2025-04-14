@@ -83,7 +83,7 @@ Como já deves ter percebido, no caso de querermos alterar a configuração/freq
 
 Cada contador tem um valor interno que é decrementado conforme a frequência do CPU. No caso do MINIX é decrementado 1193182 vezes por segundo. Sempre que o valor do contador fica a 0 o dispositivo notifica o CPU (gera uma interrupção, veremos no ponto 6 o que é) e volta ao valor original.
 
-Por exemplo, para um CPU de frequência 100 Hz e um Timer de 4 Hz precisamos de ter o contador com valor 25. Esquema ilustrativo:
+Por exemplo, para um CPU de frequência 100 Hz e um Timer de 4 Hz precisamos de ter o contador com valor 25 (counter = CPU_frequency / TIMER_frequency). Esquema ilustrativo:
 <p align="center">
   <img src="../resources/images/Counter.png" alt="gráfico do calculo do contador">
   <p align="center">Cálculo do valor do contador interno (ver referência 1)</p>
@@ -91,9 +91,9 @@ Por exemplo, para um CPU de frequência 100 Hz e um Timer de 4 Hz precisamos de 
 Para alterar a frequência do timer selecionado, de modo a conseguirmos por exemplo contar segundos (com uma frequência de 60Hz) através das interrupções geradas, devemos calcular o valor interno.
 
 ~~~C
-#define TIMER_FREQUENCY 1193182
-uint16_t frequency = 60;
-uint16_t counter = TIMER_FREQUENCY / frequency;
+#define CPU_frequency 1193182
+uint16_t TIMER_frequency = 60;
+uint16_t counter = CPU_frequency / TIMER_frequency;
 ~~~
 
 Para configurar o timer com este valor, temos que usar o _**sys_outb**_. Mas essa função só aceita valores de 8 bits...
