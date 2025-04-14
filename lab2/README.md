@@ -122,11 +122,11 @@ O resto é feito pelo _Configuration Command_, que veremos no ponto seguinte o q
 ### Resumindo...
 
 - Cada timer tem o seu endereço (0x40, 0x41, 0x42);
-- O registo 0x43 serve para dizer ao temporizador como se deve comportar;
+- O registo 0x43 serve para dizer ao timer como se deve comportar;
 - Usamos:
   - sys_outb() → para escrever nos timers ou no registo de controlo;
   - sys_inb() → para ler os valores dos timers.
-- O temporizador é independente da velocidade do processador, o que permite medir o tempo com fiabilidade.
+- A frequência do timer é independente da velocidade do processador, o que permite medir o tempo com fiabilidade.
 
 ## **3. Programação do Timer**
 
@@ -163,14 +163,14 @@ A palavra de controlo inclui:
 |       |   000   |            0              | Interrupção terminal (one-shot)
 |       |   001   |            1              | Programável em tempo (retriggerable)
 |       |   x10   |            2              | Modo Rate Generator
-|       |   x11   |            3              | Modo Square Wave Generator (onda quadrada) <- vamos usar sempre este
+|       |   x11   |            3              | Modo Square Wave Generator (onda quadrada) <- vamos usar maioritariamente este
 |       |   100   |            4              | Software Triggered Strobe
 |       |   101   |            5              | Hardware Triggered Strobe
 +-------+---------+---------------------------+
 |   0   |         |           BCD             |
 +-------+---------+---------------------------+
 |       |    0    |     Binary (16 bits)      |
-|       |    1    |      BCD (4 digits)       | (raramente usado
+|       |    1    |      BCD (4 digits)       | (raramente usado)
 +-------+---------+---------------------------+
 ~~~
 
@@ -178,12 +178,12 @@ A palavra de controlo inclui:
 
 Tal como já foi visto na **Nota #2**, irei agora mostrar na prática como se processa todos os cálculos, incluindo a aplicação do "LSB followed by MSB" no _configuration command_.
 ~~~C
-  //Ler a configuração atual para preservar alguns bits (ver nota 3)
+  //Ler a configuração atual para preservar alguns bits
   uint8_t st;
   if ((timer_get_conf(timer, &st)) != 0) return 1;
 
   // Calcular o valor de contagem baseado na frequência
-  uint16_t initial_count = TIMER_FREQ / freq;
+  uint16_t initial_count = CPU_FREQ / TIMER_freq;
 
   // Preparar o comando para configurar o timer
   uint8_t ctrl_word = (st & 0x0F) | TIMER_LSB_MSB;  // Preservar os 4 bits inferiores e definir modo de acesso
