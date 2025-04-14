@@ -186,7 +186,7 @@ Tal como já foi visto na **Nota #2**, irei agora mostrar na prática como se pr
   uint16_t initial_count = CPU_FREQ / TIMER_freq;
 
   // Preparar o comando para configurar o timer
-  uint8_t ctrl_word = (st & 0x0F) | TIMER_LSB_MSB;  // Preservar os 4 bits inferiores e definir modo de acesso
+  uint8_t ctrl_word = (st & 0x0F) | TIMER_LSB_MSB;  // Preservar os 4 bits menos significativos e definir modo de acesso
 
   // Selecionar o timer correto
   switch (timer) {
@@ -327,6 +327,10 @@ Além disso, é boa prática:
 ## **6. Interrupções**
 
 As interrupções são mecanismos fundamentais nos sistemas computacionais modernos que **permitem a comunicação entre hardware e software de forma eficiente**. Sem elas, a comunicação entre o CPU e os dispositivos I/O tem que ser feita via **polling**, em que o CPU monitoriza o estado do dispositivo periodicamente e quando este tiver alguma informação útil ao sistema essa informação é tratada - desaconselhado geralmente, **pois gasta muitos ciclos de relógio na monitorização**.
+
+<p align="center">
+  <img src="../resources/images/Polling_Interrupts_versão1.png" alt="Polling vs. Interrupts">
+  <p align="center">Filha pergunta ao pai se já chegamos a todo o minuto. No exemplo de Interrupts, o pai diz à filha quando chegam e só aí é que ela acorda. Elaborado com IA.</p>
 
 ### **_O que são interrupções?_**
 

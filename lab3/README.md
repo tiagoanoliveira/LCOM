@@ -1,20 +1,44 @@
-# Lab 3 - Keyboard
+# Lab 3 - i8042, the PC Keyboard and its Controller
 
-## 1. Funções de teste esperadas
+## 1. Introdução ao teclado
+
+
+
+
+## 2. Funções de teste esperadas
 
 Neste laboratório é esperado que implementes as seguintes funções de teste principais:
 - **kbd_test_scan** - Leitura de scancodes usando um handler de interrupções em C;
 - **kbd_test_poll** - Leitura de scancodes via polling (sem interrupções);
 - **kbd_test_timed_scan** - Combinar os handlers de interrupções do teclado e do timer.
 
+## 3. Ficheiros necessários
 
-## 2. Criar o ficheiro i8042
+Neste lab irás precisar de criar os seguintes ficheiros:
+- **i8042.h:** Para definir constantes relacionadas com o controlador do teclado (KBC);
+- **keyboard.h:** Para declarar as funções relacionadas com o teclado;
+- **keyboard.c:** Para implementar as funções relacionadas com o teclado.
 
-No ponto 3.2. da documentação de apoio para o [Lab3](https://pages.up.pt/~up722898/aulas/lcom2425/lab3/lab3_03.html) é fornecido uma descrição funcional do i8042, incluindo com detalhe todos os comandos possíveis do mesmo. Como é expectável, não precisamos de todos, daí que deixo abaixo o conteúdo necesário para o [i8042.h](https://github.com/tiagoleic02/LCOM/blob/master/lab3/i8042.h):
-~~~C
+Os ficheiros i8254.h, timer.c e utils.c já existem no Lab2, portanto podes fazer CTRL+C - CTRL+V para a pasta deste lab.
 
-~~~
-...
+## 4. Definir as constantes no i8042.h
+
+No ponto 3.2. da documentação de apoio para o [Lab3](https://pages.up.pt/~up722898/aulas/lcom2425/lab3/lab3_03.html) é fornecido uma descrição funcional do i8042, incluindo com detalhe todos os comandos possíveis do mesmo. No entanto, como é expectável, não precisamos de todos, pois apenas precisas de definir constantes para:
+- Endereços das portas de I/O do KBC;
+- Códigos de comando para o KBC;
+- Bits de estado do KBC;
+- O IRQ do teclado.
+
+## 5. Implementar funções básicas do teclado
+
+No ficheiro keyboard.c
+
+
+
+
+
+
+
 
 > Quais os conhecimentos-base que devo ter para este lab?
 
