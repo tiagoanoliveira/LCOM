@@ -40,7 +40,7 @@
 
 /* Others */
 #define KBC_IRQ 1                      // IRQ do teclado
-#define MAX_ATTEMPTS 3                 // Número máximo de tentativas para ler/escrever
+#define MAX_ATTEMPTS 10                // Número máximo de tentativas para ler/escrever
 #define KBC_DELAY_US 20000             // Delay entre tentativas (20ms)
 
 #endif
