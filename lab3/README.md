@@ -2,9 +2,17 @@
 
 ## 1. PC Keyboard
 
-O teclado é um dos dispositivos de entrada mais fundamentais de um computador. No entanto, o seu funcionamento interno é mais complexo do que aparenta. Quando alguém pressiona ou larga uma tecla, o teclado não envia diretamente o código ASCII ou outra codificação comum do carácter correspondente, mas sim um código específico chamado **scancode.**
+O teclado é um dos dispositivos de entrada mais fundamentais de um computador. Para compreender o funcionamento interno de um teclado, é essencial entender como os sinais físicos sáo convertidos em informação digital interpretável pelo computador.
 
-Os scancodes são códigos que dependem apenas da posição física da tecla no teclado, independentemente do idioma ou layout utilizado. Esta abordagem permite aos fabricantes de teclados uma grande flexibilidade, uma vez que o mesmo _hardware_ pode ser utilizado em diferentes países com diferentes configurações de teclado - ou seja, basta mudar os autocolantes do teclado e o idioma configurado no sistema operativo e voilá!
+### _Scancodes:_ a linguagem do teclado
+
+Quando um utilizador interage com o teclado, o hardware não transmite diretamente o código ASCII ou Unicode correspondente à tecla pressionada. Em vez disso, gera um **scancode** — um código numérico que representa a posição física da tecla no teclado, independente do idioma, layout ou fabricante.
+
+Esta abordagem permite aos fabricantes de teclados uma grande flexibilidade, uma vez que o mesmo _hardware_ pode ser utilizado em diferentes países com diferentes configurações de teclado - ou seja, basta mudar os autocolantes do teclado e o idioma configurado no sistema operativo e voilá!
+
+O sistema operativo utiliza tabelas de mapeamento **(keymaps)** para converter os scancodes recebidos no texto correspondente ao idioma configurado. É por isso que podemos mudar o layout do teclado via software sem alterar o hardware.
+
+Estes scancodes são então processados pelo controlador do teclado (Keyboard Controller), responsável por gerir a comunicação com o processador e gerar interrupções ou disponibilizar os dados para leitura, conforme o método usado — interrupções, polling ou com timeout.
 
 Existem dois tipos principais de scancodes:
 
@@ -16,43 +24,122 @@ Geralmente, o `breakcode` de uma tecla difere do `makecode` pelo bit mais signif
 Uma forma fácil de saber se um scancode era ou não um breakcode seria:
 ~~~C
 bool is_breakcode(uint8_t scancode) {
-   // Verifica se o bit mais significativo (bit 7) está ativo
-   // Se estiver ativo (1), é um breakcode
-   // Se não estiver ativo (0), é um makecode
-   return (scancode & BIT(7)) != 0;
+   /* Verifica se o bit mais significativo (bit 7) está ativo
+   Se estiver ativo, é um breakcode
+   Se não estiver ativo, é um makecode */
+   if (scancode & BIT(7)){
+      returne true;
+   }
+   else {
+      return false;
+   }
 }
 ~~~
-A maioria dos scancodes de PC têm um byte de comprimento, embora algumas teclas especiais tenham scancodes mais longos. Scancodes de dois bytes geralmente utilizam 0xE0 como primeiro byte, tanto no `makecode` quanto no `breakcode`.
+Para algumas teclas especiais (como teclas de função ou teclas de controlo adicionais), os scancodes podem ter dois bytes. Scancodes de dois bytes geralmente utilizam 0xE0 como primeiro byte, tanto no `makecode` quanto no `breakcode`.
 
 ## 2. O Controlador do Teclado (KBC - i8042)
 
 Nos computadores modernos, a comunicação entre o teclado e o processador é mediada por um componente eletrónico que fornece a funcionalidade do i8042, conhecido como **Keyboard Controller (KBC)**. Este controlador não gere apenas a comunicação com o teclado, mas também pode controlar o rato de dois botões em muitos sistemas.
 
-O KBC funciona com uma arquitetura baseada em portas de entrada/saída e registos:
+O KBC utiliza um sistema de portas de entrada/saída e registos que permitem a comunicação bidirecional:
 
 - **Porta do Status Register (0x64):** Permite ler o estado atual do controlador;
 - **Porta de Comandos (0x64):** Usada para enviar comandos ao controlador;
 - **Porta de Dados (0x60):** Usada para ler dados do controlador ou enviar dados para o controlador.
 
-O registo de estado (status register) fornece informações importantes, como:
+O registo de estado (status register) é formado por 8 bits e fornece informações importantes, como:
 
-- Se ocorreu um erro de paridade (bit 7);
-- Se ocorreu um erro de timeout (bit 6);
-- Se o buffer de entrada está cheio (bit 1);
-- Se o buffer de saída está cheio (bit 0).
+~~~lua
++-------+---------+---------------------------+
+|  Bit  | Função quando ativo (1)             |
++-------+---------+---------------------------+
+|   7   | Erro de paridade detetado           |
++-------+---------+---------------------------+
+|   6   | Ocorreu timeout                     |
++-------+---------+---------------------------+
+|   5   | Mouse data                          |
++-------+---------+---------------------------+
+|   4   | Valor específico da implementação   |
++-------+---------+---------------------------+
+|   3   | Comando / Dado (1=comando; 0=dado)  |
++-------+---------+---------------------------+
+|   2   | Estado do sistema                   |
++-------+---------+---------------------------+
+|   1   | Buffer de entrada está cheio        |
++-------+---------+---------------------------+
+|   0   | Buffer de saída está cheio          |
++-------+---------+---------------------------+
+~~~
+Exemplo de leitura do status e análise do estado do _input buffer_:
+~~~C
+uint8_t read_KBC_status(uint8_t *status) {
+    return util_sys_inb(0x64, status);
+}
+
+void check_input_buffer() {
+    uint8_t status;
+    read_KBC_status(&status);
+    
+    if (status & BIT(1)) {
+        printf("Input buffer is full, can't write now\n");
+    } else {
+        printf("Input buffer is available for writing\n");
+    }
+}
+~~~
 
 ### Interações com o KBC
 
 Quando interagimos com o KBC, devem ser feitas duas considerações importantes:
 
-- O buffer de entrada é finito e pode estar cheio, impedindo a inserção de novos comandos;
-- O KBC é relativamente lento (ordem de milissegundos), obrigando a realizar várias tentativas para uma só operação.
+- O **buffer de entrada é finito e pode estar cheio**, impedindo a inserção de novos comandos;
+- O **KBC é relativamente lento** (ordem de milissegundos), obrigando a realizar várias tentativas para uma só operação.
 
-Para lidar com essas limitações, é comum implementar um ciclo _while_, onde os comandos são repetidos após pequenos atrasos se não forem bem-sucedidos inicialmente.
+Para lidar com essas limitações, é necessária uma estratégia de comunicação robusta, geralmente implementada com tentativas múltiplas e tempos de espera. Geralmente 10 tentativas e 20 milissegundos entre cada uma é suficiente (vê com mais detalhe o ponto 4.2 de "Minix 3 Notes - Lab 3")
+
+Um exemplo de escrita de comando para o KBC com múltiplas tentativas poderia ser:
+~~~C
+int write_KBC_command(uint8_t port, uint8_t commandByte) {
+    uint8_t status;
+    uint8_t attempts = 10;  // Número máximo de tentativas
+
+    while (attempts > 0) {
+        // Verificar se o buffer de entrada está disponível
+        if (read_KBC_status(&status) != 0) {
+            printf("Error: Failed to read status\n");
+            return 1;
+        }
+
+        // Se o buffer de entrada não estiver cheio, podemos escrever
+        if ((status & BIT(1)) == 0) {
+            if (sys_outb(port, commandByte) != 0) {
+                printf("Error: Failed to write command\n");
+                return 1;
+            }
+            return 0;  // Sucesso: comando inserido
+        }
+        
+        // Esperar 20ms antes de tentar novamente
+        tickdelay(micros_to_ticks(20000));
+        attempts--;
+    }
+    
+    printf("Error: Maximum attempts exceeded\n");
+    return 1;  // Falha após esgotar as tentativas
+}
+~~~
+
+Da mesma forma, a leitura do buffer de saída requer verificação do status e tratamento de erros, com uma estrutura muito semelhante à do exemplo anterior.
 
 ### Modos de Operação
 
 O KBC pode operar em dois modos principais:
+- **modo de interrupções;**
+- **modo de polling.**
+
+<p align="center">
+  <img src="../resources/images/Polling_Interrupts_versão1.png" alt="Polling vs. Interrupts" width="50%">
+  <p align="center">Filha pergunta ao pai se já chegaram a todo o minuto. No exemplo de Interrupts, o pai diz à filha quando chegam e só aí é que ela acorda. Elaborado com IA.</p>
 
 #### Modo de Interrupções
 
@@ -60,15 +147,17 @@ Neste modo, sempre que uma tecla é pressionada, o KBC gera uma interrupção (I
 
 As interrupções oferecem um método eficiente para lidar com entradas do teclado, pois o processador só é interrompido quando realmente há dados a serem processados.
 
+~~~C
+~~~
+
 #### Modo de Polling
 
 No modo de polling, o software verifica continuamente o estado do KBC para determinar se há novos dados a serem lidos. Embora menos eficiente em termos de uso do processador, este método é mais simples de implementar e útil em certas situações.
 
 É importante notar que, ao usar polling em sistemas como o Minix 3, é essencial restaurar o modo de interrupções antes de encerrar o programa, caso contrário, o teclado pode parar de responder.
 
-<p align="center">
-  <img src="../resources/images/Polling_Interrupts_versão1.png" alt="Polling vs. Interrupts" width="60%">
-  <p align="center">Filha pergunta ao pai se já chegaram a todo o minuto. No exemplo de Interrupts, o pai diz à filha quando chegam e só aí é que ela acorda. Elaborado com IA.</p>
+
+
 
 ## 2. Funções de teste esperadas
 
