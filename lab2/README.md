@@ -182,9 +182,6 @@ Tal como já foi visto na **Nota #2**, irei agora mostrar na prática como se pr
   uint8_t st;
   if ((timer_get_conf(timer, &st)) != 0) return 1;
 
-  // Calcular o valor de contagem baseado na frequência
-  uint16_t initial_count = CPU_FREQ / TIMER_freq;
-
   // Preparar o comando para configurar o timer
   uint8_t ctrl_word = (st & 0x0F) | TIMER_LSB_MSB;  // Preservar os 4 bits menos significativos e definir modo de acesso
 
@@ -196,6 +193,9 @@ Tal como já foi visto na **Nota #2**, irei agora mostrar na prática como se pr
   }
   //Enviar o comando para o registo de controlo
   if ((sys_outb(TIMER_CTRL, ctrl_word)) != 0) return 1;
+  
+    // Calcular o valor de contagem baseado na frequência
+  uint16_t initial_count = CPU_FREQ / TIMER_freq;
 
   //Obter o LSB e MSB do valor de contagem
   uint8_t lsb, msb;

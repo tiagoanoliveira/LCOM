@@ -15,7 +15,7 @@ int (timer_get_conf)(uint8_t timer, uint8_t *st) {
   //Enviar comando para o registo de controlo
   if (sys_outb(TIMER_CTRL, cmd) != 0) return 1;
 
-  //Ler o status do timer selecionado
+  //Ler o valor do timer selecionado
   if(util_sys_inb(TIMER_0 + timer, st) != 0) return 1;
 
   return 0;
@@ -64,9 +64,6 @@ int (timer_set_frequency)(uint8_t timer, uint32_t TIMER_freq) {
   uint8_t st;
   if ((timer_get_conf(timer, &st)) != 0) return 1;
 
-  // Calcular o valor de contagem baseado na frequência
-  uint16_t initial_count = CPU_FREQ / TIMER_freq;
-
   // Preparar o comando para configurar o timer
   uint8_t ctrl_word = (st & 0x0F) | TIMER_LSB_MSB;  // Preservar os 4 bits inferiores e definir modo de acesso
 
@@ -78,6 +75,9 @@ int (timer_set_frequency)(uint8_t timer, uint32_t TIMER_freq) {
   }
   //Enviar o comando para o registo de controlo
   if ((sys_outb(TIMER_CTRL, ctrl_word)) != 0) return 1;
+
+  // Calcular o valor de contagem baseado na frequência
+  uint16_t initial_count = CPU_FREQ / TIMER_freq;
 
   //Obter o LSB e MSB do valor de contagem
   uint8_t lsb, msb;
