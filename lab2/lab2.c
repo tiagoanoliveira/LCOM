@@ -43,12 +43,12 @@ int(timer_test_read_config)(uint8_t timer, enum timer_status_field field) {
   return 0;
 }
 
-int(timer_test_time_base)(uint8_t timer, uint32_t freq) {
+int(timer_test_time_base)(uint8_t timer, uint32_t TIMER_freq) {
   if (timer < 0 || timer > 2) return 1;
-  if (freq < 19 || freq > TIMER_FREQ) return 1;
+  if (TIMER_freq < 19 || TIMER_freq > CPU_FREQ) return 1;
 
   //Configurar a frequência do timer
-  if (timer_set_frequency(timer, freq) != 0) return 1;
+  if (timer_set_frequency(timer, TIMER_freq) != 0) return 1;
 
   return 0;
 }

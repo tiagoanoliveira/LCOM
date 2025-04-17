@@ -1,31 +1,19 @@
-#ifndef _LCOM_KEYBOARD_H_
-#define _LCOM_KEYBOARD_H_
+#ifndef __KEYBOARD_H
+#define __KEYBOARD_H
 
 #include <lcom/lcf.h>
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "utils.h"
 #include "i8042.h"
 
-// Global variables shared with handler
-extern uint8_t scancode[2];     // Para guardar os bytes do scancode atual
-extern bool two_byte;           // Indica se o scancode é de 2 bytes
-extern uint32_t sys_inb_counter; // Contador de chamadas a sys_inb (LAB3)
+uint8_t scancode;
+bool two_type;
+int error_flag;
 
-// Interrupt handler
-void (kbc_ih)(void);
+int (kbd_subscribe_int)(uint8_t *bit_no); // Subscreve as interrupções do teclado
 
-// Auxiliar functions to interact with KBC
-int (kbc_read_status)(uint8_t *status);
-int (kbc_read_output)(uint8_t *data, uint8_t *status);
+int (kbd_unsubscribe_int)(); // Cancela a subscrição das interrupções do teclado
 
-bool (kbc_has_parity_error)(uint8_t status);
-bool (kbc_has_timeout_error)(uint8_t status);
+void (kbc_ih)(); // Manipulador de interrupções do teclado
 
-int (kbc_write_command)(uint8_t cmd);
+int (kbd_restore_interrupts)(); // Restaura a configuração do teclado, reativando as interrupções após polling
 
-int (keyboard_subscribe_int)(uint8_t *bit_no);
-int (keyboard_unsubscribe_int)(void);
-
-#endif /* _LCOM_KEYBOARD_H_ */
+#endif
