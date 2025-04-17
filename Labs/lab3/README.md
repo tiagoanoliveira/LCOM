@@ -3,9 +3,9 @@
 ## 1. Funções de teste esperadas
 
 Neste laboratório é esperado que implementes as seguintes funções de teste principais:
-- **kbd_test_scan** - Leitura de scancodes usando um handler de interrupções em C;
-- **kbd_test_poll** - Leitura de scancodes via polling (sem interrupções);
-- **kbd_test_timed_scan** - Combinar os handlers de interrupções do teclado e do timer.
+- **`kbd_test_scan`** - Leitura de scancodes usando um handler de interrupções em C;
+- **`kbd_test_poll`** - Leitura de scancodes via polling (sem interrupções);
+- **`kbd_test_timed_scan`** - Combinar os handlers de interrupções do teclado e do timer.
 
 ## 2. Ponto de partida: ficheiros necessários
 
@@ -542,7 +542,7 @@ O `-t` define qual cenário de teste usar. Aqui está o que significa cada núme
 +--------------+--------------------------------------------------------------------+--------------------------+
 ~~~
 
-Para poderes testar qual o makecode ou breakcode de algumas teclas, podes usar apenas `lcom_run lab3 "scan"` e vais obter o scancode das teclas que pressionares!
+Para poderes testar qual o makecode ou breakcode de algumas teclas, podes usar apenas `lcom_run lab3 "scan"` e vais obter o scancode das teclas que pressionares! Para terminares o processo, faz `ESC`.
 
 ## 11. Referências
 
