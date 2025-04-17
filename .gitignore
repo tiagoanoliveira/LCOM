@@ -1,9 +1,7 @@
-a.out
-a.exe
 .idea
 .vscode
 *.o
 *.gdbinit
 *.clang-format
-*output.txt
-*trace.txt
+lab3/output.txt
+lab3/trace.txt
