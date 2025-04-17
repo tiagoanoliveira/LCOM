@@ -11,7 +11,30 @@ Para implementar as duas primeiras funções recomendo a leitura atenta na ínte
 
 Para a última função, não só é necessário compreender como funciona a comunicação com os timers como também é preciso perceber o que são interrupções e como são abordadas. Para tal recomendo a leitura do [ponto 6](https://github.com/tiagoleic02/LCOM/tree/master/lab2#6-interrup%C3%A7%C3%B5es).
 
-## **2. Funcionamento do Timer (i8254)**
+## 2. Ponto de partida: ficheiros necessários
+
+Neste lab irás precisar de criar os seguintes ficheiros:
+- **`utils.c`**: Para implementar as funções relacionadas com o teclado:
+  - `util_sys_inb` - Conversão do apontador de 32 bits em 8 bits;
+  - `util_get_LSB` - Obter os LSB do counter;
+  - `util_get_MSB` - Obter os MSB do counter.
+- **`timer.c`**: Implementa funções de baixo nível para comunicação direta com o i8042:
+  - `timer_get_conf` - Obter a configuração atual de um dado timer
+  - `timer_display_conf` - Mostrar a configuração atual de um dado timer;
+  - `timer_set_frequency` - Altera a configuração (frequência) de um dado timer;
+  - `timer_subscribe_int` - Subscreve interrupções do timer;
+  - `timer_unsubscribe_int` - Cancela a subscrição de interrupções.
+
+Também irás precisar do ficheiro `i8254.h` que já vem definido e do `lab2.c`, fornecido nos documentos do laboratório.
+
+Neste [link]() tens o molde deste lab que podes descarregar para trabalhar a partir do mesmo. Tens ao teu dispôr:
+- Ficheiro `i8254.h`;
+- Ficheiros acima descritos com os `#includes` já prontos e funções declaradas;
+- `lab2.c` conforme é fornecido nos documentos de LCOM;
+
+Trabalha nos ficheiros que te forneci (`.c`) seguindo o guião deste laboratório e se tiveres alguma dúvida ou sugestão de melhoria abre uma [discussão](https://github.com/tiagoleic02/LCOM/discussions/new/choose).
+
+## **3. Funcionamento do Timer (i8254)**
 
 ### **📌 O que é?**
 
@@ -128,7 +151,7 @@ O resto é feito pelo _Configuration Command_, que veremos no ponto seguinte o q
   - sys_inb() → para ler os valores dos timers.
 - A frequência do timer é independente da velocidade do processador, o que permite medir o tempo com fiabilidade.
 
-## **3. Programação do Timer**
+## **4. Programação do Timer**
 
 Para programar um timer é necessário:
 - **Escrever um código de 8 bits no registo de controlo 0x43** (especificando o modo de operação);
@@ -213,7 +236,7 @@ Como penso ser óbvio, devem implementar uma configuração semelhante a esta no
 
 Sempre que quisermos enviar uma nova configuração para um timer, não só devemos avisar o registo de controlo como também devemos consultar primeiro qual a configuração que lá está e alterar nessa configuração apenas o necessário para evitar erros desnecesários. É por isso mesmo que chamamos a função _timer_get_config_ dentro da função _timer_set_frequency_
 
-## **4. Leitura da configuração**
+## **5. Leitura da configuração**
 
 Tal como quando vamos escrever, para ler a configuração de um timer é necessário usar o comando Read-Back.
 Para ler temos então que:
@@ -253,7 +276,7 @@ Para ler temos então que:
 ~~~
 2. _Ler os 8 bits do timer selecionado através do comando **sys_inb**._
 
-## **5. Implementação**
+## **6. Implementação**
 
 Já vimos toda a base que precisamos para implementar as duas primeiras funções referidas no ponto 1.
 
@@ -324,7 +347,7 @@ Além disso, é boa prática:
     - Usar mensagens de erro informativas (por exemplo com perror() ou strerror() em C).
 
 
-## **6. Interrupções**
+## **7. Interrupções**
 
 As interrupções são mecanismos fundamentais nos sistemas computacionais modernos que **permitem a comunicação entre hardware e software de forma eficiente**. Sem elas, a comunicação entre o CPU e os dispositivos I/O tem que ser feita via **polling**, em que o CPU monitoriza o estado do dispositivo periodicamente e quando este tiver alguma informação útil ao sistema essa informação é tratada - desaconselhado geralmente, **pois gasta muitos ciclos de relógio na monitorização**.
 
@@ -414,7 +437,7 @@ Importância:
 - É usado para identificar qual o dispositivo que gerou uma interrupção (quando múltiplos dispositivos compartilham o mesmo IRQ);
 - Serve como um ‘token’ que conecta o manipulador ao sistema de interrupções;
 
-## **7. Implementação do _timer_test_int_**
+## **8. Implementação do _timer_test_int_**
 
 Esta função já é dada praticamente concluída - basta consultar o ponto 5.2 da secção "Minix 3 Notes" da documentação para os labs fornecida (ver [referência 3](https://github.com/tiagoleic02/LCOM/tree/master/lab2#refer%C3%AAncias))
 
@@ -465,7 +488,7 @@ int(timer_test_int)(uint8_t time) {
   return 0;
 }
 ~~~
-## **8. Compilação**
+## **9. Compilação**
 
 O processo de compilação é direto graças ao Makefile fornecido. Este Makefile está configurado para compilar o programa usando os arquivos de código-fonte especificados na variável SRCS (lab2.c, timer.c e utils.c).
 
@@ -482,7 +505,7 @@ minix$ make
 ~~~
 O comando _**make clean**_ remove todos os arquivos objeto (.o) gerados por compilações anteriores, enquanto _**make**_ compila os arquivos fonte modificados desde a última compilação.
 
-## **9. Teste do código**
+## **10. Teste do código**
 
 A biblioteca LCF (LCOM Framework) fornece um modo de teste para verificar se o teu código funciona como esperado. Para testar, usa o comando _lcom_run_ com argumentos específicos:
 
@@ -520,7 +543,7 @@ minix$ lcom_run lab2 "int <time> -t <test_no>"
 Nota que, para o teste de interrupções, não é necessário especificar o timer, pois apenas o Timer 0 é usado para medição de tempo.
 Para maior fiabilidade, é recomendado repetir os testes várias vezes, especialmente quando usando o valor 0 para <test_no>, que pode produzir comportamentos aleatórios.
 
-## Referências:
+## 11. Referências:
 
 1. Fabio Sá, repositório pessoal do [GitHub](https://github.com/Fabio-A-Sa/Y2S2-LabComputadores/tree/main/Labs/lab2#para-configurar-o-timer---configuration-command). A informação presente na nota 2 e na explicação sobre como funcionam as interrupções foram adaptadas do repositório do Fábio, sendo que a imagem usada também é da sua autoria.
 2. Slides aulas teóricas de LCOM 2024/2025. Esses slides ficarão guardados na pasta resources/slides para referência futura (e porque, por vezes, os docentes gostam de ocultar o conteúdo do Moodle...)

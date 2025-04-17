@@ -3,7 +3,7 @@
 Neste repositório aglomerei todos os meus labs da cadeira de Laboratório de Computadores, incluindo algumas explicações e guias passo-a-passo. Todo o código dos labs está 100% funcional no entanto não recomendo a cópia do conteúdo dos mesmos. Além disso, todos os guiões e comentários de código estão feitos em português para facilitar a compreensão da esmagadora maioria dos discentes.
 
 Apesar da complexidade de alguns labs, a compreensão dos mesmos não deverá ser dificil se for feita uma leitura atenda dos guiões que acompanham cada um deles.
-> Se detetares erros, informação em falta, algo que poderia estar 'mais bem explicado' ou mesmo após a leitura atenta dos guiões dos respetivos labs continuares com dúvidas, por favor contacta-me via Discord - @tigas6473
+> Se detetares erros, informação em falta, algo que poderia estar 'mais bem explicado' ou mesmo após a leitura atenta dos guiões dos respetivos labs continuares com dúvidas, por favor abre uma [discussão](https://github.com/tiagoleic02/LCOM/discussions/new/choose).
 
 
 - [Lab0](https://github.com/tiagoleic02/lcom/tree/master/lab0)

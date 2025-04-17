@@ -7,21 +7,29 @@ Neste laboratório é esperado que implementes as seguintes funções de teste p
 - **kbd_test_poll** - Leitura de scancodes via polling (sem interrupções);
 - **kbd_test_timed_scan** - Combinar os handlers de interrupções do teclado e do timer.
 
-## 2. Ficheiros necessários
+## 2. Ponto de partida: ficheiros necessários
 
 Neste lab irás precisar de criar os seguintes ficheiros:
 - **`i8042.h`:** Para definir constantes relacionadas com o controlador do teclado (KBC);
-- **`keyboard.c`** (com `keyboard.h` correspondente): Para implementar as funções relacionadas com o teclado:
+- **`keyboard.c`**: Para implementar as funções relacionadas com o teclado:
   - `kbd_subscribe_int` - Subscreve interrupções do teclado em modo exclusivo;
   - `kbd_unsubscribe_int` - Cancela a subscrição de interrupções;
   - `kbc_ih` - Interrupt handler para processar interrupções do teclado;
-- **`KBC.c`** (com `KBC.h` correspondente): Implementa funções de baixo nível para comunicação direta com o i8042:
+- **`KBC.c`**: Implementa funções de baixo nível para comunicação direta com o i8042:
   - `kbc_read_status` - Lê o registo de status do KBC;
   - `kbc_read_output` - Lê o buffer de saída do KBC, verificando erros de paridade e timeout;
   - `kbc_write_command` - Escreve um comando no KBC, lidando com tentativas e atrasos;
   - `kbc_restore_interrupts` - Restaura a configuração do KBC para permitir interrupções.
 
-Também irás precisar dos ficheiros i8254.h, timer.c e utils.c que já existem no Lab2, portanto podes fazer CTRL+C - CTRL+V para a pasta deste lab.
+Também irás precisar dos ficheiros `i8254.h`, `timer.c` e `utils.c` que já existem no Lab2, portanto podes fazer CTRL+C - CTRL+V para a pasta deste lab. 
+
+Neste link tens o molde deste lab que podes descarregar para trabalhar a partir do mesmo. Tens ao teu dispôr:
+- Ficheiros `i8254.h`, `timer.c` e `utils.c`;
+- Ficheiros acima descritos com os `#includes` já prontos e funções declaradas;
+- Todos os ficheiros `.h` que considero necessários para nada falhar e não haver conflitos ou erros inesperados;
+- `lab3.c` conforme é fornecido nos documentos de LCOM;
+
+Trabalha nos ficheiros que te forneci (`.c`) seguindo o guião deste laboratório e se tiveres alguma dúvida ou sugestão de melhoria abre uma [discussão](https://github.com/tiagoleic02/LCOM/discussions/new/choose).
 
 ## 3. Definir as constantes no i8042.h
 
@@ -30,6 +38,8 @@ No ponto 3.2. da documentação de apoio para o [Lab3](https://pages.up.pt/~up72
 - Códigos de comando para o KBC;
 - Bits de estado do KBC;
 - O IRQ do teclado.
+
+Nos ficheiros de base que te forneço, já tens o `i8254.h` construído para que não percas tempo com tal tarefa!
 
 ## 4. PC Keyboard
 
