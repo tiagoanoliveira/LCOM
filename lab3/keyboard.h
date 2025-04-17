@@ -1,31 +1,49 @@
-#ifndef _LCOM_KEYBOARD_H_
-#define _LCOM_KEYBOARD_H_
+#ifndef __KEYBOARD_H
+#define __KEYBOARD_H
 
 #include <lcom/lcf.h>
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "utils.h"
 #include "i8042.h"
 
-// Global variables shared with handler
-extern uint8_t scancode[2];     // Para guardar os bytes do scancode atual
-extern bool two_byte;           // Indica se o scancode é de 2 bytes
-extern uint32_t sys_inb_counter; // Contador de chamadas a sys_inb (LAB3)
+/**
+ * @brief Subscreve as interrupções do teclado
+ *
+ * @param bit_no Endereço da variável onde será guardada a máscara para detetar interrupções
+ * @return int 0 em caso de sucesso, 1 caso contrário
+ */
+int keyboard_subscribe_int(uint8_t *bit_no);
 
-// Interrupt handler
-void (kbc_ih)(void);
+/**
+ * @brief Cancela a subscrição das interrupções do teclado
+ *
+ * @return int 0 em caso de sucesso, 1 caso contrário
+ */
+int keyboard_unsubscribe_int();
 
-// Auxiliar functions to interact with KBC
-int (kbc_read_status)(uint8_t *status);
-int (kbc_read_output)(uint8_t *data, uint8_t *status);
+/**
+ * @brief Manipulador de interrupções do teclado
+ */
+void kbc_ih();
 
-bool (kbc_has_parity_error)(uint8_t status);
-bool (kbc_has_timeout_error)(uint8_t status);
+/**
+ * @brief Restaura a configuração do teclado, ativando as interrupções
+ *
+ * @return int 0 em caso de sucesso, 1 caso contrário
+ */
+int keyboard_restore();
 
-int (kbc_write_command)(uint8_t cmd);
+/**
+ * @brief Obtém o scancode mais recente recebido do teclado
+ *
+ * @return uint8_t Scancode recebido
+ */
+uint8_t keyboard_get_scancode();
 
-int (keyboard_subscribe_int)(uint8_t *bit_no);
-int (keyboard_unsubscribe_int)(void);
+/**
+ * @brief Lê o próximo scancode do teclado em modo polling
+ *
+ * @param scancode Apontador para onde o scancode será escrito
+ * @return int 0 em caso de sucesso, 1 caso contrário
+ */
+int keyboard_read_scancode(uint8_t *scancode);
 
-#endif /* _LCOM_KEYBOARD_H_ */
+#endif

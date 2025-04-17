@@ -2,8 +2,9 @@
 #include <lcom/timer.h>
 #include <stdint.h>
 #include "i8254.h"
+#include "i8042.h"
 
-int hook_id = TIMER0_IRQ;  // Usar o IRQ do Timer 0
+int hook_id = KBC_IRQ;
 int counter = 0;
 
 int (timer_get_conf)(uint8_t timer, uint8_t *st) {

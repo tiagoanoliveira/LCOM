@@ -12,19 +12,14 @@ Neste laboratório é esperado que implementes as seguintes funções de teste p
 Neste lab irás precisar de criar os seguintes ficheiros:
 - **`i8042.h`:** Para definir constantes relacionadas com o controlador do teclado (KBC);
 - **`keyboard.c`** (com `keyboard.h` correspondente): Para implementar as funções relacionadas com o teclado:
-  - `keyboard_subscribe_int` - Subscreve interrupções do teclado em modo exclusivo;
-  - `keyboard_unsubscribe_int` - Cancela a subscrição de interrupções;
+  - `kbd_subscribe_int` - Subscreve interrupções do teclado em modo exclusivo;
+  - `kbd_unsubscribe_int` - Cancela a subscrição de interrupções;
   - `kbc_ih` - Interrupt handler para processar interrupções do teclado;
-  - `get_scancode` - Obtém o scancode do teclado;
-  - `is_breakcode` - Verifica se um scancode é um makecode ou breakcode;
-  - `is_two_byte_scancode` - Verifica se um scancode tem dois bytes.
-- **KBC.c** (com KBC.h correspondente): Implementa funções de baixo nível para comunicação direta com o i8042:
-  - `read_KBC_status` - Lê o registo de status do KBC;
-  - `write_KBC_command` - Escreve um comando no KBC, lidando com tentativas e atrasos;
-  - `read_KBC_output` - Lê o buffer de saída do KBC, verificando erros de paridade e timeout;
-  - `kbc_restore` - Restaura a configuração do KBC para permitir interrupções.
-- 
-
+- **`KBC.c`** (com KBC.h correspondente): Implementa funções de baixo nível para comunicação direta com o i8042:
+  - `kbc_read_status` - Lê o registo de status do KBC;
+  - `kbc_read_output` - Lê o buffer de saída do KBC, verificando erros de paridade e timeout;
+  - `kbc_write_command` - Escreve um comando no KBC, lidando com tentativas e atrasos;
+  - `kbc_restore_interrupts` - Restaura a configuração do KBC para permitir interrupções.
 
 Também irás precisar dos ficheiros i8254.h, timer.c e utils.c que já existem no Lab2, portanto podes fazer CTRL+C - CTRL+V para a pasta deste lab.
 
@@ -494,3 +489,7 @@ Este código demonstra como tratar interrupções de múltiplos dispositivos. A 
 
 
 ## 11. Referências
+
+1. Slides aulas teóricas de LCOM 2024/2025. Esses slides ficarão guardados na pasta resources/slides para referência futura (e porque, por vezes, os docentes gostam de ocultar o conteúdo do Moodle...)
+2. 'Documentation for Lab3' - disponível na respetiva página web [aqui](https://pages.up.pt/~up722898/aulas/lcom2425/lab3/lab3.html)
+3. Fabio Sá, repositório pessoal do [GitHub](https://github.com/Fabio-A-Sa/Y2S2-LabComputadores/tree/main/Labs/lab2#para-configurar-o-timer---configuration-command).
