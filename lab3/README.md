@@ -15,7 +15,7 @@ Neste lab irás precisar de criar os seguintes ficheiros:
   - `kbd_subscribe_int` - Subscreve interrupções do teclado em modo exclusivo;
   - `kbd_unsubscribe_int` - Cancela a subscrição de interrupções;
   - `kbc_ih` - Interrupt handler para processar interrupções do teclado;
-- **`KBC.c`** (com KBC.h correspondente): Implementa funções de baixo nível para comunicação direta com o i8042:
+- **`KBC.c`** (com `KBC.h` correspondente): Implementa funções de baixo nível para comunicação direta com o i8042:
   - `kbc_read_status` - Lê o registo de status do KBC;
   - `kbc_read_output` - Lê o buffer de saída do KBC, verificando erros de paridade e timeout;
   - `kbc_write_command` - Escreve um comando no KBC, lidando com tentativas e atrasos;

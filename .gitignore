@@ -1,0 +1,9 @@
+a.out
+a.exe
+.idea
+.vscode
+*.o
+*.gdbinit
+*.clang-format
+*output.txt
+*trace.txt
