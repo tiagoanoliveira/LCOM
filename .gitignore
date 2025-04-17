@@ -1,7 +1,5 @@
 .idea
 .vscode
 *.o
-*.gdbinit
-*.clang-format
-lab3/output.txt
 lab3/trace.txt
+lab3/output.txt
