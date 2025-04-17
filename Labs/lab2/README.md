@@ -7,9 +7,9 @@ Devemos implementar três funções de teste principais:
 - **timer_test_time_base:** para configurar um timer com uma frequência específica;
 - **timer_test_int:** para testar a gestão de interrupções do timer (vamos ver o que é isso no ponto #7)
 
-Para implementar as duas primeiras funções recomendo a leitura atenta na íntegra dos pontos 2 a 5.
+Para implementar as duas primeiras funções recomendo a leitura atenta na íntegra dos pontos 3 a 6.
 
-Para a última função, não só é necessário compreender como funciona a comunicação com os timers como também é preciso perceber o que são interrupções e como são abordadas. Para tal recomendo a leitura do [ponto 6](https://github.com/tiagoleic02/LCOM/tree/master/LABS/lab2#7-interrup%C3%A7%C3%B5es).
+Para a última função, não só é necessário compreender como funciona a comunicação com os timers como também é preciso perceber o que são interrupções e como são abordadas. Para tal recomendo a leitura do [ponto 7](https://github.com/tiagoleic02/LCOM/tree/master/Labs/lab2#7-interrup%C3%A7%C3%B5es).
 
 ## 2. Ponto de partida: ficheiros necessários
 
@@ -27,12 +27,12 @@ Neste lab irás precisar de criar os seguintes ficheiros:
 
 Também irás precisar do ficheiro `i8254.h` que já vem definido e do `lab2.c`, fornecido nos documentos do laboratório.
 
-Neste [link]() tens o molde deste lab que podes descarregar para trabalhar a partir do mesmo. Tens ao teu dispôr:
+Neste [link](https://github.com/tiagoleic02/LCOM/tree/master/Modelos/lab2) tens o molde deste lab que podes descarregar para trabalhar a partir do mesmo. Tens ao teu dispôr:
 - Ficheiro `i8254.h`;
 - Ficheiros acima descritos com os `#includes` já prontos e funções declaradas;
 - `lab2.c` conforme é fornecido nos documentos de LCOM;
 
-Trabalha nos ficheiros que te forneci (`.c`) seguindo o guião deste laboratório e se tiveres alguma dúvida ou sugestão de melhoria abre uma [discussão](https://github.com/tiagoleic02/LCOM/discussions/new/choose).
+Trabalha nos ficheiros que te forneci (`.c`) seguindo o guião deste laboratório e, se tiveres, alguma dúvida ou sugestão de melhoria abre uma [discussão](https://github.com/tiagoleic02/LCOM/discussions/new/choose).
 
 ## **3. Funcionamento do Timer (i8254)**
 
@@ -101,7 +101,7 @@ int (util_sys_inb)(int port, uint8_t *value) {
 }
 ~~~
 
-### Nota #2 - Configuração da frequência do timer usando MSB e LSB [*1](https://github.com/tiagoleic02/LCOM/tree/master/LABS/lab2#11-refer%C3%AAncias)
+### Nota #2 - Configuração da frequência do timer usando MSB e LSB [*1](https://github.com/tiagoleic02/LCOM/tree/master/Labs/lab2#11-refer%C3%AAncias)
 Como já deves ter percebido, no caso de querermos alterar a configuração/frequência de um timer, após passar a informação para o registo de controlo sobre a alteração que pretendemos fazer, é necessário injetar o valor inicial no timer da porta correspondente (0x40, 0x41 ou 0x42).
 
 Cada contador tem um valor interno que é decrementado conforme a frequência do CPU. No caso do MINIX é decrementado 1193182 vezes por segundo. Sempre que o valor do contador fica a 0 o dispositivo notifica o CPU (gera uma interrupção, veremos no ponto 6 o que é) e volta ao valor original.
@@ -291,7 +291,7 @@ int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field fiel
 //Para alterar a configuração (frequência) de um dado timer 
 int (timer_set_frequency)(uint8_t timer, uint32_t freq)
 ~~~
-> Mas como fazemos para implementar cada uma destas funções? Abaixo deixo os passos necessários a cumprir em cada uma das funções. Se mesmo assim não compreenderes, consulta o meu [_timer.c_](https://github.com/tiagoleic02/LCOM/blob/master/labs/lab2/timer.c). Tenta consultar este ficheiro unicamente **em último recurso** e, se possível, apenas para confirmar se o teu código ficou conforme esperado. _Copiar na íntegra o seu conteúdo não te vai tornar expert na matéria ou um excelente profissional._
+> Mas como fazemos para implementar cada uma destas funções? Abaixo deixo os passos necessários a cumprir em cada uma das funções. Se mesmo assim não compreenderes, consulta o meu [_timer.c_](https://github.com/tiagoleic02/LCOM/blob/master/Labs/lab2/timer.c). Tenta consultar este ficheiro unicamente **em último recurso** e, se possível, apenas para confirmar se o teu código ficou conforme esperado. _Copiar na íntegra o seu conteúdo não te vai tornar expert na matéria ou um excelente profissional._
 
 ### **1. _timer_get_conf_**
 
@@ -330,7 +330,7 @@ Depois de configuradas as 3 funções, chegou a altura de passar para o _lab2.c_
 1. Certificar que os argumentos são todos válidos;
 2. Configurar a frequência do timer usando _timer_set_frequency_.
 
-Como deves ter reparado, existem mais funções no _timer.c_ para implementar, funções essas que irão permitir construir a função _timer_test_int_. Para isso temos que falar primeiro de [Interrupções](https://github.com/tiagoleic02/LCOM/tree/master/LABS/lab2#7-interrup%C3%A7%C3%B5es)
+Como deves ter reparado, existem mais funções no _timer.c_ para implementar, funções essas que irão permitir construir a função _timer_test_int_. Para isso temos que falar primeiro de [Interrupções](https://github.com/tiagoleic02/LCOM/tree/master/Labs/lab2#7-interrup%C3%A7%C3%B5es)
 
 ### Nota #4: Rigor na escrita de funções
 
@@ -439,7 +439,7 @@ Importância:
 
 ## **8. Implementação do _timer_test_int_**
 
-Esta função já é dada praticamente concluída - basta consultar o ponto 5.2 da secção "Minix 3 Notes" da documentação para os labs fornecida (ver [referência 3](https://github.com/tiagoleic02/LCOM/tree/master/LABS/lab2#11-refer%C3%AAncias))
+Esta função já é dada praticamente concluída - basta consultar o ponto 5.2 da secção "Minix 3 Notes" da documentação para os labs fornecida (ver [referência 3](https://github.com/tiagoleic02/LCOM/tree/master/Labs/lab2#11-refer%C3%AAncias))
 
 De forma resumida, deves:
 1. Subscrever as interrupções usando _timer_subscribe_int_;

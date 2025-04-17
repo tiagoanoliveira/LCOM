@@ -2,11 +2,9 @@
 .vscode
 *.o
 
-
-// Output files
-lab2/trace.txt
-lab2/output.txt
-lab3/trace.txt
-lab3/output.txt
-lab4/output.txt
-lab4/trace.txt
+/Labs/lab2/trace.txt
+/Labs/lab2/output.txt
+/Labs/lab3/trace.txt
+/Labs/lab3/output.txt
+/Labs/lab4/output.txt
+/Labs/lab4/trace.txt

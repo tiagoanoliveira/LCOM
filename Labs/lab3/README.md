@@ -23,13 +23,13 @@ Neste lab irás precisar de criar os seguintes ficheiros:
 
 Também irás precisar dos ficheiros `i8254.h`, `timer.c` e `utils.c` que já existem no Lab2, portanto podes fazer CTRL+C - CTRL+V para a pasta deste lab. 
 
-Neste link tens o molde deste lab que podes descarregar para trabalhar a partir do mesmo. Tens ao teu dispôr:
-- Ficheiros `i8254.h`, `timer.c` e `utils.c`;
+Neste [link](https://github.com/tiagoleic02/LCOM/tree/master/Modelos/lab3) tens o molde deste lab que podes descarregar para trabalhar a partir do mesmo. Tens ao teu dispôr:
+- Ficheiros `i8254.h`, `timer.c` e `utils.c` do lab2 funcionais;
 - Ficheiros acima descritos com os `#includes` já prontos e funções declaradas;
 - Todos os ficheiros `.h` que considero necessários para nada falhar e não haver conflitos ou erros inesperados;
 - `lab3.c` conforme é fornecido nos documentos de LCOM;
 
-Trabalha nos ficheiros que te forneci (`.c`) seguindo o guião deste laboratório e se tiveres alguma dúvida ou sugestão de melhoria abre uma [discussão](https://github.com/tiagoleic02/LCOM/discussions/new/choose).
+Trabalha nos ficheiros que te forneci (`.c`) seguindo o guião deste laboratório e, se tiveres alguma dúvida ou sugestão de melhoria, abre uma [discussão](https://github.com/tiagoleic02/LCOM/discussions/new/choose).
 
 ## 3. Definir as constantes no i8042.h
 
@@ -91,25 +91,25 @@ O KBC utiliza um sistema de portas de entrada/saída e registos que permitem a c
 O registo de estado (status register) é formado por 8 bits e fornece informações importantes, como:
 
 ~~~lua
-+-------+---------+---------------------------+
++-------+-------------------------------------+
 |  Bit  | Função quando ativo (1)             |
-+-------+---------+---------------------------+
++-------+-------------------------------------+
 |   7   | Erro de paridade detetado           |
-+-------+---------+---------------------------+
++-------+-------------------------------------+
 |   6   | Ocorreu timeout                     |
-+-------+---------+---------------------------+
++-------+-------------------------------------+
 |   5   | Mouse data                          |
-+-------+---------+---------------------------+
++-------+-------------------------------------+
 |   4   | Valor específico da implementação   |
-+-------+---------+---------------------------+
++-------+-------------------------------------+
 |   3   | Comando / Dado (1=comando; 0=dado)  |
-+-------+---------+---------------------------+
++-------+-------------------------------------+
 |   2   | Estado do sistema                   |
-+-------+---------+---------------------------+
++-------+-------------------------------------+
 |   1   | Buffer de entrada está cheio        |
-+-------+---------+---------------------------+
++-------+-------------------------------------+
 |   0   | Buffer de saída está cheio          |
-+-------+---------+---------------------------+
++-------+-------------------------------------+
 ~~~
 
 Os bits que nos vão interessar neste lab serão apenas o 0, 1, 6 e 7.
@@ -494,9 +494,55 @@ int kbd_test_timed_scan(uint8_t idle_time) {
 
 Este código demonstra como tratar interrupções de múltiplos dispositivos. A função `driver_receive()` bloqueia até receber uma interrupção, e depois o programa identifica a fonte da interrupção usando máscaras de bits.
 
-## 9. Compilação
+## 9. Teste do código
 
+A biblioteca LCD (LCOM Framework) fornece um modo de teste para verificar se o teu código funciona conforme esperado para cada uma das funções deste laboratório. Para veres quais os comandos de teste possíveis, faz:
+~~~C
+minix$ lcom_run lab3
+~~~
+Conforme podes ver no output obtido, as combinações possíveis são:
+~~~C
+minix$ lcom_run lab3 "<modo> -t <número do teste>"
+~~~
+Repara que os argumentos podem assumir os seguintes valores:
+### 1. Modos disponíveis (`<modo>`)
+~~~lua
++-----------------+--------------------------------------+----------------------------+
+| Comando         | Função que chama                     | Tipo de interação          |
++-----------------+--------------------------------------+----------------------------+
+| scan            | kbd_test_scan()                      | Com interrupções           |
+| poll            | kbd_test_poll()                      | Sem interrupções (polling) |
+| timed <seconds> | kbd_test_timed_scan(uint8_t seconds) | Timeout por inatividade    |
++-----------------+--------------------------------------+----------------------------+
+~~~
+### 2. Número do teste (`-t <número>`)
+O `-t` define qual cenário de teste usar. Aqui está o que significa cada número:
 
+- Para **`scan`** e **`poll`** (válido: `-t` 0 a `-t` 5):
+~~~lua
++-------+-------------------------------------------+----------------+
+| Teste | O que faz                                 | Como termina   |
++-------+-------------------------------------------+----------------+
+| -t 0  | Sequência aleatória, incluindo ou não ESC | ESC ou timeout |
+| -t 1  | Só envia ESC (make e break)               | Ao receber ESC |
+| -t 2  | Envia 2 teclas + ESC                      | Ao receber ESC |
+| -t 3  | Envia 3 teclas + ESC                      | Ao receber ESC |
+| -t 4  | Envia 4 teclas + ESC                      | Ao receber ESC |
+| -t 5  | Envia 5 teclas + ESC                      | Ao receber ESC |
++-------+-------------------------------------------+----------------+
+~~~
+- Para timed <seconds> (válido: -t 0 a -t 10):
+~~~lua
++--------------+--------------------------------------------------------------------+--------------------------+
+| Teste        | O que faz                                                          | Como termina             |
++--------------+--------------------------------------------------------------------+--------------------------+
+| -t 0         | Sequência aleatória com ou sem ESC                                 | ESC ou timeout           |
+| -t 1 a -t 5  | Igual aos testes scan/poll: sequência curta + ESC                  | Ao receber ESC           |
+| -t 6 a -t 10 | Igual aos testes 1–5 mas sem ESC (testa o timeout por inatividade) | Após 'seconds' sem input |
++--------------+--------------------------------------------------------------------+--------------------------+
+~~~
+
+Para poderes testar qual o makecode ou breakcode de algumas teclas, podes usar apenas `lcom_run lab3 "scan"` e vais obter o scancode das teclas que pressionares!
 
 ## 11. Referências
 

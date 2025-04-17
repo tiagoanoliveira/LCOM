@@ -6,10 +6,10 @@ Apesar da complexidade de alguns labs, a compreensão dos mesmos não deverá se
 > Se detetares erros, informação em falta, algo que poderia estar 'mais bem explicado' ou mesmo após a leitura atenta dos guiões dos respetivos labs continuares com dúvidas, por favor abre uma [discussão](https://github.com/tiagoleic02/LCOM/discussions/new/choose).
 
 
-- [Lab0](https://github.com/tiagoleic02/lcom/tree/master/labs/lab0)
-- [Lab2](https://github.com/tiagoleic02/lcom/tree/master/labs/lab2)
-- [Lab3](https://github.com/tiagoleic02/lcom/tree/master/labs/lab3)
-- [Lab4](https://github.com/tiagoleic02/lcom/tree/master/labs/lab4)
-- [Lab5](https://github.com/tiagoleic02/lcom/tree/master/labs/lab5)
+- [Lab0](https://github.com/tiagoleic02/lcom/tree/master/Labs/lab0)
+- [Lab2](https://github.com/tiagoleic02/lcom/tree/master/Labs/lab2)
+- [Lab3](https://github.com/tiagoleic02/lcom/tree/master/Labs/lab3)
+- [Lab4](https://github.com/tiagoleic02/lcom/tree/master/Labs/lab4)
+- [Lab5](https://github.com/tiagoleic02/lcom/tree/master/Labs/lab5)
 
 Deixo um agradecimento especial ao [Fabio Sá](https://www.linkedin.com/in/fabio-a-sa) por todo o apoio que deu a esta cadeira durante vários anos, não esquecendo o seu repositório que certamente salvou uma grande fatia dos estudantes de uma cadeira com uma avaliação particularmente dificil e materiais de apoio dificeis de compreender. Vários conteúdos deste repositório estão marcados com '*1' pois foram retirados parcialmente ou na íntegra do repositório do Fábio. Seremos eternamente gratos pela sua ajuda.
