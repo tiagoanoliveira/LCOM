@@ -1,5 +1,12 @@
 .idea
 .vscode
 *.o
+
+
+// Output files
+lab2/trace.txt
+lab2/output.txt
 lab3/trace.txt
 lab3/output.txt
+lab4/output.txt
+lab4/trace.txt

@@ -1,6 +1,7 @@
-#include <lcom/lcf.h>
 #include "KBC.h"
+#include "i8042.h"
 
+// Ler o registo de estado do KBC
 int kbc_read_status(uint8_t *status) {
     // Verificar se o ponteiro é válido
     if (status == NULL) return 1;
@@ -9,36 +10,7 @@ int kbc_read_status(uint8_t *status) {
     return util_sys_inb(KBC_STATUS_REG, status);
 }
 
-int kbc_write_command(uint8_t port, uint8_t cmd) {
-    uint8_t status;
-    uint8_t attempts = MAX_ATTEMPTS;
-
-    while (attempts > 0) {
-        // Ler o status atual do KBC
-        if (kbc_read_status(&status) != 0) {
-            printf("Erro: Status não disponível!\n");
-            return 1;
-        }
-
-        // Verificar se o buffer de entrada está vazio (bit 1 = 0)
-        if ((status & KBC_INPUT_BUFFER_FULL) == 0) {
-            // Buffer de entrada está vazio, posso escrever
-            if (sys_outb(port, cmd) != 0) {
-                printf("Erro: Não foi possível escrever o comando!\n");
-                return 1;
-            }
-            return 0; // Sucesso
-        }
-
-        // Esperar antes de tentar novamente
-        tickdelay(micros_to_ticks(KBC_DELAY_US));
-        attempts--;
-    }
-
-    printf("Erro: Número máximo de tentativas excedido!\n");
-    return 1; // Falha após todas as tentativas
-}
-
+// Ler dados do buffer de saída do KBC (com verificação de erros)
 int kbc_read_output(uint8_t port, uint8_t *data) {
     uint8_t status;
     uint8_t attempts = MAX_ATTEMPTS;
@@ -81,37 +53,33 @@ int kbc_read_output(uint8_t port, uint8_t *data) {
     return 1; // Falha após todas as tentativas
 }
 
-int kbc_read_command_byte(uint8_t *value) {
-    // Verificar se o ponteiro é válido
-    if (value == NULL) return 1;
+// Escreve um comando no KBC
+int kbc_write_command(uint8_t port, uint8_t cmd) {
+    uint8_t status;
+    uint8_t attempts = MAX_ATTEMPTS;
 
-    // Enviar comando para ler a palavra de comandos
-    if (kbc_write_command(KBC_CMD_REG, KBC_READ_CMD) != 0) {
-        printf("Erro: Não foi possível enviar o comando de leitura!\n");
-        return 1;
+    while (attempts > 0) {
+        // Ler o status atual do KBC
+        if (kbc_read_status(&status) != 0) {
+            printf("Erro: Status não disponível!\n");
+            return 1;
+        }
+
+        // Verificar se o buffer de entrada está vazio (bit 1 = 0)
+        if ((status & KBC_INPUT_BUFFER_FULL) == 0) {
+            // Buffer de entrada está vazio, posso escrever
+            if (sys_outb(port, cmd) != 0) {
+                printf("Erro: Não foi possível escrever o comando!\n");
+                return 1;
+            }
+            return 0; // Sucesso
+        }
+
+        // Esperar antes de tentar novamente
+        tickdelay(micros_to_ticks(KBC_DELAY_US));
+        attempts--;
     }
 
-    // Ler a palavra de comandos
-    if (kbc_read_output(KBC_OUTPUT_BUF, value) != 0) {
-        printf("Erro: Não foi possível ler a palavra de comandos!\n");
-        return 1;
-    }
-
-    return 0; // Sucesso
-}
-
-int kbc_write_command_byte(uint8_t value) {
-    // Enviar comando para escrever a nova palavra de comandos
-    if (kbc_write_command(KBC_CMD_REG, KBC_WRITE_CMD) != 0) {
-        printf("Erro: Não foi possível enviar o comando de escrita!\n");
-        return 1;
-    }
-
-    // Escrever a nova palavra de comandos
-    if (kbc_write_command(KBC_INPUT_BUF, value) != 0) {
-        printf("Erro: Não foi possível escrever a palavra de comandos!\n");
-        return 1;
-    }
-
-    return 0; // Sucesso
+    printf("Erro: Número máximo de tentativas excedido!\n");
+    return 1; // Falha após todas as tentativas
 }

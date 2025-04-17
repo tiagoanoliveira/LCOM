@@ -3,7 +3,7 @@
 
 #include <lcom/lcf.h>
 
-#define TIMER_FREQ 1193182   // clock frequency for timer in PC and AT
+#define CPU_FREQ 1193182   // clock frequency for timer in PC and AT
 #define TIMER0_IRQ 0         // Timer 0 IRQ line
 
 // I/O port addresses

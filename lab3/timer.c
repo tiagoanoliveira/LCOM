@@ -2,9 +2,8 @@
 #include <lcom/timer.h>
 #include <stdint.h>
 #include "i8254.h"
-#include "i8042.h"
 
-int hook_id = KBC_IRQ;
+int hook_id = TIMER0_IRQ;
 int counter = 0;
 
 int (timer_get_conf)(uint8_t timer, uint8_t *st) {
@@ -16,7 +15,7 @@ int (timer_get_conf)(uint8_t timer, uint8_t *st) {
   //Enviar comando para o registo de controlo
   if (sys_outb(TIMER_CTRL, cmd) != 0) return 1;
 
-  //Ler o status do timer selecionado
+  //Ler o valor do timer selecionado
   if(util_sys_inb(TIMER_0 + timer, st) != 0) return 1;
 
   return 0;
@@ -65,9 +64,6 @@ int (timer_set_frequency)(uint8_t timer, uint32_t TIMER_freq) {
   uint8_t st;
   if ((timer_get_conf(timer, &st)) != 0) return 1;
 
-  // Calcular o valor de contagem baseado na frequência
-  uint16_t initial_count = CPU_FREQ / TIMER_freq;
-
   // Preparar o comando para configurar o timer
   uint8_t ctrl_word = (st & 0x0F) | TIMER_LSB_MSB;  // Preservar os 4 bits inferiores e definir modo de acesso
 
@@ -79,6 +75,9 @@ int (timer_set_frequency)(uint8_t timer, uint32_t TIMER_freq) {
   }
   //Enviar o comando para o registo de controlo
   if ((sys_outb(TIMER_CTRL, ctrl_word)) != 0) return 1;
+
+  // Calcular o valor de contagem baseado na frequência
+  uint16_t initial_count = CPU_FREQ / TIMER_freq;
 
   //Obter o LSB e MSB do valor de contagem
   uint8_t lsb, msb;
@@ -111,37 +110,4 @@ int (timer_unsubscribe_int)() {
 
 void (timer_int_handler)() {
   counter++; //Incrementar o contador a cada interrupção
-}
-int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field field) {
-  union timer_status_field_val config;
-
-  switch(field) {
-    case tsf_all:
-      config.byte = st;
-      break;
-
-    case tsf_initial:
-      config.in_mode = (st & TIMER_LSB_MSB) >> 4;
-      break;
-
-    case tsf_mode:
-      st = (st & (BIT(3) | BIT(2) | BIT(1))) >> 1;  // Extrai os bits 3-1 para o modo de contagem
-
-      if (st == 6) {
-        config.count_mode = 2;  // Ajusta 6 para 2
-      } else if (st == 7) {
-        config.count_mode = 3;  // Ajusta 7 para 3
-      } else config.count_mode = st;
-      break;
-
-    case tsf_base:
-      config.bcd = st & BIT(0);  // Verifica o bit 0 para saber se é BCD ou binário
-      break;
-
-    default:
-      return 1;
-  }
-
-  if ((timer_print_config(timer, field, config)) != 0) return 1;
-  return 0;
 }
