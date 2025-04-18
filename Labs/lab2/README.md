@@ -149,7 +149,7 @@ O resto é feito pelo _Configuration Command_, que veremos no ponto seguinte o q
 - Usamos:
   - sys_outb() → para escrever nos timers ou no registo de controlo;
   - sys_inb() → para ler os valores dos timers.
-- A frequência do timer é independente da velocidade do processador, o que permite medir o tempo com fiabilidade.
+- A frequência do timer é independente da frequência/velocidade do processador, o que permite medir o tempo com fiabilidade.
 
 ## **4. Programação do Timer**
 
@@ -352,7 +352,7 @@ Além disso, é boa prática:
 As interrupções são mecanismos fundamentais nos sistemas computacionais modernos que **permitem a comunicação entre hardware e software de forma eficiente**. Sem elas, a comunicação entre o CPU e os dispositivos I/O tem que ser feita via **polling**, em que o CPU monitoriza o estado do dispositivo periodicamente e quando este tiver alguma informação útil ao sistema essa informação é tratada - desaconselhado geralmente, **pois gasta muitos ciclos de relógio na monitorização**.
 
 <p align="center">
-  <img src="../resources/images/Polling_Interrupts_versão1.png" alt="Polling vs. Interrupts" width="60%">
+  <img src="../resources/images/Polling_vs_interrupts_IA.png" alt="Polling vs. Interrupts" width="60%">
   <p align="center">Filha pergunta ao pai se já chegaram a todo o minuto. No exemplo de Interrupts, o pai diz à filha quando chegam e só aí é que ela acorda. Elaborado com IA.</p>
 
 ### **_O que são interrupções?_**
@@ -377,9 +377,9 @@ Para ativar as interrupções é necessário subscrevê-las por meio de uma syst
 
 Para esse efeito usamos 3 funções:
 
-1. **_timer_subscribe_int_**: Esta função regista um manipulador de interrupção para o timer, subscrevendo a interrupção através da função _sys_irqsetpolicy_ (ver nota #5) ;
-2. **_timer_int_handler_**: Manipulador de interrupção que será executado cada vez que o timer gerar uma interrupção. Serve para incrementar o contador a cada interrupção;
-3. **_timer_unsubscribe_int_**: Esta função cancela o registo do manipulador de interrupção, comunicando ao sistema que o programa não deseja receber mais notificações de interrupções do timer.
+1. **_timer_subscribe_int_**: esta função regista um manipulador de interrupção para o timer, subscrevendo a interrupção através da função _sys_irqsetpolicy_ (ver nota #5) ;
+2. **_timer_int_handler_**: manipulador de interrupção que será executado cada vez que o timer gerar uma interrupção. Serve para incrementar o contador a cada interrupção;
+3. **_timer_unsubscribe_int_**: esta função cancela o registo do manipulador de interrupção, comunicando ao sistema que o programa não deseja receber mais notificações de interrupções do timer.
 
 ### Nota #5: função sys_irqsetpolicy
 

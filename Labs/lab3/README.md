@@ -51,7 +51,7 @@ Quando um utilizador interage com o teclado, o hardware não transmite diretamen
 
 O sistema operativo utiliza tabelas de mapeamento **(keymaps)** para converter os scancodes recebidos no texto correspondente ao idioma configurado. É por isso que podemos mudar o layout do teclado via software sem alterar o hardware.
 
-Estes scancodes são então processados pelo controlador do teclado **(Keyboard Controller)**, responsável por gerir a comunicação com o processador e gerar interrupções ou disponibilizar os dados para leitura, conforme o método usado — interrupções, polling ou com timeout.
+Estes scancodes são então processados pelo controlador do teclado **(Keyboard Controller)**, responsável por gerir a comunicação com o processador e gerar interrupções ou disponibilizar os dados para leitura, conforme o método usado — interrupções, polling ou timeout.
 
 Existem dois tipos principais de scancodes:
 
@@ -74,7 +74,7 @@ bool is_breakcode(uint8_t scancode) {
    }
 }
 ~~~
-Para algumas teclas especiais (como teclas de função ou teclas de controlo adicionais), os scancodes podem ter dois bytes. Scancodes de dois bytes geralmente utilizam 0xE0 como primeiro byte, tanto no `makecode` quanto no `breakcode`.
+Para algumas teclas especiais (como teclas de função ou teclas de controlo adicionais), os scancodes podem ter dois bytes. Scancodes de dois bytes geralmente utilizam 0xE0 como byte mais significativo, tanto no `makecode` quanto no `breakcode`.
 
 ## 5. O Controlador do Teclado (KBC - i8042)
 
@@ -241,7 +241,7 @@ O KBC pode operar em dois modos principais:
 - **modo de polling.**
 
 <p align="center">
-  <img src="../resources/images/Polling_Interrupts_versão1.png" alt="Polling vs. Interrupts" width="50%">
+  <img src="../resources/images/Polling_vs_interrupts_IA.png" alt="Polling vs. Interrupts" width="50%">
   <p align="center">Filha pergunta ao pai se já chegaram a todo o minuto. No exemplo de Interrupts, o pai diz à filha quando chegam e só aí é que ela acorda. Elaborado com IA.</p>
 
 #### Modo de Interrupções

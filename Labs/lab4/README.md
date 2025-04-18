@@ -1,4 +1,4 @@
-# Lab 4 - i8042, the PC Keyboard and its Controller
+# Lab 4 - 
 
 ## 1. Funções de teste esperadas
 
