@@ -13,7 +13,7 @@ Apesar da complexidade de alguns labs, a compreensão dos mesmos não deverá se
 - [**Lab5 - The PC's Video Card in Graphics Mode**](https://github.com/tiagoleic02/lcom/tree/master/Labs/lab5)
 
 <p align="center">
-  <img src="../resources/images/lab0_IA.png" alt="Representação dos dispositivos que serão alvo de análise nos laboratórios" width="50%">
+  <img src="Labs/resources/images/lab0_IA.png" alt="Representação dos dispositivos que serão alvo de análise nos laboratórios" width="50%">
   <p align="center">Alguns dos dispositivos que serão alvo de trabalho nesta cadeira. Elaborado com IA.</p>
 
 ## Agradecimentos e Referências
