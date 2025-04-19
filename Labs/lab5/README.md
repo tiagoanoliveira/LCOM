@@ -2,5 +2,4 @@
 
 ## 1. Funções de teste esperadas
 
-
-## Referências
+# 🚧🚧🚧 EM CONSTRUÇÃO 🚧🚧🚧
