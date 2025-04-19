@@ -246,7 +246,7 @@ O KBC pode operar em dois modos principais:
 
 #### Modo de Interrupções
 
-Neste modo, sempre que uma tecla é pressionada, o KBC gera uma interrupção. O processador interrompe a sua execução normal para processar essa interrupção através de um manipulador de interrupções (interrupt handler).
+Neste modo, sempre que uma tecla é pressionada, o KBC gera uma interrupção. O processador interrompe a sua execução normal para processar essa interrupção através de um manipulador de interrupções (interrupt handler - explico melhor mais abaixo).
 
 As interrupções oferecem um método eficiente para lidar com entradas do teclado, pois o processador só é interrompido quando realmente há dados a serem processados.
 
@@ -358,13 +358,13 @@ int kbc_restore() {
 Este processo envolve:
 1. Ler a palavra de comando atual do KBC;
 2. Ativar o bit de interrupções (bit 0);
-3. Escrever a palavra de comando modificada de volta ao KBC.
+3. Escrever a palavra de comando modificada de volta no KBC.
 
 ## 6. Tratamento de scancodes
 
 No ponto 4 tivemos a oportunidade de ver como é distinguido um breakcode de um scancode, tal como uma possível implementação de código para fazer uma distinção rápida de um scancode e saber de que tipo é.
 
-Algumas teclas especiais geram scancodes de dois bytes, começando normalmente com 0xE0. Para processá-los corretamente, é necessário manter estado entre leituras:
+Algumas teclas especiais geram scancodes de dois bytes, começando normalmente com 0xE0. Para processá-los corretamente, é necessário armazenar o primeiro byte numa variável até que o segundo byte seja recebido:
 ~~~C
 // Variáveis globais para manter estado
 bool two_byte_scancode = false;
@@ -394,7 +394,7 @@ void process_scancode(uint8_t byte) {
     }
 }
 ~~~
-Este código diferencia entre scancodes de um e dois bytes, mantendo o estado necessário para processar corretamente sequências de bytes.
+Este código diferencia entre scancodes de um e dois bytes, utilizando variáveis globais para lembrar quando está no meio do processamento de uma sequência de dois bytes.
 
 ## 7. Contagem de chamadas a sys_inb()
 

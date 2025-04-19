@@ -1,4 +1,4 @@
-# Lab 4 - 
+# Lab 4 - The PS/2 Mouse
 
 ## 1. Funções de teste esperadas
 
