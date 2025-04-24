@@ -63,8 +63,14 @@ Quando falamos em comunicar com o timer, falamos em duas hipóteses:
 Em qualquer comunicação com o timer temos **sempre** que informar o registo de controlo (0x43) para ele 'ficar a contar' com o que pretendemos fazer. Só após o registo de controlo ter do lado dele a informação daquilo que pretendemos fazer (enviar ou receber a configuração de um timer especifico p.e.) é que podemos efetivamente recolher ou enviar essa informação.
 
 Para isso, usamos duas system calls:
+- `sys_outb`;
+- `sys_inb`.
 
-#### 🔽 _sys_outb_ — **Envia comandos/informações para o timer**
+<p align="center">
+  <img src="../resources/images/i8254.png" alt="Interação entre um programa e o i8254">
+  <p align="center">Interação entre um programa e o i8254</p>
+
+#### 🔽 `sys_outb` — **Envia comandos/informações para o timer**
 ~~~C
 int sys_outb(uint8_t port, uint32_t command);
 ~~~
@@ -75,7 +81,7 @@ int sys_outb(uint8_t port, uint32_t command);
 sys_outb(0x43, 0x36); // Envia um comando de configuração para o registo de controlo, informando o mesmo do que pretendemos fazer (neste caso, alterar a configuração do timer 0)
 sys_outb(0x40, 0x9C); // Altera o valor do timer 0, enviando-lhe uma nova configuração
 ~~~
-#### 🔼 _sys_inb_ — **Recebe informação do timer**
+#### 🔼 `sys_inb` — **Recebe informação do timer**
 ~~~C
 int sys_inb(uint8_t port, uint32_t *value);
 ~~~
