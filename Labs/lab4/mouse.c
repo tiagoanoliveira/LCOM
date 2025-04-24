@@ -8,12 +8,6 @@ static uint8_t packet_bytes[3];      // Array para armazenar os 3 bytes do pacot
 static uint8_t packet_index = 0;     // Índice do byte atual no pacote
 static bool packet_ready = false;    // Flag para indicar se um pacote completo está pronto
 
-/**
- * @brief Subscreve as interrupções do mouse
- *
- * @param bit_no Endereço da variável onde será armazenado o bit de notificação
- * @return int 0 em caso de sucesso, 1 em caso de erro
- */
 int mouse_subscribe_int(uint8_t *bit_no) {
     if (bit_no == NULL) return 1;
 
@@ -28,11 +22,6 @@ int mouse_subscribe_int(uint8_t *bit_no) {
     return 0;
 }
 
-/**
- * @brief Cancela a subscrição das interrupções do mouse
- *
- * @return int 0 em caso de sucesso, 1 em caso de erro
- */
 int mouse_unsubscribe_int() {
     // Remove a política de interrupção para cancelar a subscrição
     if (sys_irqrmpolicy(&hook_id_mouse) != 0) {
@@ -43,10 +32,6 @@ int mouse_unsubscribe_int() {
     return 0;
 }
 
-/**
- * @brief Handler de interrupções do mouse
- * Lê um byte do buffer de saída do KBC e o armazena no array de bytes do pacote
- */
 void (mouse_ih)() {
     uint8_t data;
     uint8_t status;
@@ -90,12 +75,6 @@ void (mouse_ih)() {
     }
 }
 
-/**
- * @brief Escreve um comando para o mouse
- *
- * @param cmd O comando a ser enviado ao mouse
- * @return int 0 em caso de sucesso, 1 em caso de erro
- */
 int mouse_write_cmd(uint8_t cmd) {
     uint8_t attempts = 5;  // Número de tentativas
     uint8_t ack;          // Byte de reconhecimento do mouse
@@ -109,13 +88,14 @@ int mouse_write_cmd(uint8_t cmd) {
 
         // Passo 2: Enviar o comando para o mouse através da porta 0x60
         if (kbc_write_command(KBC_IN_BUF, cmd) != 0) {
-            printf("Erro ao enviar comando 0x%x para o mouse\n", cmd);
+            printf("Erro ao enviar comando", cmd, " para o mouse\n");
             return 1;
         }
 
         // Passo 3: Ler o byte de reconhecimento (ACK) do mouse
         if (kbc_read_output(KBC_OUT_BUF, &ack) != 0) {
-            printf("Erro ao ler ACK do mouse\n");
+            if(&afk==NULL) return 1;
+            printf("Erro ao ler", &ack, " do mouse\n");
             return 1;
         }
 
@@ -144,11 +124,6 @@ int mouse_write_cmd(uint8_t cmd) {
     return 1;
 }
 
-/**
- * @brief Habilita o envio de dados do mouse em modo de stream
- *
- * @return int 0 em caso de sucesso, 1 em caso de erro
- */
 int mouse_enable_data_reporting() {
     // Envia o comando para habilitar data reporting
     if (mouse_write_cmd(MOUSE_ENABLE_DATA_REPORTING) != 0) {
@@ -159,11 +134,6 @@ int mouse_enable_data_reporting() {
     return 0;
 }
 
-/**
- * @brief Desabilita o envio de dados do mouse em modo de stream
- *
- * @return int 0 em caso de sucesso, 1 em caso de erro
- */
 int mouse_disable_data_reporting() {
     // Envia o comando para desabilitar data reporting
     if (mouse_write_cmd(MOUSE_DISABLE_DATA_REPORTING) != 0) {
@@ -174,12 +144,6 @@ int mouse_disable_data_reporting() {
     return 0;
 }
 
-/**
- * @brief Sincroniza os bytes do pacote do mouse
- * Espera até receber o primeiro byte válido de um pacote
- *
- * @return int 0 em caso de sucesso, 1 em caso de erro
- */
 int mouse_sync_bytes() {
     uint8_t byte;
     uint8_t status;
@@ -212,11 +176,6 @@ int mouse_sync_bytes() {
     }
 }
 
-/**
- * @brief Analisa um pacote completo do mouse e preenche a estrutura packet
- *
- * @param pp Ponteiro para a estrutura packet a ser preenchida
- */
 void mouse_parse_packet(struct packet *pp) {
     if (pp == NULL) return;
 
@@ -265,14 +224,6 @@ static GestureState current_state = INITIAL;
 static bool last_lb = false;         // Estado anterior do botão esquerdo
 static bool last_rb = false;         // Estado anterior do botão direito
 
-/**
- * @brief Detecta o gesto de um V invertido
- *
- * @param pp Ponteiro para o pacote atual do mouse
- * @param x_len Comprimento mínimo no eixo X para cada linha
- * @param tolerance Tolerância para movimentos indesejados
- * @return int 1 se o gesto foi detectado, 0 caso contrário
- */
 int mouse_detect_gesture(struct packet *pp, uint8_t x_len, uint8_t tolerance) {
     if (pp == NULL) return 0;
 
