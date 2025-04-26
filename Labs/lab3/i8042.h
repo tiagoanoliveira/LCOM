@@ -34,11 +34,11 @@
 #define KBC_CMD_INHIBIT BIT(4)         // Inibir teclado
 #define KBC_CMD_AUX_INHIBIT BIT(5)     // Inibir rato
 
-/* Scancodes */
+// Scancodes
 #define ESC_BREAKCODE 0x81             // Breakcode da tecla ESC
 #define SCANCODE_TWO_BYTE 0xE0         // Prefixo para scancodes de 2 bytes
 
-/* Others */
+// Outros
 #define KBC_IRQ 1                      // IRQ do teclado
 #define MAX_ATTEMPTS 10                // Número máximo de tentativas para ler/escrever
 #define KBC_DELAY_US 20000             // Delay entre tentativas (20ms)
