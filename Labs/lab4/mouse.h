@@ -6,6 +6,10 @@
 #include "i8042.h"
 #include "KBC.h"
 
+static uint8_t timer_hook_id = 0;
+static uint8_t mouse_hook_id = 2;        // hook_id para o rato - o valor não tem significado, só tem que ser diferente do valor do teclado e do timer
+static uint8_t byte_index = 0;       // Índice do byte do pacote
+
 int (mouse_subscribe_int)(uint8_t *bit_no);
 int (mouse_unsubscribe_int)();
 void (mouse_ih)();

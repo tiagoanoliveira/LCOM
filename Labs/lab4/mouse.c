@@ -1,10 +1,8 @@
 #include "mouse.h"
 
 // Variáveis globais
-static uint8_t byte_index = 0;       // Índice do byte do pacote
 static uint8_t packet[3];            // Pacote do rato
 static uint8_t current_byte;         // Último byte lido
-static int mouse_hook_id = 2;        // hook_id para o rato - o valor não tem significado, só tem que ser diferente do valor do teclado e do timer
 
 // Subscrever interrupções do rato
 int mouse_subscribe_int(uint8_t *bit_no) {
