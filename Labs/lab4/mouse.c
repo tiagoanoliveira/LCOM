@@ -1,8 +1,7 @@
 #include "mouse.h"
 
-// Variáveis globais
-static uint8_t packet[3];            // Pacote do rato
-static uint8_t current_byte;         // Último byte lido
+uint8_t packet[3];         // Pacote do rato
+uint8_t current_byte;      // Último byte lido
 
 // Subscrever interrupções do rato
 int mouse_subscribe_int(uint8_t *bit_no) {
@@ -18,8 +17,7 @@ int mouse_unsubscribe_int() {
 
 // Função para lidar com interrupções do rato
 void (mouse_ih)() {
-    read_KBC_output(KBC_OUTPUT_BUF, &current_byte, 1); // Lê um byte do rato
-    printf("Erro\n");
+    kbc_read_output(KBC_OUTPUT_BUF, &current_byte); // Lê um byte do rato
 }
 
 // Função para sincronizar bytes do pacote
@@ -64,10 +62,10 @@ int mouse_write_cmd(uint8_t command) {
 
     // Tenta enviar o comando
     while (attempts > 0) {
-        if (write_KBC_command(KBC_CMD_REG, KBC_WRITE_TO_MOUSE) != 0) {
+        if (kbc_write_command(KBC_CMD_REG, KBC_WRITE_TO_MOUSE) != 0) {
             return 1; // Erro ao escrever o comando
         }
-        if (write_KBC_command(KBC_OUTPUT_BUF, command) != 0) {
+        if (kbc_write_command(KBC_OUTPUT_BUF, command) != 0) {
             return 1; // Erro ao escrever o comando no buffer de saída
         }
 

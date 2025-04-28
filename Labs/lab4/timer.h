@@ -10,7 +10,7 @@
 
 // Declaração da variável global counter (para usar no timed_scan)
 extern int counter;
-int hook_id = TIMER0_IRQ;
+extern int hook_id;
 
 int (timer_get_conf)(uint8_t timer, uint8_t *st);
 int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field field);
