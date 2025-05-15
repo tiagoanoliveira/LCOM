@@ -36,6 +36,8 @@ May also be used for interacting with **menus** (optional).
 
 ### 🖼️ Graphics
 
+We're gonna use mode 0x105 (1024x758).
+
 Required to **render the game visually** using pixel-based drawing, including:
 
 - The grid
