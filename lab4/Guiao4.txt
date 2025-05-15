@@ -1,0 +1,299 @@
+Computer Labs - 2nd Semester
+Lab 4: The PS/2 Mouse
+1. Objectives
+The objectives of this lab are threefold:
+
+that you learn the operation of the PS/2 mouse and how to use its low level interface.
+that you get a better understanding of the interrupt mechanism and that you learn how to use it in the context of the PS/2 mouse
+that you learn how to implement state machines in event-driven designs
+This lab is planned for one lab class, but you are expected to have to work for more hours than usual to also implement the last function.
+
+This handout is structured as follows:
+
+2. What to Do
+which summarizes what you are supposed to implement and what you have to do in order to prepare for the lab class
+3. The PS/2 Mouse and its i8042
+which provides an overview of the PS/2 mouse and its controller. More detailed information can be found in the resources linked in this section.
+4. Minix 3 Notes
+which describes some Minix aspects that are relevant for the lab.
+5. Test Functions Specification
+which specifies the test functions that you must implement and that we will use to grade your work
+6. Compilation and execution
+7. Testing with the LCF
+References
+The PS/2 Mouse lecture notes
+Synaptics Interfacing Guide
+Andries Brouwer’s The PS/2 Mouse, Ch. 13 of Keyboard scancodes
+Adam Chapweske’s The PS/2 Mouse Interface (Similar to the previous reference, as far as this lab is concerned.)
+Data sheet of W83C42 an 8042-compatible IC that supports the PS/2 mouse
+Acknowledgments
+This lab is based on a lab by João Cardoso and Miguel P. Monteiro for DJGPP running on Windows98.
+
+Pedro Silva co-designed and implemented the LCF.
+
+Next
+
+Prev Top Next
+2. What to Do
+Write in the C programming language several functions that use the PS/2's mouse low level interface. The key functionality to implement is:
+
+Read and display the packets sent by the PS/2's mouse
+To handle interrupts from both the mouse and the timer
+Recognize a simple "mouse gesture" using a state machine
+Like in Lab 3 you are not given the prototypes of the functions to implement: the specification of these functions is part of your job. However, to make the task of testing your assignment feasible you are required to implement the following testing functions:
+
+int mouse_test_packet()
+int mouse_test_async()
+int mouse_test_gesture()
+These functions are declared in header file lab4.h, and source file lab4.c contains their implementation stubs. You should add your test code to that file, because it is already prepared for 1) use with the LCF, and 2) incremental development. Section 5 describes what these functions should do.
+
+Because lab4.h is indirectly included via <lcom/lcf.h>, we do not provide any link to it. Instead, we provide you the relevant doxygen documentation, which is all you need for implementing the functions specified Section 5.
+
+2.1 Class Preparation
+So that you can accomplish this lab's objectives, you should do some homework, i.e. some work before the lab class. In addition to read, and understand, this handout and the class notes, you should:
+
+Copy file lab4.c to the folder /home/lcom/labs/lab4, that already exists (in Minix's filesystem). You should also copy to this folder a makefile you have used in one of the previous labs. (Do not forget to make appropriate changes to this makefile so that it can be used for this lab.)
+Add these files to your local git repository and synch it with your group's repository in Gitlab@FEUP.
+Write mouse_test_packet()
+Prev Top Next
+
+Prev Top Next
+3. The PS/2 Mouse and the i8042
+The PS/2 mouse has 3 buttons and is able to track the movement of the mouse in a plane. Usually, it is configured to report its state, i.e. the state of the buttons or its position in the plane, to its controller in an event-driven fashion, i.e. whenever its state changes. It does so by sending a multi-byte packet to its controller, which puts each of the bytes received in a register, and if configured to generate interrupts, will do so. On the PC, the mouse controller raises IRQ line 12. It is then up to the interrupt handler to read the bytes of the packet, one per interrupt, from the controller.
+
+3.1 Mouse Packets
+The packets sent by a mouse to its controller are composed by several bytes. Different mouse types use different packet types. For example, whereas the PS/2 mouse uses a 3-byte packet, the Microsoft Intellimouse, which includes a scrolling-wheel, uses a 4-byte packet mouse.
+
+The beauty of this simple interface between the mouse and its controller is that it is rather flexible and can be used to support a wide range of mice, from very simple to very sophisticated. In this Lab, you'll need only use the standard PS/2 protocol, which was presented in the lectures. Any of the references of this handout has a good description of the format of the PS/2 mouse packets.
+
+3.2 The i8042: The keyboard (and mouse) controller (KBC)
+In modern PCs, the communication between the mouse and thse processor is mediated by an electronic component that provides the functionality of the i8042, the keyboard controller (KBC). I.e., the KBC interfaces with both the AT-keyboard and the PS/2-mouse. The communication between the KBC and the mouse (actually, a microprocessor embedded in the mouse) is by means of a serial communication protocol similar to that used in the communication between the KBC and the keyboard, and is not the object of this lab.
+
+In this lab, you need only to interface with the "i8042". In PS/2 mode, this controller supports some KBC commands, such as enabling/disabling the mouse interface or enabling/disabling interrupt generation upon reception of a byte from the mouse. As usual, these "KBC-commands" are written to port 0x64. Furthermore, it allows the device driver to issue commands directly to the mouse, mouse commands, by using the KBC-command 0xD4, Write (byte) to the Auxiliary Device.
+
+The mouse commands and their arguments, if any, are arguments of the 0xD4 KBC-command. That is, to issue a command to the mouse, the "driver" must first write command 0xD4 to the KBC, i.e. using port 0x64, and afterwards the mouse command to port 0x60. Like the keyboard, the mouse will send an acknowledgment byte, which indicates whether or not the command was successfully received. The KBC puts this reply in the output buffer, and it must be read from port 0x60. If the command has any arguments, they should be written using the same protocol. I.e., for each byte of the arguments, the "driver" must first write command 0xD4 to port 0x64, and afterwards the byte to port 0x60. As before, the mouse will send an acknowledgment to the byte sent by the KBC, and the KBC will put it in the output buffer. Again, each acknowledgment must be read from port 0x60. Finally, after receiving the last byte of a command (either the command itself, or the last byte of its arguments), the mouse will execute the command, and if it elicits a response, the mouse will send it to the KBC, which again will put it in the output buffer, and must be read from port 0x60.
+
+Table 1: Summary of actions for sending command to mouse
+Order	Description	Action to do	Notes
+1	Request forwarding of byte (command) to the mouse	write 0xD4 to port 0x64	
+2	Write the byte (command)	write the code for the command to port 0x60	See Synaptics Interfacing Guide, pag 31, for the command list
+3	Read the acknowledgement byte received from the mouse	read the acknowledgement byte from port 0x60	In case of success, acknowledgement byte is 0xFA. In case of error the value will differ, see below
+4	If command has arguments	repeat steps above for each byte of the argument(s); including reading the acknowledgement byte	Again, there might be an error, see below
+mouse executes command
+5	If command has response	read response from port 0x60	
+Summarizing, for each byte sent using command 0xD4, either a command or an argument, the mouse will send back an acknowledgment, which is put in the output buffer, and must be read from port 0x60. Furthermore, if the mouse command elicits a response, the mouse will send it after the acknowledgment to the last byte of the command (either the command itself or the last byte of its arguments) and the KBC will put in the output buffer; this response should be read from port 0x60.
+
+3.3 Synchronization Issues
+A PS/2-mouse packet is a sequence of 3 bytes. The device driver must be synchronized with the mouse to ensure that when it processes a packet, the 3 bytes it uses all belong to the same packet. For example, using two bytes of a packet and the first byte of the following packet may lead to incorrect behavior.
+
+The challenge is that the bytes of the PS/2 packet do not carry an identification, and therefore it is not easy to detect that the driver is not in sync with the mouse. A solution relies on the fact that bit 3 of byte 1, must be 1. Thus, if the byte the driver is expecting is the first one, and bit 3 of the byte received is 0, the byte received cannot be the first one and the driver is not in sync with the mouse.
+
+Although this does not guarantee that your "driver" will always be in sync, other bytes can have bit 3 set to 1, this can be used to synchronize the driver with the mouse. Actually, the efficacy of this approach will depend on the mouse usage pattern: if the user starts only by clicking the mouse, then bit 3 of all packets but the first will be 0, and the "driver" will get in sync with the mouse after 1 or 2 bytes.
+
+3.4 Handling errors
+As described above, when you send a byte to the mouse, the mouse will respond with an acknowledgement byte. If it responds with 0xFE, which signals an error, you need to resend the entire command from the beginning, not only the last byte. From the Synaptics Interfacing Guide, pg. 31:
+
+When the host [driver] gets an 0xFE response, it should retry the offending command. If an argument byte elicits an 0xFE response, the host should retransmit the entire command, not just the argument byte.
+
+3.5 Sending commands in stream mode
+When the mouse is configured to operate in stream mode, you must disable data reporting before sending a command to prevent interference from packets sent by the mouse. From the Synaptics Interfacing Guide, pg. 33:
+
+If the device is in Stream mode (the default) and has been enabled with an Enable (0xF4) command, then the host should disable the device with a Disable (0xF5) command before sending any other command.
+
+Prev Top Next
+
+Prev Top Next
+4. Minix 3 Notes
+4.1 Minix's Initial Mouse Configuration
+Although Minix 3 boots up in command line mode and does not use the mouse, its terminal driver configures the mouse in stream mode and installs its own mouse interrupt handler (IH), the default one. Furthermore, to prevent the mouse from generating useless interrupts, Minix disables (stream mode) data reporting.
+
+Thus, so that you can use the mouse and the Minix's default mouse IH does not interfere with your program, either the LCF or your program may have to perform some actions:
+
+mouse interrupts subscription
+to prevent Minix's default IH from "stealing" mouse packets. (This requires using not only the IRQ_REENABLE policy but also the IRQ_EXCLUSIVE policy.)
+enabling data reporting
+so that the mouse sends packets reporting its displacement or changes in the state of its buttons
+Before exiting, your program must revert these actions, even if some of them were taken by the LCF, as detailed in Section 5. This will ensure that the configuration of the mouse upon exit of your program, will be the one when it started.
+
+4.2 Waiting for the Mouse to Respond
+Like the keyboard, the mouse communicates with the KBC via a serial line, and thus you should not expect to receive the acknowledgment to a byte you write to the mouse, or the response it sends to a command, immediately after issuing a command. As suggested for Lab 3 rather than wait indefinitely, or until the KBC reports a time-out, your code should give enough-time for the KBC or the mouse to respond, retry a few times on time-out, and finally give up. Given that the time intervals to consider are in the order of tens of ms, it is not appropriate to use sleep(), which measures time intervals whose duration is a multiple of a second. Instead, you can use the function tickdelay() of Minix 3's libsys as described in Section 4.2 of Lab 3
+
+Prev Top Next
+
+Prev Top Next
+5. Test Functions Specification
+So that you get familiar with the kind of functions that you will have to implement in the programming tests, we have specified the functions that you are required to implement in a similar style. We will develop the code that will call them, so make sure that your implementation matches their prototypes.
+
+Rather than implement the required functionality directly in these functions, you should design and implement functions that may be useful to interface with the mouse in your integration project, i.e. functions that read the packets sent by the mouse and that may be of use to configure or to find the status of the mouse. You should try to implement a layered solution as suggested in the lectures. In the final project, you will score points for the quality of the design of your functions. We will grade not only how you structure the required functionality in functions, but also how do you group these functions in compilation units, i.e. in the source files.
+
+Do not forget to follow the LCF requirements as in the previous labs. Use the provided lab4.c file.
+
+5.1 int mouse_test_packet(uint32_t cnt)
+The purpose of this function is that you learn 1) how to read, using an interrupt handler (IH), the packets the PS/2 mouse sends when operating in stream mode; and 2) how to parse the mouse packets. Therefore, this function must:
+
+configure the mouse properly
+receive the number of mouse packets specified in its argument via interrupts
+parse the mouse packets
+print them in a friendly way
+reset the mouse to Minix's default configuration, before exiting
+You can find its documentation here.
+
+As explained in Section 4:
+
+mouse interrupts must be subscribed in exclusive mode (use IRQ_REENABLE and IRQ_EXCLUSIVE on IRQ 12)
+data reporting by the mouse must be enabled
+To help you getting started, we are providing, via the LCF library, the int mouse_enable_data_reporting() function:
+
+int mouse_enable_data_reporting();
+which enables data reporting in stream mode, as documented here. We expect that, in your final version, data reporting in stream mode will be enabled by your own code. In the final project, you will score points for that.
+
+As mentioned in the lectures, upon each interrupt, the IH must read only one byte. It's prototype must be as documented here:
+
+void mouse_ih();
+Since the IH takes no arguments and returns no values, the passing of data between mouse_ih() and the other functions of your implementation must be done via global variables, preferrably static.
+
+Remember that, in its definition, the function name of the mouse_ih() function must also appear between parenthesis, as shown:
+
+void (mouse_ih)() {
+You should implement this function in a source file together with related functions, as discussed in the lectures.
+
+Every time a packet is received, i.e. upon receiving the 3rd byte of a mouse packet, your program should parse it and print it on the console, by calling the following function that is documented here and that we provide you as part of the LCF:
+
+void mouse_print_packet(struct packet *pp);
+where:
+
+pp
+is the address of a struct packet, which is documented here
+Figure 1 illustrates the output generated by mouse_print_packet().
+
+B1=0x08	B2=0x12	B3=0x14	LB=0	MB=0	RB=0	XOV=0	YOV=0	X=18	Y=20
+B1=0x08	B2=0x12	B3=0x12	LB=0	MB=0	RB=0	XOV=0	YOV=0	X=18	Y=18
+B1=0x08	B2=0x12	B3=0x0e	LB=0	MB=0	RB=0	XOV=0	YOV=0	X=18	Y=14
+B1=0x08	B2=0x10	B3=0x0e	LB=0	MB=0	RB=0	XOV=0	YOV=0	X=16	Y=14
+B1=0x09	B2=0x00	B3=0x00	LB=1	MB=0	RB=0	XOV=0	YOV=0	X=0	Y=0
+B1=0x0C	B2=0x00	B3=0x00	LB=0	MB=1	RB=0	XOV=0	YOV=0	X=0	Y=0
+B1=0x0A	B2=0x00	B3=0x00	LB=0	MB=0	RB=1	XOV=0	YOV=0	X=0	Y=0
+Figure 1: Example of output generated by mouse_print_packet()
+Before calling mouse_print_packet(), your code must initialize the struct packet whose address is pp. Because the struct packet contains not only the bytes of a mouse packet, but also members such as the displacement in both the x and the y directions, or the state of the mouse buttons, your code must parse the packets received from the mouse.
+
+The mouse_test_packet() function should terminate after printing the number of packets specified in its argument cnt. However, before returning, it should reset the mouse to its state before the execution of your program, i.e. it must disable data reporting and unsubscribe mouse interrupts.
+
+5.2 mouse_test_async(uint8_t idle_time)
+The purpose of this function is to make you think about the structure of the code that handles asynchronous interrupt notifications from multiple devices, namely the PC's timer 0 and the mouse.
+
+This function should do essentially the same as mouse_test_packet(), i.e. it should display the packets received from the mouse, as shown in Figure 1.
+
+The difference is on the exit condition: mouse_test_async()should terminate if it receives no packets from the mouse for the number of seconds specified in its argument idle_time.
+
+For measuring the time you must use timer 0's interrupts. Furthermore, you must not change the configuration of timer 0. You can determine timer 0 interrupt frequency with the help of the kernel call sys_hz().
+
+Like in mouse_test_packet(), mouse_test_async() must subscribe mouse interrupts and enable data reporting, for which it can use mouse_enable_data_reporting(), until you develop that functionality. Also like in mouse_test_packet(), it is up to mouse_test_async() to disable data reporting and unsubscribe mouse interrupts before returning.
+
+5.3 mouse_test_gesture(uint8_t x_len, uint8_t tolerance)
+The purpose of this function is that you learn how to implement a state machine, whose states change in response to events originating from I/O devices, more specifically the mouse.
+
+This function should do essentially the same as mouse_test_packet(), i.e. it should display the packets received from the mouse, as shown in Figure 1.
+
+The difference is on the exit condition: now, the function should terminate if the user draws a logical and symbol, i.e. an inverted V, from left to write, as follows:
+
+the first line must be drawn while the left button, and no other, is pressed down.
+the second line must be drawn while the right button, and no other, is pressed down.
+the absolute value of the slope of each line must be larger than 1.
+the value of the displacement of each line along the x-direction must have the minimum value specified in the first argument, x_len.
+The units of both arguments are the units reported by the mouse.
+
+Your gesture matching algorithm must also satisfy the following requirements:
+
+The start of a line is marked by the pressing down of the relevant button when all buttons are released.
+Each line must be drawn in the "right" direction. To tolerate less precise mice, you shall give the tolerance specified in the second, tolerance, argument. E.g. the first line should be upwards, therefore all movements reported by the mouse should, in principle, have non-negative displacements along both the x and the y directions. But your algorithm must allow "small" negative displacements along both the x and the y directions, i.e. their absolute value cannot be larger than the second argument, tolerance.
+The end of a line is marked by the release of the relevant button.
+On the vertex, the left button must be released before the right button is pressed down. No other button-related events are acceptable between these two.
+Every movement reported between the two button-related events that define the vertex must be residual only, i.e. the absolute value in both the x and the y directions cannot be larger than the value of the second, tolerance, argument.
+To simplify the state machine, especially its hierarchical/layered implementation, you must ignore any displacement reported on a packet that generates either the start-of-line or the end-of-line button-based events. Essentially this means that each mouse packet can lead to at most one event relevant for gesture matching.
+The algorithm must restart matching the gesture from the very beginning as soon as it determines that the mouse events do not satisfy the requirements specified above.
+
+Like in mouse_test_packet() (and mouse_test_async()), mouse_test_gesture() must subscribe mouse interrupts and enable data reporting, for which it can use mouse_enable_data_reporting(), until you develop that functionality. Also like in mouse_test_packet() (and mouse_test_async()), it is up to mouse_test_gesture() to disable data reporting and unsubscribe mouse interrupts before returning.
+
+Prev Top Next
+
+Prev Top Next
+6. Program Compilation and Execution
+6.1 Compiling
+Follow the procedures described for the previous labs (of course now you should use directory lab4 instead of directory lab3 or lab2), but do not forget to modify the Makefile.
+
+6.2 Running
+After compiling, you can execute your program using the lcom_run utility, as follows:
+
+minix$ cd ~/labs/lab4
+minix$ lcom_run lab4 ["< list of space separated arguments >"]
+Note that the first command, is just to ensure that you execute lcom_run in a directory where it can find lab4.
+
+Prev Top Next
+
+Prev Top
+7. Testing with the LCF
+The LCF has a testing mode that allows you to test your code, by adding the string "-t <test no.>" at the end of the command line (as printed in the usage help message when you run lab4 via lcom_run, without specifying any argument).
+
+In test mode, the LCF checks if your program behaves as expected; in other words, if the output is provided when and as expected. In this mode, the LCF itself injects the mouse packets, thus emulating the mouse and the user that uses the mouse. Please note that the LCF does not try to emulate a human user, instead the packets are "sent" in quick succession, thus, in this aspect, its temporal behavior is not what you would observe if a human was using the mouse.
+
+Before exiting, the LCF prints a message with the result of the test, either "Test FAILED" or "Test succeeded". Furthermore, it prints the sequence of packet bytes injected, after the line with the test outcome. The value of these bytes are represented in hexadecimal, but they are not prefixed with 0x. We hope that this will help you better debug your code, if it fails a test.
+
+For test numbers 1 to 5, for each test function, the sequence of packets injected is the same every time you run the test with the same arguments. Nevertheless, so that you gain more confidence on the correctness of your code, we recommend that you repeat each test several times. For more details about the sequences used for each test function, please read the corresponding subsection below.
+
+For test number 0, the sequence of packets injected is random. We suggest that you use this test number only after running successfully test numbers 1 to 5. Running test number 0 repeated times, will allow you to more extensively test your code.
+
+To avoid interference from the mouse, when running these tests, the focus of the mouse must not be in the VBox window.
+
+Because the LCF checks essentially the behavior of your program, you may implement any of the functions without following the specifications, and your program may still pass the tests. Obviously, when we grade your code, we will check that your implementation is conforming with the specification. If it is not, you will get no points. Therefore, ensure that you follow the functions' specifications.
+
+To manually test the code you develop in this lab, the mouse focus must be on the VM's screen.
+
+Remember that in test mode, the trace and output log functionalities of the LCF are disabled. Nevertheless, you can still use printf() and check its output in the /var/log/messages file.
+
+7.1 Testing mouse_test_packet()
+The value of <test no.>, must be one of 0 to 5
+
+The following is a short description of the tests:
+
+1
+In this case, the packets report only mouse buttons' events
+2
+In this case, the sequence corresponds to a horizontal movemnet
+3
+In this case, the sequence corresponds to a vertical movement
+4
+In this case, the packets correspond to a mouse movement from left to right with a positive slope
+5
+In this case, the packets report various events, including mouse buttons being pressed/released and both upward and downward mouse movements.
+We suggest that you execute the tests "in order", starting with test no. 1, and leave test no. 0 for last.
+
+7.2 Testing mouse_test_async()
+For this function, the value of <test no.>, must be one of 0 to 5. The sequence of packets for test numbers 1 to 5 is similar to that described for mouse_test_packet(). The difference is that it checks whether or not your program exits after the specified time interval after the last byte of the last packet.
+
+Test number 0 generates a sequence of random packets with a random length.
+
+7.3 Testing mouse_test_gesture()
+For this function, the value of <test no.>, must be one of 0 to 5.
+
+When <test no.> is different from 0, the LCF will behave deterministically, i.e. it will generate always the same (relatively short) sequence of packets.
+
+All sequences derive from a so called "perfect sequence", which corresponds to a V whose lines have a slope of 2 (absolute value) and satisfy the other drawing rules, including the pressing/releasing of the buttons. Therefore, your program should terminate after processing the last packet of each of the sequences.
+
+The following is a short description of the tests:
+
+1
+In this case, the LCF injects the "perfect sequence"
+2
+In this case, the injected sequence differs from the "perfect sequence" in that it has two additional packets in the vertex with residual movements
+3
+In this case, the injected sequence differs from the "perfect sequence" in that the slope of the first line is not exactly 2
+4
+In this case, the injected sequence differs from the "perfect sequence" in that the slope of the second line is not exactly -2
+5
+In this case, the injected sequence differs from the "perfect sequence" in all three aspects described for tests 2, 3 and 4
+We suggest that you execute the tests "in order", starting with test no. 1.
+
+For test number 0, the LCF will generate a sequence of packets with a random length. This sequence always terminates with the "perfect sequence". The other packets, are also derived from the "perfect sequence", but are guaranteed not to match an inverted V. Therefore, if your program exits before the last byte in the sequence, it will not be correct.
+
+Prev Top
+

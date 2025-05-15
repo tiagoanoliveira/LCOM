@@ -7,7 +7,7 @@
 uint8_t scancode[2];
 int hook_id_kbd = 1;
 bool two_byte = false;
-uint32_t sys_inb_counter = 0; // é atualizado automaticamente no util_sys_inb, mas podes manter aqui
+uint32_t sys_inb_counter = 0;
 
 void (kbc_ih)(void) {
   uint8_t scancode_byte;
@@ -51,7 +51,7 @@ int (kbc_write_command)(uint8_t cmd) {
 
   while(attempts < MAX_ATTEMPS) {
     if ((util_sys_inb(KBC_STATUS_REG, &status)) != 0) return 1;
-    if ((status & KBC_INPUT_BUF) == 0) {
+    if ((status & KBC_INPUT_BUFFER_FULL) == 0) {
       if ((sys_outb(KBC_CMD_REG, cmd)) != 0) return 1;
       return 0;
     }

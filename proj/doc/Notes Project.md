@@ -42,6 +42,7 @@ Required to **render the game visually** using pixel-based drawing, including:
 - The falling pieces
 - Score display
 - UI elements (start screen, pause, game over)
+- Se tivermos problemas com a parte gráfica podemos tentar usar Key Frames, em vez de gerar a janela inteira gera apenas os pixeis que foram modificados na janela
 
 ---
 

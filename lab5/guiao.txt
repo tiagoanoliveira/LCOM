@@ -1,0 +1,537 @@
+Computer Labs - 2nd Semester
+Lab 5: The PC's Video Card in Graphics Mode
+1. Objective
+The objective of this lab is twofold:.
+
+that you learn how to use the PC's video card in graphics mode, using the BIOS/VBE interface for its configuration
+that you learn the principles computer graphics animation
+This lab is planned for 2 lab classes. You are expected to attend the lectures and in addition to spend about 5 hours to prepare each of the lab classes.
+
+This handout is structured as follows:
+
+2. What to Do
+which summarizes what you are supposed to implement and what you have to do in order to prepare for the lab classes
+3. The VBE Standard
+which provides a very brief overview of the VBE standard. More detailed information can be found in the standard itself.
+4. Minix 3 Notes
+which describes some Minix 3 aspects that are relevant for the lab.
+5. Test Functions Specification
+which specifies the test functions that you must implement and that we will use to grade your work
+6. Compilation and execution
+7. Testing with the LCF
+References
+Lecture notes
+VESA BIOS EXTENSION (VBE), Version 2.0
+Acknowledgments
+This lab is based on a lab by João Cardoso and Miguel P. Monteiro for DJGPP running on Windows98.
+
+Prev Top Next
+2. What to Do
+Write in the C programming language several functions to use the PC's video card in graphics mode. The goal is to develop a generic module that will be used to create a library, which you will be able to use in the course's project.
+
+In this lab you have to implement the following test functions:
+
+void video_test_init(unsigned short mode, unsigned short delay)
+int video_test_rectangle(uint16_t mode, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color)
+int video_test_pattern(uint16_t mode, uint8_t no_rectangles, uint32_t first)
+int video_test_xpm(char *xpm[], unsigned short xi, unsigned short yi)
+int video_test_move(char *xpm[], unsigned short xi, unsigned short yi, unsigned short xf, unsigned short yf, short speed, short frame_rate)
+in a file whose name is lab5.c. (Actually, you should use the file lab5.c, which includes stubs for these functions as well as the implementation of main(), without which you will not be able to test your code.) Section 5 describes what these functions should do.
+
+2.1 Preparation of the first lab class
+The goals for the first class are to implement:
+
+void video_test_init(unsigned short mode, unsigned short delay)
+int video_test_rectangle(uint16_t mode, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color)
+int video_test_pattern(uint16_t mode, uint8_t no_rectangles, uint32_t first)
+Therefore, for the first class you should read:
+
+the material presented in the lectures of March 28th and April 4th about the video card's in graphics mode;
+this handout
+Furthermore, you should:
+
+Copy file lab5.c to the folder /home/lcom/labs/lab5, that already exists (in Minix's filesystem). You should also copy to this folder a makefile you have used in one of the previous labs. (Do not forget to make appropriate changes to this makefile so that it can be used for this lab.)
+Add these files to your local git repository and synch it with your group's repository in Gitlab@FEUP..
+Write video_test_init()
+2.2 Preparation for the second lab class
+The goals for the second class are to implement:
+
+int video_test_xpm(char *xpm[], unsigned short xi, unsigned short yi)
+int video_test_move(char *xpm[], unsigned short xi, unsigned short yi, unsigned short xf, unsigned short yf, short speed, short frame_rate)
+Therefore, for the second class you should:
+
+read the material presented in the lectures of April 4th
+and try to implement video_test_xpm().
+Prev Top Next
+
+Prev Top Next
+3. The VBE Standard
+In the late 1980's, there was a large number of video card manufacturers offering video cards with higher resolutions than those specified in the VGA standard. In order to allow application programmers to develop portable video-based applications, the Video Electronics Standards Association (VESA) published in 1989 the VBE (VESA BIOS Extensions) standard. During the 1990's this standard was revised several times. However, the last major version, version 3.0, dates from 1998. This is probably because by that time other standards had emerged, namely DirectX by Microsoft and OpenGL, originally developed by SGI.
+
+The VBE standard defines a set of functions related to the operation of the video card, and specifies how they can be invoked. These functions were implemented by the video card manufacturers, usually in a ROM in the video card. Originally, the interface to these functions used only INT 0x10, i.e. the interrupt number used by the BIOS' video services, and had to be executed with the CPU in real-mode. Starting with version 2.0, VBE supports also the direct call of some time-critical functions from protected mode. Version 3.0 specified a new interface for protected mode for most functions, but their implementation is optional: i.e. an implementation can claim conformance with VBE 3.0, even though it does not support the protected mode interface.
+
+Do not worry if you do not know what the real- and the protected modes are. It suffices to know that these are different modes of operation of the Intel x86 architecture processors. The real-mode was the only mode supported by the processor used in the original IBM PC, and provided no protection mechanisms. Protected mode was introduced later, but it is not compatible with real mode: i.e. a program written/compiled for real-mode may not execute correctly in proteted mode. If you want to learn more, you can read these notes by Prof. Pedro Brandão.
+
+The VirtualBox video card's emulation supports only VBE 2.0, thus we will focus on that version of the standard.
+
+In this lab, we will use only a few basic functions that allow
+
+to retrieve information regarding the video card's capabilities, including the modes supported and their characteristics and
+to change the operating mode.
+Because these functions are not time-critical, VBE 2.0 specifies only a real-mode interface for them.
+
+3.1 Invoking the VBE Functions
+As already mentioned, in real-mode, VBE functions are called using the interface used for standard BIOS video services. That is, the call is via the INT 0x10 software interrupt instruction, in real-mode, and the function parameters are passed in the CPU registers.
+
+When invoking a VBE function, the AH register must be set to 0x4F, thus distinguishing it from the standard VGA BIOS functions. The VBE function being called is specified in the AL register. The use of the other registers depends on the VBE function.
+
+The AL and the AH registers are also used to return a completion status value. If the VBE function called is supported, the AL register is set with value 0x4F. A different value is returned if the function is not supported. If the VBE function completed successfully, value 0x00 is returned in the AH, otherwise it is set to indicate the nature of the failure, as shown in the table:
+
+Table 1: Unsuccessful call return codes
+AH	Meaning
+0x01	Function call failed
+0x02	Function is not supported in current HW configuration
+0x03	Function is invalid in current video mode
+Invoking VBE function:
+set AH=0x4F
+specify function in AL
+Return codes:
+AL!=0x4F: if func not supported
+AL==0x4F: if func supported
+AH==0x00: if func successful
+AH as in Table 1: if func not successful
+3.2 Setting the Graphics Mode
+In graphics mode, the screen is abstracted as a matrix of points, pixels (from picture element). The number of pixels on the screen depends on the screen resolution. Thus we can abstract the screen as a set of VRES lines, each of which with HRES pixels. Each pixel has a single attribute (in addition to its coordinates): its color.
+
+The VBE standard defines several operating modes that video cards may support. These modes have different attributes, for example whether they are text or graphic modes. Other attributes in the latter case include: the horizontal and vertical resolution, the number of bits per color. For the more attributes, you can read the specification of function 0x01 Return VBE Mode Information in page 16 and following of the VBE 2.0 standard. In this lab, we want you to play with modes with different parameters, e.g.:
+
+Table 2: VBE modes
+Mode	Screen Resolution	Color Model	Bits per pixel (R:G:B)
+0x105	1024x768	Indexed	8
+0x110	640x480	Direct color	15((1:)5:5:5)
+0x115	800x600	Direct color	24 (8:8:8)
+0x11A	1280x1024	Direct color	16 (5:6:5)
+0x14C	1152x864	Direct color	32 ((8:)8:8:8)
+For a list of the modes specified in VBE, you can read Section 3 (pg. 6) of the VBE 2.0 standard. Video card manufacturers can also define other video modes. This is made possible by the VBE functions that allow an application to obtain the video card's capabilities. For example, the VBE implementation of the VirtualBox supports many modes that are not defined in the standard, e.g. mode 0x14C listed in the table above.
+
+To initialize the controller and set a video mode, you must use function 0x02 - Set VBE Mode. The mode must be passed in the BX register. Bit 14 of the BX register should be set, in order to set the linear frame buffer model (described in the next section), which facilitates access to video RAM (VRAM). You can find more details regarding this function in its specification in pg. 25 of the VBE2.0 standard.
+
+3.3 Linear/Flat Frame Buffer Model
+The values of the pixels on the screen are stored in VRAM. The layout of these values on the VRAM depends on the memory model used. In LCOM, we will use the linear/flat frame buffer.
+
+In the linear/flat frame buffer model, the lines of the screen are located in VRAM one after the other, from the top line to the bottom line of the screen. Furthermore, in each line, the left most pixel comes first, then the pixel to its right, and so on until the right most pixel, which comes last.
+
+Graphics mode VRAM is not directly accessible by a user program. To make it accessible you need to map it in the process' address space. Of course, this operation is privileged and your program needs to have the necessary permissions.
+
+Before your process can map the graphics VRAM in its address space it needs to know the VRAM's physical address. This information can be obtained from the video controller using VBE function 0x01 Return VBE Mode Information, which takes as arguments the mode and a real-mode address of a buffer that will be filled in with the parameters of the specified mode. In addition to the linear buffer physical address, these parameters include the horizontal and vertical resolution, as well as the number of bits per pixel. All these parameters must be known to change the color of a specific pixel. You can find more details regarding this function in its specification in pg. 16 of the VBE2.0 standard.
+
+Another useful function provided by the VBE standard is function 0x00 Return VBE Controller Information, which returns the capabilities of the controller, including a list of the video mode numbers supported by the controller. Like function 0x01, this function also takes as an argument a real-mode address with a buffer that will be filled in with the controller information. This function and function 0x01 can be used by a graphics application to learn the capabilities of the video card, and set the video-mode that suits it better. You can find more details regarding this function in its specification in pg. 12 of the VBE2.0 standard.
+
+The use of the VBE functions in general and of the functions 0x00 and 0x01, in particular, is tricky because they usually use real-mode addresses: these are physical addresses, and are composed of the base address of a segment, a 16 bit-value that should be left-shifted by 4 bits to create a 20 bit segment address, and a 16-bit offset, that should be added to the 20-bit segment address. However, Minix processes normally use virtual addresses. Thus to use the VBE interface, your program should use Minix functions that expose physical addresses, as described in the next section.
+
+3.4 Returning to Text Mode
+As already mentioned, in graphics mode you will not have access to the Minix Terminal, and hence to the shell. Thus, before terminating your program, you should always reset the video controller to operate in text mode. (Anyway, the best option is to use ssh from "remote" terminal.)
+
+The mode used by Minix in text mode is a standard CGA mode, whose number is 0x03. To set this mode, you should use the standard INT 0x10 BIOS interface, namely function 0x00. Thus you should set the AH register to 0x00 and the AL register to 0x03.
+
+3.5 Summary
+Function	AH	AL	Ref in VBE
+standard	Notes
+Set VBE mode	0x4F	0x02	page 25	mode is passed in register BX, which should have bit 14 set
+Return VBE Mode Info	0x4F
+0x01	page 16	mode is passed on CX
+must provide address for returned info in registers ES:DI
+Return VBE Controller Information	0x4F	0x00	page 12	must provide address for returned info in registers ES:DI
+BIOS Set Video Mode	0x00	< video mode >		not a VBE function, but a BIOS function
+set AL to 0x03 to return to Minix's default text mode
+Prev Top Next
+
+Prev Top Next
+4. Minix 3 Notes
+Accessing the video card via the VBE interface in Minix 3 raises a few issues:
+
+Invocation of the INT 0x10 instruction in real-mode
+Minix 3 executes in protected mode, however VBE requires the invocation of INT 0x10 in real-mode.
+Mapping of video RAM (VRAM) into the process address space
+Graphics mode VRAM, like text mode VRAM, is not directly accessible to a user process in Minix 3. So that a process can access VRAM, it must first map it into its address space.
+In the following, we describe how to address these issues.
+
+4.1 Invocation of the INT 0x10 instruction
+Minix 3.1.x offers the SYS_INT86 kernel call, whose description in the Minix 3 Developers Guide was as follows:
+
+Make a real-mode BIOS [call] on behalf of a user-space device driver. This temporarily switches from 32-bit protected mode to 16-bit real-mode to access the BIOS calls.
+That is, this kernel call switches from 32-bit protected mode to (16-bit) real-mode, and then executes a software interrupt instruction INT. This instruction takes as an argument an 8-bit integer, that specifies the interrupt number. As a result, the processor jumps to the corresponding handler, which must be configured at boot time. After the execution of that handler, SYS_INT86 switches back to 32-bit protected mode. The main use of this call in Minix 3.1.x was to make BIOS calls.
+
+Although Minix has dropped this kernel call in release 3.2.0, Pedro Silva added support for it to Minix 3.4.0rc6, the version we are using in LCOM, by porting libx86emu to Minix. Thus, the current implementation of SYS_INT86, rather than switching to real-mode, emulates in software the execution in real-mode of a software interrupt instruction, INT, as well as the execution of the real-mode code of the respective handler.
+
+The library function to make this kernel call is as follows:
+
+// #include <machine/int86.h> no need to include this line
+
+int sys_int86(struct reg86 *reg86p);
+It returns either OK, in the case of success, or EFAULT otherwise, and takes as arguments a value of type reg86_t *reg86p, which allows to specify the values of the interrupt number and of the processor registers. This struct is defined in the header file <machine/int86.h>, which is already included via <lcom/lcf.h>
+
+The reg86_t struct is an interesting example of the use of anonymous unions/structs. If you wish to learn more, you can read these notes.
+
+An example of the use of the sys_int86() is vg_exit(), which is already provided by the LCF, and resets the video controller to operate in text mode. More specifically, vg_exit() calls function 0x00 (Set Video Mode) of the BIOS video services (INT 0x10).:
+
+/* Set default text mode */
+int vg_exit() {
+  reg86_t r86;
+   
+  /* Specify the appropriate register values */
+  
+  memset(&r86, 0, sizeof(r86));	/* zero the structure */
+
+  r86.intno = 0x10; /* BIOS video services */
+  r86.ah = 0x00;    /* Set Video Mode function */
+  r86.al = 0x03;    /* 80x25 text mode */
+  
+  /* Make the BIOS call */
+
+  if( sys_int86(&r86) != OK ) {
+    printf("\tvg_exit(): sys_int86() failed \n");
+    return 1;
+  }
+  return 0;
+}
+In order to avoid unexpected behavior by libx86emu, whenever you make a INT 0x10 call, you should clear the ununsed registers of the reg86_t struct before passing it to sys_int86(), using for example memset() as above in vg_exit().
+
+4.2 Mapping Video RAM in a Process's Address Space
+What is displayed on a computer screen depends on the contents of its video RAM (VRAM), more specifically the frame buffer in VRAM. Therefore, to change what is displayed on the screen, we need to modify the frame buffer. The VRAM is a physical memory region, so before lab5, i.e. the program you will develop in this lab, can access the frame buffer, it must map the VRAM to its address space, by using MINIX 3's kernel call:
+
+void *vm_map_phys(endpoint_t who, void *phaddr, size_t len)
+The first argument is a value that identifies the process on whose address space the physical memory region should be mapped. Of course phaddr specifies the physical address of the first memory byte in that region and len the region's length. This call returns the virtual address (of the first physical memory position) on which the physical address range was mapped. Subsequently, a process can use the returned virtual address to access the contents in the mapped physical address range.
+
+The physical address and the size of VRAM for a given graphics mode can be obtained using VBE function 0x01, Return VBE Mode Info.
+
+Because the process has access to the mapped physical memory, Minix requires the process to have not only the necessary permissions to execute that call, but it must also have the permission to map the desired physical address range. To grant a process the permission to map a given address range you should use MINIX 3 kernel call:
+
+int sys_privctl(endpoint_t proc_ep, int request, void *p)
+Again, the first argument specifies the process whose privileges will be affected, and the other two arguments depend on the privileges to change. The following code snippet illustrates the steps required to map the VRAM to a process's address space. Note that [...] means that we have omitted some code.
+
+// #include <minix/driver.h> already included by <lcom/lcf.h>
+// #include <sys/mman.h> already included by <lcom/lcf.h>
+
+[...]
+
+static void *video_mem;         /* frame-buffer VM address 
+				   (static global variable*/ 
+[...]
+
+struct minix_mem_range mr;
+unsigned int vram_base;  /* VRAM's physical addresss */
+unsigned int vram_size;  /* VRAM's size, but you can use
+				    the frame-buffer size, instead */
+int r;				    
+
+/* Use VBE function 0x01 to initialize vram_base and vram_size */
+
+[...]
+
+/* Allow memory mapping */
+
+mr.mr_base = (phys_bytes) vram_base;	
+mr.mr_limit = mr.mr_base + vram_size;  
+
+if( OK != (r = sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr)))
+   panic("sys_privctl (ADD_MEM) failed: %d\n", r);
+
+/* Map memory */
+
+video_mem = vm_map_phys(SELF, (void *)mr.mr_base, vram_size);
+
+if(video_mem == MAP_FAILED)
+   panic("couldn't map video memory");
+As in other labs, you need not include <minix/drivers.h> nor <minix/mman.h>, as long as you include <lcom/lcf.h>, which includes several other header files.
+
+4.2.1 Accessing Graphics Mode VRAM in C
+As we have already mentioned, with the linear frame buffer model, each pixel on the screen is mapped sequentially to VRAM from the left to the right, and from the top to the bottom. Thus, to access graphics mode VRAM in C, after mapping it in the process' address space, you can use C pointers.
+
+To keep the prototypes of the functions you will have to develop simple, they need not take as arguments the address on which VRAM is mapped nor the horizontal resolution and so on. Instead, you can use static global variables in the source code file that changes the VRAM's content, as shown in the following code snippet:
+
+static char *video_mem;		/* Process (virtual) address to which VRAM is mapped */
+
+static unsigned h_res;	        /* Horizontal resolution in pixels */
+static unsigned v_res;	        /* Vertical resolution in pixels */
+static unsigned bits_per_pixel; /* Number of VRAM bits per pixel */
+Although the use of global variables is something you should avoid, there are two reasons why they are acceptable here:
+
+These are static global variables, and thus their scope is limited to the file where they are declared, i.e. they are not visible in other files
+We are structuring our code very much like in object oriented programming, and these variables are akin to the static member variables of a C++ class.
+Of course, you can add other "static member variables" as you see fit.
+
+4.3 Access to and Processing of the Data Returned by VBE Functions 0x00 and 0x01
+VBE functions 0x00 and 0x01 return data in a memory buffer, as defined in their specification, in pages 12 to 24 of the VBE 2.0 standard. These data comprises several fields whose size is specified using one of 3 types: db, dw and dd, with sizes 1, 2 and 4 bytes, respectively. Because, memory space was at a premium, this data is stored sequentially in memory, without holes (except for fields defined in previous versions that were deprecated).
+
+This layout creates a potential problem when one defines C language structs with the fields defined in the VBE standard and uses C types such as uint8_t, uint16_t and uint32_t defined in <stdint.h> corresponding to the "types" used in VBE's specification. The problem is that, for performance reasons, most compilers store the members of a C struct in positions whose addresses are aligned according to their types; this may lead to holes in the structure. In this case, access to a member of the struct in C, may actually access a memory position storing a different field, or a different piece of the same field.
+
+To prevent the C compiler from placing the members of a C struct in memory positions whose addresses are aligned according to their types, but rather place them consecutively without any holes in between, you can enclose the relevant data structures inside the following pair of #pragma directives: 1) #pragma pack(1) and 2) #pragma options align=reset, as illustrated in the following code snippet with the definition of vbe_mode_info_t type in vbe.h:
+
+#pragma pack(1) 
+ 
+typedef struct {
+  /*  Mandatory information for all VBE revisions */
+  uint16_t ModeAttributes; 	/**< @brief mode attributes */
+  uint8_t WinAAttributes; 	/**< @brief window A attributes */
+  uint8_t WinBAttributes; 	/**< @brief window B attributes */
+  uint16_t WinGranularity; 	/**< @brief window granularity */
+  uint16_t WinSize;		/**< @brief window size */
+  uint16_t WinASegment;		/**< @brief window A start segment */
+  uint16_t WinBSegment;		/**< @brief window B start segment */
+  phys_bytes WinFuncPtr;	/**< @brief real mode/far pointer to window function */
+  uint16_t BytesPerScanLine; 	/**< @brief bytes per scan line */
+
+  /* Mandatory information for VBE 1.2 and above */
+
+  uint16_t XResolution;      	/**< @brief horizontal resolution in pixels/characters */
+  uint16_t YResolution;      	/**< @brief vertical resolution in pixels/characters */
+  uint8_t XCharSize; 		/**< @brief character cell width in pixels */
+  uint8_t YCharSize; 		/**< @brief character cell height in pixels */
+  uint8_t NumberOfPlanes; 	/**< @brief number of memory planes */
+  uint8_t BitsPerPixel; 	/**< @brief bits per pixel */
+  uint8_t NumberOfBanks;	/**< @brief number of banks */
+  uint8_t MemoryModel;		/**< @brief memory model type */
+  uint8_t BankSize;		/**< @brief bank size in KB */
+  uint8_t NumberOfImagePages;	/**< @brief number of images */
+  uint8_t Reserved1;		/**< @brief reserved for page function */
+
+  /* Direct Color fields (required for direct/6 and YUV/7 memory models) */
+  
+  uint8_t RedMaskSize;		/* size of direct color red mask in bits */
+  uint8_t RedFieldPosition;	/* bit position of lsb of red mask */
+  uint8_t GreenMaskSize;	/* size of direct color green mask in bits */
+  uint8_t GreenFieldPosition;	/* bit position of lsb of green mask */
+  uint8_t BlueMaskSize; 	/* size of direct color blue mask in bits */
+  uint8_t BlueFieldPosition;	/* bit position of lsb of blue mask */
+  uint8_t RsvdMaskSize;		/* size of direct color reserved mask in bits */
+  uint8_t RsvdFieldPosition;	/* bit position of lsb of reserved mask */
+  uint8_t DirectColorModeInfo;	/* direct color mode attributes */
+
+  /* Mandatory information for VBE 2.0 and above */
+  phys_bytes PhysBasePtr;        /**< @brief physical address for flat memory frame buffer */
+  uint8_t Reserved2[4]; 	 /**< @brief Reserved - always set to 0 */
+  uint8_t Reserved3[2]; 	 /**< @brief Reserved - always set to 0 */
+
+  /* Mandatory information for VBE 3.0 and above */
+  uint16_t LinBytesPerScanLine;  /* bytes per scan line for linear modes */
+  uint8_t BnkNumberOfImagePages; /* number of images for banked modes */
+  uint8_t LinNumberOfImagePages; /* number of images for linear modes */
+  uint8_t LinRedMaskSize; 	 /* size of direct color red mask (linear modes) */
+  uint8_t LinRedFieldPosition;   /* bit position of lsb of red mask (linear modes) */
+  uint8_t LinGreenMaskSize; 	 /* size of direct color green mask (linear modes) */
+  uint8_t LinGreenFieldPosition; /* bit position of lsb of green mask (linear  modes) */
+  uint8_t LinBlueMaskSize; 	 /* size of direct color blue mask (linear modes) */
+  uint8_t LinBlueFieldPosition;  /* bit position of lsb of blue mask (linear modes ) */
+  uint8_t LinRsvdMaskSize; 	 /* size of direct color reserved mask (linear modes) */
+  uint8_t LinRsvdFieldPosition;	 /* bit position of lsb of reserved mask (linear modes) */
+  uint32_t MaxPixelClock; 	 /* maximum pixel clock (in Hz) for graphics mode */
+  uint8_t Reserved4[190]; 	 /* remainder of ModeInfoBlock */
+} vbe_mode_info_t;
+
+#pragma options align=reset
+Because vbe.h is already included by <lcom/lcf.h>, you can access directly the members of vbe_mode_info_t without concern of their layout in memory. For more detailed information regarding these members, you can read the definition of the ModeInfoBloc struc (sic) in pg. 23 of the VBE2.0 standard.
+
+An alternative is to use the __attribute__ ((packed)) extension of the GNU C compiler. Although some other compilers, e.g. clang, also support this extension, it is less portable than the above alternative.
+
+4.4 Summary
+To summarize, the sequence of operations of the program to develop in this lab is as follows:
+
+Map the graphics mode VRAM into the process' address space and initialize the video graphics mode. The LCF function vbe_get_mode_info() can be used to obtain the relevant mode parameters for these two actions.
+Modify VRAM, by calling the functions you'll develop for this lab.
+Switch back to text mode, by calling vg_exit()
+Prev Top Next
+
+Prev Top Next
+5. Test Functions Specification
+So that you get familiar with the kind of functions that you will have to implement in the programming tests, we have specified the functions that you are required to implement in a similar style. These functions are invoked by the LCF, so make sure that your implementation matches their prototypes.
+
+Rather than implement the required functionality directly in these functions, you should design and implement functions that may be useful to interface with the video adapter in your integration project, i.e. functions that configure the video adapter, that change the color of a pixel, etc. We will grade not only how you structure the required functionality in functions, but also how do you group these functions in compilation modules, i.e. in the source files.
+
+Remember that your implementation must use the LCF. Therefore, all your C source code files must include the following line:
+
+#include <lcom/lcf.h>
+This should be the first header file to be included in all your C source code files. You may create your own header files, if needed.
+
+You can find doxygen's documentation of the functions to develop, and of some other useful functions, here.
+
+5.1 video_test_init(uint16_t mode, uint8_t delay)
+The purpose of this function is that you learn how to switch the video adapter to the graphics mode specified in its argument, using the VBE interface, and then back again to the default text mode.
+
+When this function is invoked, your program should change to the video mode specified in its mode argument.
+
+After delay seconds, it should go back to Minix's default text mode.
+
+5.2 video_test_rectangle(uint16_t mode, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color)
+The purpose of this function is that you learn how to change the color of pixels on the screen and to use the relevant graphics mode parameters.
+
+This function shall:
+
+map the video memory to the process' address space
+change the video mode to that in its argument
+draw a rectangle
+reset the video mode to Minix's default text mode and return, upon receiving the break code of the ESC key (0x81)
+Note that actions 1 and 2 could have been swapped. However, the LCF tests are not flexible, and require 1 to be performed before 2. This applies also to the other test functions that access the VRAM.
+
+The arguments x and y specify the coordinates of the rectangle's top-left corner. (The pixel at the top-left corner of the screen has coordinates (0,0).) The arguments width and height specify the width and height of the rectangle in pixels. The color argument specifies the color to fill the rectangle, encoded as determined by the first argument, mode.
+
+You can check the details in its doxygen documentation.
+
+To facilitate testing, you should use the function:
+
+int vg_draw_hline(uint16_t x, uint16_t y, uint16_t len, uint32_t color)
+which is documented here, and that you need to implement.
+
+So that your code supports different graphics modes, it should use VBE function 0x01 - Return VBE Mode Information, to get the parameters relevant for the chosen graphics mode. You can then use these parameters to change the value of the appropriate location of the video RAM (VRAM). For example, if the mode is 0x105, then the resolution is 1024 x 768, color mode is indexed and each pixel takes 8 bits, i.e. 1 byte; thus the argument color must not be larger than 255. Furthermore, to change a pixel you must write this byte to the byte in VRAM corresponding to that pixel. On the other hand, if the mode is 0x115, then the resolution is 800 x 600, the color mode is direct and each pixel takes 24 bits, 8 for each of the RGB components. Therefore, you should consider only the 24 least significant bits, i.e. the 3 least significant bytes, of the color argument. Furthermore, to change a pixel you must write these 3 bytes to the 3 bytes in VRAM corresponding to that pixel.
+
+Because using VBE function 0x01 requires knowledge of some obsolete features of the first Intel processors used in PCs, you can use the vbe_get_mode_info() function that is provided by the LCF:
+
+#include <lcom/lcf.h>
+	
+int vbe_get_mode_info(uint16_t mode, vbe_mode_info_t *vmi_p);
+This function essentially calls the VBE function 0x01 - Return VBE Mode Information and is documented here, together with the vbe_mode_info_t struct.
+
+.
+5.3 int video_test_pattern(uint16_t mode, uint8_t no_rectangles, uint32_t first, uint8_t step)
+The purpose of this function is that you learn further how to use the graphics mode parameter, namely to handle the different components of a pixel color in direct mode.
+
+This function shall change the video mode to that in its argument. Then it should draw a pattern of colored (filled) rectangles on the screen. Finally, upon receiving the break code of the ESC key (0x81), it should reset the video mode to Minix's default text mode and return.
+
+You can check the details in its doxygen documentation.
+
+The pattern to be drawn is a matrix of no_rectangles by no_rectangles. All rectangles shall have the same size, i.e. the same width and the same height. If the horizontal (vertical) resolution is not divisible by no_rectangles then you should leave a black stripe with minimum width (height) on the right (bottom) of the screen.
+
+The color of each rectangle depends on its coordinates in the rectangle matrix, (row, col), and on all the arguments.
+
+If the color mode is indexed (or packed pixel, in VBE jargon), then the index of the color to fill the rectangle with coordinates (row, column) is given by the expression:
+
+	index(row, col) = (first + (row * no_rectangles + col) * step) % (1 << BitsPerPixel)
+where BitsPerPixel is the value of the member of the VBEInfoBlock struct with the same name (check the vbe_mode_info_t doxygen documentation) for the input mode, and the remaining variables are the arguments of video_test_pattern().
+
+If the color mode is direct, then the RGB components of the color to fill the rectangle with coordinates (row, column) are given by the expressions:
+
+	R(row, col) = (R(first) + col * step) % (1 << RedMaskSize)
+	G(row, col) = (G(first) + row * step) % (1 << GreenMaskSize)
+	B(row, col) = (B(first) + (col + row) * step) % (1 << BlueMaskSize)	
+where RedMaskSize, GreenMaskSize and BlueMaskSize, are the values of the members of the VBEInfoBlock struct with the same name (check the vbe_mode_info_t doxygen documentation) for the input mode, and the remaining variables are the arguments of video_test_pattern().
+
+To facilitate testing with the LCF, you should use the function:
+
+int vg_draw_rectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color)
+which is documented here, and that you need to implement.
+
+5.4 video_test_xpm(const char *xpm[], uint16_t x, uint16_t y)
+The purpose of this function is that you learn how to draw a pixmap that is provided as an XPM image.
+
+This function should change to video mode 0x105 and display the pixmap provided as an XPM at the specified coordinates (upper left corner of pixmap). When the user releases the ESC key (scancode 0x81), it should reset the video mode to Minix's default text mode and return.
+
+You can check the details in its doxygen documentation.
+
+You can use the function load_xpm() that is provided by the LCF to convert an XPM into a pixmap. For more details, you can check its doxygen documentation.
+
+The input XPM provided as the first argument of video_test_xpm() is one of the XPMs of the pixmap.h file. Which one, depends on the second argument (the one after the "xpm" string) of the lab5 Minix service as specified by the following table:
+
+First argument of video_test_xpm()
+Second argument of lab5	XPM of the pixmap.h file
+0	pic1
+1	pic2
+2	pic3
+3	cross
+4	penguin
+5.5 video_test_move(const char *xpm[], uint16_t xi, uint16_t yi, uint16_t xf, uint16_t yf, int16_t speed, uint8_t fr_rate)
+The purpose of this function is that you learn how to move a pixmap that is provided as an XPM image.
+
+When this function is invoked, your program should change to video mode 0x105 and display the pixmap provided as an XPM at (xi,yi) (upper left corner). Then it should move that sprite until its upper left corner is at position (xf,yf). This movement should be done at the specified speed with the specified frame_rate in frames per second (fps). When the user releases the ESC key (scancode 0x81), it should reset the video mode to Minix's default text mode and return, even if the movement has not completed.
+
+You need only consider movements along either the horizontal or the vertical directions. I.e. either xf is equal to xi or yf is equal to yi.
+
+If speed is positive it should be understood as the displacement in pixels between consecutive frames. If the speed is negative it should be understood as the number of frames required for a displacement of one pixel.
+
+You must always ensure that the final position of the pixmap is the one specified in the arguments to video_test_move(). Thus if speed is positive and the length of the movement is not a multiple of speed, the last displacement of the pixmap in its movement will be smaller than speed.
+
+You can check the details in its doxygen documentation.
+
+Note: The input XPM provided as the first argument of video_test_move() is specified as described for video_test_xpm().
+
+Prev Top Next
+
+Prev Top Next
+6. Program Compilation and Execution
+6.1 Compiling
+Follow the procedures described for the previous labs (of course now you should use directory lab5 instead of directory lab3 or lab2), but do not forget to modify the Makefile.
+
+You should also modify the variables specifying the library dependencies to include also liblm.a and libxpm.a.
+
+6.2 Running
+After compiling, you can execute your program using the lcom_run utility, as follows:
+
+minix$ cd ~/labs/lab5
+minix$ lcom_run lab5 ["<list of space separated arguments>"]
+Note that the first command, is just to ensure that you execute lcom_run in a directory where it can find lab5.
+
+For more details regarding the command line arguments, run lab5 without arguments. (This year, you can ignore the last line output by lab5.)
+
+Remember that the XPM required by video_test_xpm() and video_test_move() is specified as described in Section 5.
+
+Prev Top Next
+
+Prev Top
+7. Testing with the LCF
+The LCF has a testing mode that allows you to test your code, by adding the string "-t <test no.>" at the end of the command line (as printed in the usage help message when you run lab5 via lcom_run, without specifying any argument).
+
+In test mode, the LCF checks if your program behaves as expected; in other words, if the output is provided when and as expected. More specifically, the LCF checks if the contents of the frame-buffer is the expected one at specific time instants. In this mode, the LCF itself injects Esc-key scancodes that should cause lab5 to terminate. Before exiting, the LCF prints a message with the result of the test, either "Test FAILED" or "Test succeeded".
+
+As in previous labs, for positive test numbers, the LCF behavior is deterministic, i.e. it generates the Esc-key scancodes always at the same time. For test number 0, when supported, that instant is random. We suggest that you use this test number only after running successfully positive test numbers.
+
+Note that test no. 0 uses a seed, which is printed at the end with the test result. This allows you to re-run the test, by adding the option "-s ", after the "-t 0" option (this is not printed in the usage message because it does not fit in one line). This is particularly useful for debugging, if your code fails in some run of test no. 0.
+
+To avoid interference from the keyboard, when running these tests, do not use it, if the VBox window is the active one.
+
+Recall that the LCF checks essentially the behavior of your program, thus you may implement any of the functions without following the specifications, and your program may still pass the tests. By doing that, you will be fooling yourself only. Ensure that you follow the functions' specifications.
+
+Remember that in test mode, the trace and output log functionalities of the LCF are disabled. Nevertheless, you can still use printf() and check its output in the /var/log/messages file.
+
+7.1 Testing video_test_init()
+The value of <test no.> must be 1. This is a parameterized test, i.e. you may provide arbitrary (appropriate) values for both the mode and the delay. Verification is done by intercepting the relevant calls and checking their arguments and the instants when they are made.
+
+7.2 Testing video_test_rectangle() and video_test_pattern()
+For these functions, the value of <test no.> must also be 1. This is a parameterized test, i.e. you may provide arbitrary values for all arguments, except for mode. Indeed, the testing functionality of the LCF supports only modes 0x105 and 0x115. (Nevertheless, we recommend that you develop tests for other modes.)
+
+The test of these functions is based essentially on the contents of the frame-buffer upon calling vg_exit(). Therefore, you should invoke VBE function 0x02, Set VBE Mode, with bit 15 of the BX register cleared, thus ensuring that the display memory is cleared after switching to the desired graphics mode.
+
+As stated above, for these functions, the LCF injects the make and break codes of the ESC key. This is done, as soon as your code invokes driver_receive(), if it has previously subscribed keyboard interrupts, so that in test mode you will hardly see what your program displays on the screen.
+
+To simplify the implementation of these tests (and also of the following), the LCF requires that you map video RAM before you change to graphics mode. If you swap the order of these actions the LCF will report the following outcome:
+
+
+Test FAILED: one or more missing/unexpected function calls!
+
+7.3 Testing video_test_xpm()
+Like for the previous functions, the value of <test no.> must also be 1. This too is a parameterized test, i.e. you may provide arbitrary values for all arguments, although the current implementation of the LCF requires you to specify the XPM by using an integer in the 0 to 4 range, as described in Section 5.
+
+The observations regarding the test of the contents of the frame buffer and the injection of the ESC-key scancodes made in the previous section for video_test_rectangle() and video_test_pattern() also apply to video_test_xpm().
+
+7.4 Testing video_test_move()
+For this function, the value of <test no.> may be one of 0, 1 and 2. These test cases differ on the instant when the LCF injects the ESC scancodes; this is measured in frames since the begining of the execution, and is based on the number of expected frames to complete the movement
+
+Test no.	Instant ESC scancodes are injected
+0	random between 0 and 2*expected no. of frames
+1	after the expected no. of frames
+2	after half of the expected no. of frames
+Although these tests are also parameterized, there are some restrictions on the values of some arguments, as shown in the following table:
+
+Argument	Supported values
+xpm	0, 1, 2, 3 or 4 (as described in Section 5)
+fr_rate	Divisors of 60
+Furthermore, the LCF tests only either vertical or horizontal movements, i.e. movements with either xi=xf or yi=yf, respectively.
+
+We suggest that you execute the tests "in order", starting with test no. 1.
+
+So that you gain more confidence on the correctness of your code, we recommend that you repeat each test several times, although we do not expect that the result of a test the first time it is run will be different of the results of subsequent runs of the same test.
+
+The purpose of test number 0 is to allow you to more extensively test your code. As usual, this test is random, as described above, and uses a seed, which is printed at the end with the test result.
+
+Unlike for other functions, for testing video_test_move() the LCF has to test the contents of the frame buffer against the expected contents at different instants. Thus the LCF may report failure because your code does not move correctly the pixmap or does not do it at the right speed or even uses the wrong frame rate. Thus it is advisable that you choose carefully the test arguments, especially when running the first LCF tests. (Actually, it may be a good idea to first test your code "manually" and use the test functionality of the LCF, only once you are confident it is working properly.)
+
+Prev Top
+
