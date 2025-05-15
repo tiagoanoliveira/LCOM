@@ -40,7 +40,6 @@ int kbc_read_output(uint8_t port, uint8_t *data) {
                 printf("Erro: Erro de timeout detectado!\n");
                 return 1;
             }
-
             return 0; // Sucesso, dados lidos sem erros
         }
 
