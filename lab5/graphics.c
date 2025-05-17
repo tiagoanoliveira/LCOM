@@ -52,3 +52,28 @@ int set_frame_buffer(uint16_t mode) {
 
     return 0;
 }
+
+int draw_rectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
+  for (uint16_t i = 0; i < height; i++) {
+    for (uint16_t j = 0; j < width; j++) {
+      if (paint_pixel(x + j, y + i, color) != 0) return 1;
+    }
+  }
+  return 0;
+}
+
+int paint_pixel(uint16_t x, uint16_t y, uint32_t color) {
+  // Verificar se as coordenadas são válidas
+  if (x >= mode_info.XResolution || y >= mode_info.YResolution) return 1;
+
+  // Calcular quantos bytes cada pixel ocupa (arredonda por excesso)
+  unsigned bytes_per_pixel = (mode_info.BitsPerPixel + 7) / 8;
+
+  // Calcular índice no array frame_buffer
+  unsigned int index = (y * mode_info.XResolution + x) * bytes_per_pixel;
+
+  // Escrever a cor no frame buffer
+  memcpy(&frame_buffer[index], &color, bytes_per_pixel);
+
+  return 0;
+}

@@ -10,6 +10,10 @@
 
 #include "graphics.h"
 #include "timer.h"
+#include "i8042.h"
+#include "keyboard.h"
+
+extern uint8_t scancode;
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -62,11 +66,44 @@ int(video_test_init)(uint16_t mode, uint8_t delay) {
 
 int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
                           uint16_t width, uint16_t height, uint32_t color) {
-  /* To be completed */
-  printf("%s(0x%03X, %u, %u, %u, %u, 0x%08x): under construction\n",
-         __func__, mode, x, y, width, height, color);
+  if (set_frame_buffer(mode)) return 1;
+  if (set_graphic_mode(mode)) return 1;
 
-  return 1;
+  if (draw_rectangle(x, y, width, height, color)) {
+    printf("Erro ao desenhar retângulo\n");
+    vg_exit();
+    return 1;
+  }
+
+  int ipc_status;
+  message msg;
+  uint8_t irq_set = BIT(KEYBOARD_IRQ);
+  int r;
+  scancode = 0;
+
+  if (kbd_subscribe_int(&irq_set)) return 1;
+
+  while (scancode != ESC_BREAK_CODE) {
+    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) continue;
+
+    if (is_ipc_notify(ipc_status)) {
+      switch (_ENDPOINT_P(msg.m_source)) {
+        case HARDWARE:
+          if (msg.m_notify.interrupts & irq_set) {
+            kbc_ih();
+            //scancode = get_scancode();
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  if (kbd_unsubscribe_int()) return 1;
+  if (vg_exit()) return 1;
+
+  return 0;
 }
 
 int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, uint8_t step) {
