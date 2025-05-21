@@ -12,6 +12,8 @@
 #include "timer.h"
 #include "i8042.h"
 #include "keyboard.h"
+#include <lcom/xpm.h>
+//#include "pixmap.h"
 
 extern uint8_t scancode;
 
@@ -158,11 +160,59 @@ int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, ui
 }
 
 int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
-  /* To be completed */
-  printf("%s(%8p, %u, %u): under construction\n", __func__, xpm, x, y);
+  if (set_frame_buffer(0x105)) return 1;
+  if (set_graphic_mode(0x105)) return 1;
 
-  return 1;
+  xpm_image_t img;
+  uint8_t *sprite = xpm_load(xpm, XPM_INDEXED, &img);
+  if (sprite == NULL) {
+    printf("Erro ao carregar o XPM\n");
+    vg_exit();
+    return 1;
+  }
+
+  // Desenhar a imagem pixel a pixel
+  for (uint16_t i = 0; i < img.height; i++) {
+    for (uint16_t j = 0; j < img.width; j++) {
+      uint32_t color = sprite[i * img.width + j]; // Cada pixel é um índice (8 bits)
+      if (paint_pixel(x + j, y + i, color)) {
+        printf("Erro ao desenhar pixel (%d, %d)\n", x + j, y + i);
+        vg_exit();
+        return 1;
+      }
+    }
+  }
+
+  // Esperar pelo ESC
+  uint8_t irq_set = BIT(KEYBOARD_IRQ);
+  int ipc_status, r;
+  message msg;
+  scancode = 0;
+
+  if (kbd_subscribe_int(&irq_set)) return 1;
+
+  while (scancode != ESC_BREAK_CODE) {
+    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) continue;
+
+    if (is_ipc_notify(ipc_status)) {
+      switch (_ENDPOINT_P(msg.m_source)) {
+        case HARDWARE:
+          if (msg.m_notify.interrupts & irq_set) {
+            kbc_ih();
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  if (kbd_unsubscribe_int()) return 1;
+  if (vg_exit()) return 1;
+
+  return 0;
 }
+
 
 int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint16_t yf,
                      int16_t speed, uint8_t fr_rate) {
