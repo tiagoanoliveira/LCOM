@@ -71,3 +71,33 @@ int kbd_restore_interrupts() {
 
     return 0; // Sucesso
 }
+
+int wait_for_esc() {
+  int ipc_status, r;
+  message msg;
+  uint8_t bit_no;
+
+  scancode = 0; // limpar a variável global
+
+  // subscreve e recebe em bit_no a máscara de notificações (já é BIT(hook_id))
+  if (kbd_subscribe_int(&bit_no)) 
+    return 1;
+
+  uint32_t irq_set = bit_no;
+
+  while (scancode != 0x81) {       // até receber o ESC break code
+    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+      printf("driver_receive failed with: %d\n", r);
+      continue;
+    }
+    if (is_ipc_notify(ipc_status) && _ENDPOINT_P(msg.m_source) == HARDWARE &&
+        (msg.m_notify.interrupts & irq_set)) {
+        kbc_ih();  // atualiza a variável global scancode
+    }
+  }
+
+  if (kbd_unsubscribe_int()) 
+    return 1;
+
+  return 0;
+}

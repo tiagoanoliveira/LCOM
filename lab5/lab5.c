@@ -107,11 +107,54 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
 }
 
 int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, uint8_t step) {
-  /* To be completed */
-  printf("%s(0x%03x, %u, 0x%08x, %d): under construction\n", __func__,
-         mode, no_rectangles, first, step);
+  if (set_frame_buffer(mode)) return 1;
+  if (set_graphic_mode(mode)) return 1;
 
-  return 1;
+
+  uint16_t width = mode_info.XResolution / no_rectangles;
+  uint16_t height = mode_info.YResolution / no_rectangles;
+
+  uint32_t color;
+
+  for (uint8_t row = 0; row < no_rectangles; row++) {
+    for (uint8_t col = 0; col < no_rectangles; col++) {
+
+      if (mode_info.MemoryModel == 0x04 || mode_info.MemoryModel == 0x03) { // Indexed
+        color = (first + (row * no_rectangles + col) * step) % (1 << mode_info.BitsPerPixel);
+
+      } else if (mode_info.MemoryModel == 0x06) { // Direct color
+        uint8_t red_mask_size = mode_info.RedMaskSize;
+        uint8_t green_mask_size = mode_info.GreenMaskSize;
+        uint8_t blue_mask_size = mode_info.BlueMaskSize;
+
+        uint8_t red_pos = mode_info.RedFieldPosition;
+        uint8_t green_pos = mode_info.GreenFieldPosition;
+        uint8_t blue_pos = mode_info.BlueFieldPosition;
+
+        uint32_t red = (first >> red_pos) & ((1 << red_mask_size) - 1);
+        uint32_t green = (first >> green_pos) & ((1 << green_mask_size) - 1);
+        uint32_t blue = (first >> blue_pos) & ((1 << blue_mask_size) - 1);
+
+
+        red = (red + col * step) % (1 << red_mask_size);
+        green = (green + row * step) % (1 << green_mask_size);
+        blue = (blue + (row + col) * step) % (1 << blue_mask_size);
+
+        color = (red << red_pos) | (green << green_pos) | (blue << blue_pos);
+
+      } else {
+        printf("Unsupported memory model\n");
+        return 1;
+      }
+
+      if (draw_rectangle(col * width, row * height, width, height, color)) return 1;
+    }
+  }
+
+  // Esperar pela tecla ESC
+  if (wait_for_esc()) return 1;
+
+  return vg_exit();
 }
 
 int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {

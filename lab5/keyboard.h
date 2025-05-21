@@ -17,4 +17,6 @@ void (kbc_ih)(); // Manipulador de interrupções do teclado
 
 int (kbd_restore_interrupts)(); // Restaura a configuração do teclado, reativando as interrupções após polling
 
+int wait_for_esc();
+
 #endif
