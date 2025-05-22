@@ -53,3 +53,26 @@ Required to **render the game visually** using pixel-based drawing, including:
 - “Drop” animation with **fade effect**
 - Clickable **start menu** using the mouse
 - **Theme/skin changes** based on level progression
+
+
+# Project Structure
+
+src/
+  drivers/
+    timer/                # Timer device code
+    keyboardMouse/        # Keyboard and mouse device code
+    graphics/             # Graphics/video mode code (implement drawing, double buffering, etc.)
+    utils/                # Utility functions
+  game/
+    tetris.c              # Main game logic (piece movement, rotation, line clearing, scoring)
+    tetris.h
+    grid.c                # Grid management (collision, line detection)
+    grid.h
+    piece.c               # Piece definitions and manipulation
+    piece.h
+    state.c               # Game state (start, pause, game over)
+    state.h
+    menu.c                # Menu logic
+    menu.h
+  xpm/                    # .xpm image files
+main.c                    # Entry point, event loop, device initialization
