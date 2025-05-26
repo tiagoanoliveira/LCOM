@@ -9,6 +9,15 @@ uint8_t packet_byte_index = 0;
 uint8_t packet_bytes[3];
 uint8_t current_byte;
 
+int mouse_init() {
+  uint8_t bit_no;
+  return mouse_subscribe_int(&bit_no);
+}
+
+int mouse_exit() {
+  return mouse_unsubscribe_int();
+}
+
 void (mouse_ih)(){
     if(read_KBC_output(KBC_OUTPUT_BUF, &current_byte, 1)) printf("Error in reading byte from mouse\n");
 }

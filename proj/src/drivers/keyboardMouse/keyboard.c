@@ -9,6 +9,15 @@ int hook_id_kbd = 1;
 bool two_byte = false;
 uint32_t sys_inb_counter = 0;
 
+int keyboard_init() {
+  uint8_t bit_no;
+  return keyboard_subscribe_int(&bit_no);
+}
+
+int keyboard_exit() {
+  return keyboard_unsubscribe_int();
+}
+
 void (kbc_ih)(void) {
   uint8_t scancode_byte;
   uint8_t status;
