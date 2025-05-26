@@ -22,8 +22,7 @@ void draw_grid_contents(int grid[20][10]) {
     for (int row = 0; row < 20; row++) {
         for (int col = 0; col < 10; col++) {
             if (grid[row][col]) {
-                // Example: always draw in blue, or you can store colors in the grid if you want
-                draw_block(col, row, 0x0000FF);
+                draw_block(col, row, grid[row][col]);
             }
         }
     }

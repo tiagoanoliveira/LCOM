@@ -121,3 +121,7 @@ int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field fiel
   if ((timer_print_config(timer, field, config)) != 0) return 1;
   return 0;
 }
+
+uint32_t timer_get_ticks() {
+  return idle_counter;
+}
