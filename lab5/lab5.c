@@ -175,7 +175,7 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
   for (uint16_t i = 0; i < img.height; i++) {
     for (uint16_t j = 0; j < img.width; j++) {
       uint32_t color = sprite[i * img.width + j]; // Cada pixel é um índice (8 bits)
-      if (paint_pixel(x + j, y + i, color)) {
+      if (vg_draw_pixel(x + j, y + i, color)) {
         printf("Erro ao desenhar pixel (%d, %d)\n", x + j, y + i);
         vg_exit();
         return 1;
@@ -213,15 +213,119 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
   return 0;
 }
 
-
-int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint16_t yf,
-                     int16_t speed, uint8_t fr_rate) {
-  /* To be completed */
-  printf("%s(%8p, %u, %u, %u, %u, %d, %u): under construction\n",
-         __func__, xpm, xi, yi, xf, yf, speed, fr_rate);
-
-  return 1;
+void clear_sprite(uint16_t x, uint16_t y, xpm_image_t img) {
+  for (uint16_t i = 0; i < img.height; i++) {
+    for (uint16_t j = 0; j < img.width; j++) {
+      vg_draw_pixel(x + j, y + i, 0); // Apagar com preto (cor 0)
+    }
+  }
 }
+
+void draw_sprite(uint16_t x, uint16_t y, uint8_t *sprite, xpm_image_t img) {
+  for (uint16_t i = 0; i < img.height; i++) {
+    for (uint16_t j = 0; j < img.width; j++) {
+      uint8_t color = sprite[i * img.width + j];
+      vg_draw_pixel(x + j, y + i, color);
+    }
+  }
+}
+
+int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, 
+                     uint16_t xf, uint16_t yf, int16_t speed, uint8_t fr_rate) {
+  if (set_frame_buffer(0x105)) return 1;
+  if (set_graphic_mode(0x105)) return 1;
+
+  // Carregar sprite
+  xpm_image_t img;
+  uint8_t *sprite = xpm_load(xpm, XPM_INDEXED, &img);
+  if (sprite == NULL) {
+    vg_exit();
+    return 1;
+  }
+
+  // Subscrever interrupções
+  uint8_t kbd_irq_bit, timer_irq_bit;
+  if (kbd_subscribe_int(&kbd_irq_bit)) {
+    vg_exit();
+    return 1;
+  }
+
+  if (timer_subscribe_int(&timer_irq_bit)) {
+    kbd_unsubscribe_int();
+    vg_exit();
+    return 1;
+  }
+
+  int ticks_per_frame = sys_hz() / fr_rate;
+
+  uint16_t x = xi;
+  uint16_t y = yi;
+
+  int16_t dx = (xf > xi) ? 1 : (xf < xi) ? -1 : 0;
+  int16_t dy = (yf > yi) ? 1 : (yf < yi) ? -1 : 0;
+  uint16_t dist = (dx != 0) ? abs(xf - xi) : abs(yf - yi);
+  uint16_t moved = 0;
+
+  int ticks = 0;
+  int frames = 0;
+
+  draw_sprite(x, y, sprite, img);
+
+  int ipc_status;
+  message msg;
+  scancode = 0;
+
+  while (scancode != ESC_BREAK_CODE && moved < dist) {
+    if (driver_receive(ANY, &msg, &ipc_status) != 0) continue;
+
+    if (is_ipc_notify(ipc_status)) {
+      switch (_ENDPOINT_P(msg.m_source)) {
+        case HARDWARE:
+          if (msg.m_notify.interrupts & timer_irq_bit) {
+            ticks++;
+
+            if (ticks >= ticks_per_frame) {
+              ticks = 0;
+              frames++;
+
+              if ((speed > 0 && moved < dist) || (speed < 0 && frames >= abs(speed))) {
+                clear_sprite(x, y, img);
+
+                int step = (speed > 0) ? ((moved + speed > dist) ? dist - moved : speed) : 1;
+
+                x += dx * step;
+                y += dy * step;
+                moved += step;
+
+                if (speed < 0) frames = 0;
+
+                draw_sprite(x, y, sprite, img);
+              }
+            }
+          }
+
+          if (msg.m_notify.interrupts & kbd_irq_bit) {
+            kbc_ih();
+          }
+
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  timer_unsubscribe_int();
+  kbd_unsubscribe_int();
+  vg_exit();
+
+  return 0;
+}
+
+
+
+
+
 
 int(video_test_controller)() {
   /* This year you do not need to implement this */

@@ -56,13 +56,13 @@ int set_frame_buffer(uint16_t mode) {
 int draw_rectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
   for (uint16_t i = 0; i < height; i++) {
     for (uint16_t j = 0; j < width; j++) {
-      if (paint_pixel(x + j, y + i, color) != 0) return 1;
+      if (vg_draw_pixel(x + j, y + i, color) != 0) return 1;
     }
   }
   return 0;
 }
 
-int paint_pixel(uint16_t x, uint16_t y, uint32_t color) {
+int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color) {
   // Verificar se as coordenadas são válidas
   if (x >= mode_info.XResolution || y >= mode_info.YResolution) return 1;
 
