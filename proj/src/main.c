@@ -25,7 +25,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
     bool needs_redraw = false;
 
     int wait = 0;
-    while (timer_get_ticks() == 0 && wait++ < 100000000);         // waits for the first tick
+    while (timer_get_ticks() == 0 && wait++ < 100000000); // waits for the first tick
     srand(timer_get_ticks());
 
     uint8_t prev_scancode[2] = {0, 0}; // to avoid multiple detections
@@ -36,9 +36,9 @@ int(proj_main_loop)(int argc, char* argv[]) {
         return 1;
     }
 
-    vg_set_grid_position(10, 20, 30, 30);         // Repositions grid to center
+    vg_set_grid_position(10, 20, 30, 30); // Repositions grid to center
 
-    piece_init(&current_piece, PIECE_O, 4, 0);  // Initializes piece O in the middle
+    piece_init(&current_piece, PIECE_O, 4, 0); // Initializes piece O in the middle
 
     // Subscribes keyboard interrupts
     int ipc_status;
@@ -112,8 +112,8 @@ int(proj_main_loop)(int argc, char* argv[]) {
                             if (piece_fits(&current_piece, current_piece.x, current_piece.y + 1)) {
                                 current_piece.y++;
                             } else {
-                                fix_piece_to_grid(&current_piece);                          // 🔴 FIXAR
-                                piece_init(&current_piece, random_piece_type(), 4, 0);     // 🟢 NOVA PEÇA
+                                fix_piece_to_grid(&current_piece);
+                                piece_init(&current_piece, random_piece_type(), 4, 0);
                             }
                             needs_redraw = true;
                         }
