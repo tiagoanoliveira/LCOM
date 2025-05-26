@@ -1,4 +1,5 @@
 #include "tetris.h"
+#include "render.h"
 
 void tetris_init() {
     // Inicialização futura: grid, peça ativa, pontuação...

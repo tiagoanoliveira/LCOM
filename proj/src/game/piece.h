@@ -12,9 +12,10 @@ typedef enum {
 
 typedef struct {
     PieceType type;
-    int rotation; // 0-3
-    int x, y;     // Position on the grid (top-left of 4x4 matrix)
-    uint8_t shape[4][4]; // Current rotation shape
+    int rotation;           // 0-3
+    int x, y;               // Position on the grid (top-left of 4x4 matrix)
+    uint8_t shape[4][4];    // Current rotation shape
+    uint32_t color;         // Color of the piece
 } Piece;
 
 // Initialize a piece of a given type at a given position
@@ -28,5 +29,8 @@ void piece_update_shape(Piece *piece);
 
 // Get the color for a given piece type
 uint32_t piece_get_color(PieceType type);
+
+// Check if a piece fits in the grid at a given position
+bool piece_fits(const Piece* piece, int new_x, int new_y);
 
 #endif // PIECE_H

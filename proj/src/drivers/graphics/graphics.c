@@ -6,7 +6,7 @@ uint8_t *frame_buffer = NULL;
 int grid_origin_x = 0;
 int grid_origin_y = 0;
 
-void set_grid_position(int grid_cols, int grid_rows, int cell_w, int cell_h) {
+void vg_set_grid_position(int grid_cols, int grid_rows, int cell_w, int cell_h) {
     grid_origin_x = (h_res - grid_cols * cell_w) / 2;
     grid_origin_y = (v_res - grid_rows * cell_h) / 2;
 }
@@ -18,6 +18,15 @@ void swap_buffers() {
     }
 
     memcpy(video_mem, frame_buffer, vram_size);
+}
+
+int draw_rectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
+    for (uint16_t i = 0; i < height; i++) {
+        for (uint16_t j = 0; j < width; j++) {
+        if (vg_draw_pixel(x + j, y + i, color) != 0) return 1;
+        }
+    }
+    return 0;
 }
 
 void* my_vg_init(uint16_t mode) {

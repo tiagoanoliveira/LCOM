@@ -15,10 +15,12 @@
 #include "drivers/utils/utils.h"
 #include "game/tetris.h"
 #include "game/menu.h"
+#include "game/render.h"
+#include "game/piece.h"
+
+Piece current_piece; // Global current piece
 
 int(proj_main_loop)(int argc, char* argv[]) {
-    int col = 4; // começa centrado
-    int row = 0;
     int tick_count = 0;
     bool needs_redraw = false;
 
@@ -30,26 +32,23 @@ int(proj_main_loop)(int argc, char* argv[]) {
         return 1;
     }
 
-    vg_clear_screen(0x00);
-    draw_grid();
-    draw_piece(4, 0, 0x01); // coluna 4 → centrado (há 10 colunas), linha 0 → topo
+    vg_set_grid_position(10, 20, 30, 30);         // Repositions grid to center
 
-    // Desenha um retângulo azul (cor 0x01) no canto superior esquerdo
-    //draw_rectangle(100, 100, 200, 150, 0x01);
+    piece_init(&current_piece, PIECE_O, 4, 0);  // Initializes piece O in the middle
 
-    // Subscreve interrupções do teclado
+    // Subscribes keyboard interrupts
     int ipc_status;
     message msg;
     uint8_t irq_kbd;
     if (keyboard_subscribe_int(&irq_kbd)) {
-        printf("Erro ao subscrever teclado.\n");
+        printf("Error subscribing keyboard.\n");
         vg_exit();
         return 1;
     }
 
     uint8_t irq_timer;
     if (timer_subscribe_int(&irq_timer)) {
-        printf("Erro ao subscrever timer\n");
+        printf("Error subscribing timer\n");
         keyboard_unsubscribe_int();
         vg_exit();
         return 1;
@@ -64,7 +63,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
                     if (msg.m_notify.interrupts & irq_kbd) {
                         kbc_ih();
 
-                        // Evitar processar o mesmo scancode repetidamente
+                        // Avoid processing the same scancode repeatedly
                         if (prev_scancode[0] == scancode[0] && prev_scancode[1] == scancode[1])
                             break;
 
@@ -78,29 +77,46 @@ int(proj_main_loop)(int argc, char* argv[]) {
 
                         if (scancode[0] == 0xE0) {
                             switch (scancode[1]) {
-                                case 0x4B: if (col > 0) { col--; needs_redraw = true; } break;      // ←
-                                case 0x4D: if (col < 8) { col++; needs_redraw = true; } break;      // → (máx = 8 porque peça O tem 2 colunas)
-                                case 0x50: if (row < 18) { row++; needs_redraw = true; } break;     // ↓ (máx = 18 para peça caber)
+                                    case 0x4B: // ←
+                                        if (piece_fits(&current_piece, current_piece.x - 1, current_piece.y)) {
+                                            current_piece.x--;
+                                            needs_redraw = true;
+                                        }
+                                        break;
+
+                                    case 0x4D: // →
+                                        if (piece_fits(&current_piece, current_piece.x + 1, current_piece.y)) {
+                                            current_piece.x++;
+                                            needs_redraw = true;
+                                        }
+                                        break;
+
+                                    case 0x50: // ↓
+                                        if (piece_fits(&current_piece, current_piece.x, current_piece.y + 1)) {
+                                            current_piece.y++;
+                                            needs_redraw = true;
+                                        }
+                                        break;
                             }
                         }
                     }
 
                     if (msg.m_notify.interrupts & irq_timer) {
                         tick_count++;
-                        if (tick_count >= 60) { // a cada segundo
+                        if (tick_count >= 60) { // each second
                             tick_count = 0;
-                            if (row < 18) {
-                                row++;      // move para baixo
+                            if (current_piece.y < GRID_ROWS - 2) {
+                                current_piece.y++;
                                 needs_redraw = true;
                             }
                         }
                     }
 
                     if (needs_redraw) {
-                        vg_clear_screen(0x00);          // limpa o frame_buffer
-                        draw_grid();                    // desenha grelha no frame_buffer
-                        draw_piece(col, row, 0x01);     // desenha peça no frame_buffer
-                        swap_buffers();                 // copia para video_mem tudo de uma vez
+                        vg_clear_screen(0x00);          // clear frame_buffer
+                        draw_grid();                    // draw grid on frame_buffer
+                        draw_current_piece(&current_piece);     // draw piece on frame_buffer
+                        swap_buffers();                 // copy everything to video_mem at once 
                         needs_redraw = false;
                     }
 
@@ -109,19 +125,19 @@ int(proj_main_loop)(int argc, char* argv[]) {
         }
     }
 
-    // Limpar variáveis globais (opcional mas seguro)
+    // Clear global variables (optional but safe)
     scancode[0] = 0;
     scancode[1] = 0;
     two_byte = false;
 
-    // Libertar teclado
+    // Free keyboard and timer subscriptions
     if (keyboard_unsubscribe_int() != 0)
-        printf("Erro ao cancelar subscrição do teclado\n");
+        printf("Error unsubscribing keyboard\n");
 
     if (timer_unsubscribe_int() != 0)
-        printf("Erro ao cancelar subscrição do timer\n");
+        printf("Error unsubscribing timer\n");
 
-    // Voltar ao modo texto
+    // Return to text mode
     vg_exit();
 
     if (frame_buffer != NULL) {

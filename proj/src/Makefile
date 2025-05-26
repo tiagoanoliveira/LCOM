@@ -17,7 +17,9 @@ SRCS = main.c \
        mouse.c \
        KBC.c \
        utils.c \
-       tetris.c
+       tetris.c \
+       piece.c \
+       render.c
 
 # additional compilation flags
 # "-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set

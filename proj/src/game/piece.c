@@ -1,4 +1,5 @@
 #include "piece.h"
+#include "render.h"
 
 // Define the 4 rotations for each piece type (4x4 matrices)
 static const uint8_t PIECE_SHAPES[7][4][4][4] = {
@@ -54,13 +55,13 @@ static const uint8_t PIECE_SHAPES[7][4][4][4] = {
 };
 
 static const uint32_t PIECE_COLORS[7] = {
-    0x00FFFF, // I - Cyan
-    0xFFFF00, // O - Yellow
-    0x800080, // T - Purple
-    0x00FF00, // S - Green
-    0xFF0000, // Z - Red
-    0x0000FF, // J - Blue
-    0xFFA500  // L - Orange
+    0x03, // I - Cyan
+    0x04, // O - Yellow
+    0x05, // T - Purple
+    0x06, // S - Green
+    0x07, // Z - Red
+    0x08, // J - Blue
+    0x09  // L - Orange
 };
 
 void piece_init(Piece *piece, PieceType type, int x, int y) {
@@ -92,4 +93,18 @@ uint32_t piece_get_color(PieceType type) {
     if (type >= PIECE_I && type <= PIECE_L)
         return PIECE_COLORS[type];
     return 0xFFFFFF; // Default: white
+}
+
+bool piece_fits(const Piece* piece, int new_x, int new_y) {
+    for (int i = 0; i < PIECE_SIZE; i++) {
+        for (int j = 0; j < PIECE_SIZE; j++) {
+            if (piece->shape[i][j]) {
+                int gx = new_x + j;
+                int gy = new_y + i;
+                if (gx < 0 || gx >= GRID_COLS || gy < 0 || gy >= GRID_ROWS)
+                    return false;
+            }
+        }
+    }
+    return true;
 }
