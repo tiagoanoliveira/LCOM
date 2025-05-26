@@ -1,6 +1,8 @@
 #include "piece.h"
 #include "render.h"
 
+extern int grid[GRID_ROWS][GRID_COLS];
+
 // Define the 4 rotations for each piece type (4x4 matrices)
 static const uint8_t PIECE_SHAPES[7][4][4][4] = {
     // PIECE_I
@@ -101,7 +103,13 @@ bool piece_fits(const Piece* piece, int new_x, int new_y) {
             if (piece->shape[i][j]) {
                 int gx = new_x + j;
                 int gy = new_y + i;
+
+                // Checks boundaries
                 if (gx < 0 || gx >= GRID_COLS || gy < 0 || gy >= GRID_ROWS)
+                    return false;
+
+                // Checks collision with fixed blocks
+                if (grid[gy][gx])
                     return false;
             }
         }

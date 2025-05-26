@@ -24,11 +24,8 @@ int(proj_main_loop)(int argc, char* argv[]) {
     int tick_count = 0;
     bool needs_redraw = false;
 
-    printf("ENTROU NO LOOP!\n");
-
     int wait = 0;
     while (timer_get_ticks() == 0 && wait++ < 100000000);         // waits for the first tick
-    printf("ticks = %d\n", timer_get_ticks());
     srand(timer_get_ticks());
 
     uint8_t prev_scancode[2] = {0, 0}; // to avoid multiple detections
