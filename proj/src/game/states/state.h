@@ -22,7 +22,7 @@ struct GameState {
     void (*update)(GameState* state);
     void (*render)(GameState* state);
     GameStateType (*get_next_state)(GameState* state);
-    void* data; // Dados específicos do estado
+    void* data;
 };
 
 // State manager

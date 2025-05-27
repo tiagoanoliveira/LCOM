@@ -32,7 +32,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
         return 1;
     }
 
-    // Inicializar sistemas
     state_manager_init();
     input_init();
 
@@ -52,7 +51,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
                     if (msg.m_notify.interrupts & irq_kbd) {
                         kbc_ih();
 
-                        // Processar input usando o novo sistema
                         InputEvent event = input_process_scancode(scancode, two_byte);
                         if (event.action != INPUT_NONE) {
                             state_manager_handle_input(event);

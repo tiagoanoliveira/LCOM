@@ -40,7 +40,7 @@ void gameover_state_handle_input(GameOverState* state, InputEvent event) {
 
 void gameover_state_update(GameOverState* state) {
     // Lógica de update se necessário (animações, timers, etc.)
-    // Por agora não há nada específico
+    // Por agora não há nada específico, se tivermos tempo metemos
 }
 
 GameStateType gameover_state_get_selected_action(const GameOverState* state) {
