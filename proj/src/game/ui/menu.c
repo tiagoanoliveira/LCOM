@@ -61,6 +61,7 @@ void menu_handle_input(Menu* menu, uint8_t scancode[2], bool two_byte) {
     // Handle ESC key (quit)
     if (scancode[0] == 0x81) { // ESC break code
         menu->selected = MENU_QUIT;
+        state_set_redraw(true);
         return;
     }
 
@@ -69,9 +70,11 @@ void menu_handle_input(Menu* menu, uint8_t scancode[2], bool two_byte) {
         switch (scancode[1]) {
             case 0x48: // Up arrow
                 menu->selected = (menu->selected == 0) ? MENU_OPTIONS_COUNT - 1 : menu->selected - 1;
+                state_set_redraw(true);
                 break;
             case 0x50: // Down arrow
                 menu->selected = (menu->selected + 1) % MENU_OPTIONS_COUNT;
+                state_set_redraw(true);
                 break;
         }
     }
