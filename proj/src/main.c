@@ -20,6 +20,7 @@
 #include "game/core/state.h"
 
 Piece current_piece; // Global current piece
+bool game_over = false; // Global game over flag
 
 int(proj_main_loop)(int argc, char* argv[]) {
     int tick_count = 0;
@@ -142,17 +143,35 @@ int(proj_main_loop)(int argc, char* argv[]) {
 
                     if (msg.m_notify.interrupts & irq_timer) {
                         tick_count++;
-                        if (currentState == STATE_GAME && tick_count >= 60) { // each second
+                        if (currentState == STATE_GAME && tick_count >= 60) { // every second
                             tick_count = 0;
+
                             if (piece_fits(&current_piece, current_piece.x, current_piece.y + 1)) {
                                 current_piece.y++;
                             } else {
                                 fix_piece_to_grid(&current_piece);
-                                piece_init(&current_piece, random_piece_type(), 3, 0);
+
+                                // Attempt to spawn a new piece
+                                Piece new_piece;
+                                piece_init(&new_piece, random_piece_type(), 3, 0);
+
+                                if (!piece_fits(&new_piece, new_piece.x, new_piece.y)) {
+                                    // Game Over: new piece doesn't fit
+                                    game_over = true;
+                                    printf("Game Over!\n");
+
+                                    // Return to menu
+                                    currentState = STATE_MENU;
+                                    menu_init(&mainMenu);
+                                } else {
+                                    current_piece = new_piece;
+                                }
                             }
+
                             needs_redraw = true;
                         }
                     }
+
 
                     // Render based on current state
                     if (needs_redraw) {
