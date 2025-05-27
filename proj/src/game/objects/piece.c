@@ -1,5 +1,5 @@
 #include "piece.h"
-#include "render.h"
+#include "../ui/render.h"
 
 extern int grid[GRID_ROWS][GRID_COLS];
 

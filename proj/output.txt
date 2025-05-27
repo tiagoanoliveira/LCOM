@@ -1,2 +1,0 @@
-ENTROU NO LOOP!
-ticks = 0

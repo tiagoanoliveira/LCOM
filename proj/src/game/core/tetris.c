@@ -1,5 +1,5 @@
 #include "tetris.h"
-#include "render.h"
+#include "../ui/render.h"
 
 int grid[GRID_ROWS][GRID_COLS] = {{0}}; // 0 means empty cell
 

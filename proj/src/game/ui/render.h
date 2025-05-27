@@ -2,9 +2,9 @@
 #define RENDER_H
 
 #include <stdint.h>
-#include "grid.h"                             // For GRID_COLS, GRID_ROWS, CELL_SIZE      
-#include "piece.h"                            // For struct Piece
-#include "../drivers/graphics/graphics.h"     // For draw_rectangle and grid coordinates
+#include "../objects/grid.h"                             // For GRID_COLS, GRID_ROWS, CELL_SIZE
+#include "../objects/piece.h"                            // For struct Piece
+#include "../../drivers/graphics/graphics.h"     // For draw_rectangle and grid coordinates
 
 // Draws the Tetris grid
 void draw_grid();

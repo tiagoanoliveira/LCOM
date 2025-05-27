@@ -13,10 +13,11 @@
 #include "drivers/graphics/graphics.h"
 #include "drivers/timer/timer.h"
 #include "drivers/utils/utils.h"
-#include "game/tetris.h"
-#include "game/menu.h"
-#include "game/render.h"
-#include "game/piece.h"
+#include "game/core/tetris.h"
+#include "game/ui/menu.h"
+#include "game/ui/render.h"
+#include "game/objects/piece.h"
+#include "game/core/state.h"
 
 Piece current_piece; // Global current piece
 
@@ -38,7 +39,12 @@ int(proj_main_loop)(int argc, char* argv[]) {
 
     vg_set_grid_position(10, 20, 30, 30); // Repositions grid to center
 
-    piece_init(&current_piece, PIECE_O, 4, 0); // Initializes piece O in the middle
+    // Initialize game state and menu
+    GameState currentState = STATE_MENU;
+    menu_init(&mainMenu);
+
+    // Initialize game components
+    tetris_init();
 
     // Subscribes keyboard interrupts
     int ipc_status;
@@ -59,6 +65,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
     }
 
     bool running = true;
+
     while (running) {
         if (driver_receive(ANY, &msg, &ipc_status) != 0) continue;
         if (is_ipc_notify(ipc_status)) {
@@ -73,61 +80,101 @@ int(proj_main_loop)(int argc, char* argv[]) {
 
                         prev_scancode[0] = scancode[0];
                         prev_scancode[1] = scancode[1];
+                        // Handle input based on current state
+                        switch (currentState) {
+                            case STATE_MENU:
+                                menu_handle_input(&mainMenu, scancode, two_byte);
 
-                        if (scancode[0] == 0x81) {
-                            running = false; // ESC
-                            break;
+                                // Check if Enter was pressed to select menu option
+                                if (scancode[0] == 0x1C) { // Enter make code
+                                    GameState newState = menu_get_selected_action(&mainMenu);
+                                    if (newState != currentState) {
+                                        currentState = newState;
+                                        if (currentState == STATE_GAME) {
+                                            // Initialize game when starting
+                                            piece_init(&current_piece, PIECE_O, 3, 0);
+                                        }
+                                    }
+                                }
+                                break;
+
+                            case STATE_GAME:
+                                // Handle game input
+                                if (scancode[0] == 0x81) { // ESC - return to menu
+                                    currentState = STATE_MENU;
+                                    needs_redraw = true;
+                                    break;
+                                }
+
+                                if (scancode[0] == 0xE0) { // Two-byte scancode
+                                    switch (scancode[1]) {
+                                        case 0x4B: // Left arrow
+                                            if (piece_fits(&current_piece, current_piece.x - 1, current_piece.y)) {
+                                                current_piece.x--;
+                                                needs_redraw = true;
+                                            }
+                                            break;
+                                        case 0x4D: // Right arrow
+                                            if (piece_fits(&current_piece, current_piece.x + 1, current_piece.y)) {
+                                                current_piece.x++;
+                                                needs_redraw = true;
+                                            }
+                                            break;
+                                        case 0x50: // Down arrow
+                                            if (piece_fits(&current_piece, current_piece.x, current_piece.y + 1)) {
+                                                current_piece.y++;
+                                                needs_redraw = true;
+                                            }
+                                            break;
+                                    }
+                                }
+                                break;
+
+                            case STATE_QUIT:
+                                running = false;
+                                break;
                         }
 
-                        if (scancode[0] == 0xE0) {
-                            switch (scancode[1]) {
-                                    case 0x4B: // ←
-                                        if (piece_fits(&current_piece, current_piece.x - 1, current_piece.y)) {
-                                            current_piece.x--;
-                                            needs_redraw = true;
-                                        }
-                                        break;
-
-                                    case 0x4D: // →
-                                        if (piece_fits(&current_piece, current_piece.x + 1, current_piece.y)) {
-                                            current_piece.x++;
-                                            needs_redraw = true;
-                                        }
-                                        break;
-
-                                    case 0x50: // ↓
-                                        if (piece_fits(&current_piece, current_piece.x, current_piece.y + 1)) {
-                                            current_piece.y++;
-                                            needs_redraw = true;
-                                        }
-                                        break;
-                            }
-                        }
+                        needs_redraw = true;
                     }
 
                     if (msg.m_notify.interrupts & irq_timer) {
                         tick_count++;
-                        if (tick_count >= 60) { // each second
+                        if (currentState == STATE_GAME && tick_count >= 60) { // each second
                             tick_count = 0;
                             if (piece_fits(&current_piece, current_piece.x, current_piece.y + 1)) {
                                 current_piece.y++;
                             } else {
                                 fix_piece_to_grid(&current_piece);
-                                piece_init(&current_piece, random_piece_type(), 4, 0);
+                                piece_init(&current_piece, random_piece_type(), 3, 0);
                             }
                             needs_redraw = true;
                         }
                     }
 
+                    // Render based on current state
                     if (needs_redraw) {
-                        vg_clear_screen(0x00);                  // clear frame_buffer
-                        draw_grid();                            // draw grid on frame_buffer
-                        draw_grid_contents(grid);               // draw grid contents on frame_buffer
-                        draw_current_piece(&current_piece);     // draw piece on frame_buffer
-                        swap_buffers();                         // copy everything to video_mem at once
+                        switch (currentState) {
+                            case STATE_MENU:
+                                menu_draw(&mainMenu);
+                                swap_buffers();
+                                break;
+
+                            case STATE_GAME:
+                                vg_clear_screen(0x00); // clear framebuffer
+                                draw_grid(); // draw grid on framebuffer
+                                draw_grid_contents(grid); // draw grid contents on framebuffer
+                                draw_current_piece(&current_piece); // draw piece on framebuffer
+                                swap_buffers();
+                                break;
+
+                            case STATE_QUIT:
+                                // No need to draw anything
+                                break;
+                        }
+                        swap_buffers(); // copy everything to videomem at once
                         needs_redraw = false;
                     }
-
                     break;
             }
         }

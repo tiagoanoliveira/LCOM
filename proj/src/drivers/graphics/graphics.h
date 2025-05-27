@@ -12,8 +12,8 @@
 #include <minix/sysutil.h>  // printf
 
 // Resolution and buffer info
-static uint16_t h_res;
-static uint16_t v_res;
+uint16_t h_res;
+uint16_t v_res;
 static uint8_t bits_per_pixel;
 static uint32_t vram_base;
 static uint32_t vram_size;

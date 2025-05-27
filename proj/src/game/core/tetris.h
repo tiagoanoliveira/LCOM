@@ -11,9 +11,9 @@
 #include <minix/syslib.h>   // sys_privctl
 #include <minix/sysutil.h>  // printf
 
-#include "../drivers/graphics/graphics.h"
-#include "piece.h"
-#include "grid.h"
+#include "../../drivers/graphics/graphics.h"
+#include "../objects/piece.h"
+#include "../objects/grid.h"
 
 extern int grid[GRID_ROWS][GRID_COLS];
 

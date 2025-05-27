@@ -8,6 +8,10 @@ PROG=proj
 .PATH: ${.CURDIR}/drivers/utils
 .PATH: ${.CURDIR}/video
 .PATH: ${.CURDIR}/game
+.PATH: ${.CURDIR}/game/core
+.PATH: ${.CURDIR}/game/objects
+.PATH: ${.CURDIR}/game/ui
+
 
 # source code files to be compiled
 SRCS = main.c \
@@ -19,7 +23,9 @@ SRCS = main.c \
        utils.c \
        tetris.c \
        piece.c \
-       render.c
+       render.c \
+       font.c \
+       menu.c
 
 # additional compilation flags
 # "-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set
