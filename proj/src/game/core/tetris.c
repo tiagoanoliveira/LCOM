@@ -27,4 +27,36 @@ void fix_piece_to_grid(const Piece* piece) {
             }
         }
     }
+    clear_full_lines();
+}
+
+int clear_full_lines() {
+    int lines_cleared = 0;
+
+    for (int row = GRID_ROWS - 1; row >= 0; row--) {
+        bool full = true;
+        for (int col = 0; col < GRID_COLS; col++) {
+            if (grid[row][col] == 0) {
+                full = false;
+                break;
+            }
+        }
+
+        if (full) {
+            for (int r = row; r > 0; r--) {
+                for (int c = 0; c < GRID_COLS; c++) {
+                    grid[r][c] = grid[r - 1][c];
+                }
+            }
+
+            for (int c = 0; c < GRID_COLS; c++) {
+                grid[0][c] = 0;
+            }
+
+            lines_cleared++;
+            row++; // Re-check this row
+        }
+    }
+
+    return lines_cleared;
 }

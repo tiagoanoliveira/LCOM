@@ -21,5 +21,6 @@ void tetris_init();
 void tetris_draw();
 void fix_piece_to_grid(const Piece* piece);
 PieceType random_piece_type();
+int clear_full_lines();
 
 #endif // TETRIS_H

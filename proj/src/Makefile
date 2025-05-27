@@ -14,18 +14,7 @@ PROG=proj
 
 
 # source code files to be compiled
-SRCS = main.c \
-       graphics.c \
-       timer.c \
-       keyboard.c \
-       mouse.c \
-       KBC.c \
-       utils.c \
-       tetris.c \
-       piece.c \
-       render.c \
-       font.c \
-       menu.c
+SRCS = main.c graphics.c timer.c keyboard.c mouse.c KBC.c utils.c tetris.c piece.c render.c font.c menu.c
 
 # additional compilation flags
 # "-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set
