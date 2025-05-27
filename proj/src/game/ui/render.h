@@ -1,10 +1,10 @@
-#ifndef _RENDER_H_
-#define _RENDER_H_
+#ifndef RENDER_H
+#define RENDER_H
 
 #include <stdint.h>
-#include "../objects/grid.h"                    // For GRID_COLS, GRID_ROWS, CELL_SIZE
-#include "../objects/piece.h"                   // For struct Piece
-#include "../../drivers/graphics/graphics.h"    // For draw_rectangle and grid coordinates
+#include "../objects/grid.h"                             // For GRID_COLS, GRID_ROWS, CELL_SIZE
+#include "../objects/piece.h"                            // For struct Piece
+#include "../../drivers/graphics/graphics.h"     // For draw_rectangle and grid coordinates
 
 // Draws the Tetris grid
 void draw_grid();
@@ -18,4 +18,4 @@ void draw_current_piece(const Piece* piece);
 // Draws all occupied cells in the grid
 void draw_grid_contents(int grid[20][10]);
 
-#endif /* _RENDER_H_ */
+#endif // RENDER_H

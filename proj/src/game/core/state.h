@@ -1,5 +1,5 @@
-#ifndef _STATE_H_
-#define _STATE_H_
+#ifndef STATE_H
+#define STATE_H
 
 typedef enum {
     STATE_MENU,
@@ -7,4 +7,4 @@ typedef enum {
     STATE_QUIT
 } GameState;
 
-#endif /* _STATE_H_ */
+#endif

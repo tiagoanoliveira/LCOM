@@ -1,5 +1,5 @@
-#ifndef _MENU_H_
-#define _MENU_H_
+#ifndef MENU_H
+#define MENU_H
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -37,4 +37,4 @@ void draw_menu_option(int x, int y, const char* text, bool selected);
 void draw_menu_title(void);
 void draw_menu_background(void);
 
-#endif /* _MENU_H_ */
+#endif // MENU_H
