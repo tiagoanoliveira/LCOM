@@ -20,7 +20,7 @@
 #define CELL_SIZE 30
 
 // Cores das peças
-#define \ 0x03  // Cyan
+#define COLOR_I 0x03  // Cyan
 #define COLOR_O 0x04  // Yellow
 #define COLOR_T 0x05  // Purple
 #define COLOR_S 0x06  // Green
