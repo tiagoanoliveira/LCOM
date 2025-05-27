@@ -3,7 +3,16 @@
 int grid[GRID_ROWS][GRID_COLS] = {{0}}; // 0 means empty cell
 
 void tetris_init() {
-    // Future initialization: grid, active piece, score...
+    // Clear the grid
+    for (int i = 0; i < GRID_ROWS; i++) {
+        for (int j = 0; j < GRID_COLS; j++) {
+            grid[i][j] = 0;
+        }
+    }
+
+    // Initialize the current piece at the starting position
+    extern Piece current_piece; // Make sure this is declared somewhere globally
+    piece_init(&current_piece, random_piece_type(), 3, 0);
 }
 
 void tetris_draw() {
