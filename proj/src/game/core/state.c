@@ -65,7 +65,19 @@ void state_handle_input(uint8_t scancode[2], bool two_byte) {
         case STATE_GAME:
             game_handle_input(scancode, two_byte);
             break;
+        case STATE_GAME_OVER:
+            game_over_menu_handle_input(&gameOverMenu, scancode, two_byte);
+            if (scancode[0] == 0x1C) { // Enter
+                GameState newState = game_over_menu_get_selected_action(&gameOverMenu);
+                if (newState == STATE_GAME) {
+                    // Restart game logic
+                    tetris_init();
 
+                }
+                currentState = newState;
+                needsRedraw = true;
+            }
+            break;
         case STATE_QUIT:
             // Não precisa de input
             break;
@@ -95,6 +107,10 @@ void state_render(void) {
             draw_grid();
             draw_grid_contents(grid);
             draw_current_piece(&currentPiece);
+            break;
+        case STATE_GAME_OVER:
+            game_over_menu_draw(&gameOverMenu); // draw game over screen
+            swap_buffers();
             break;
 
         case STATE_QUIT:

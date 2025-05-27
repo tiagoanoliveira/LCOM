@@ -4,12 +4,18 @@
 #include <string.h>
 
 Menu mainMenu;
+GameOverMenu gameOverMenu;
 
 // Menu text constants
 static const char* MENU_TITLE = "TETR-IO-S";
 static const char* MENU_OPTIONS[] = {
     "PLAY",
     "INSTRUCTIONS",
+    "QUIT"
+};
+static const char* GAME_OVER_OPTIONS[] = {
+    "PLAY AGAIN",
+    "BACK TO MENU",
     "QUIT"
 };
 
@@ -152,5 +158,67 @@ void draw_menu_background(void) {
         int y = screen_height - 80;
         draw_rectangle(x, y, 25, 25, COLOR_BORDER);
         draw_rectangle(x + 2, y + 2, 21, 21, COLOR_SELECTED);
+    }
+}
+void game_over_menu_init(GameOverMenu* menu) {
+    if (!menu) return;
+    menu->selected = GAME_OVER_PLAY_AGAIN;
+    menu->active = true;
+}
+
+void game_over_menu_draw(const GameOverMenu* menu) {
+    if (!menu || !menu->active) return;
+
+    int screen_width = mode_info.XResolution;
+    int screen_height = mode_info.YResolution;
+
+    vg_clear_screen(COLOR_BACKGROUND);
+    draw_menu_background();
+    draw_menu_title();
+
+    // Draw "GAME OVER" message
+    const char* msg = "GAME OVER";
+    int msg_width = strlen(msg) * CHAR_WIDTH;
+    int msg_x = (screen_width - msg_width) / 2;
+    int msg_y = screen_height / 4 + 80;
+    draw_text(msg_x, msg_y, msg, COLOR_TITLE, COLOR_BACKGROUND);
+
+    // Draw options
+    int menu_start_y = screen_height / 2;
+    int option_spacing = 80;
+    for (int i = 0; i < GAME_OVER_OPTIONS_COUNT; i++) {
+        bool is_selected = (i == menu->selected);
+        int option_y = menu_start_y + (i * option_spacing);
+        draw_menu_option(screen_width / 2, option_y, GAME_OVER_OPTIONS[i], is_selected);
+    }
+}
+
+void game_over_menu_handle_input(GameOverMenu* menu, uint8_t scancode[2], bool twobyte) {
+    if (!menu || !menu->active) return;
+
+    // Handle arrow keys for navigation
+    if (!twobyte && scancode[0] == 0xE0) {
+        switch (scancode[1]) {
+            case 0x48: // Up arrow
+                menu->selected = (menu->selected == 0) ? GAME_OVER_OPTIONS_COUNT - 1 : menu->selected - 1;
+                break;
+            case 0x50: // Down arrow
+                menu->selected = (menu->selected + 1) % GAME_OVER_OPTIONS_COUNT;
+                break;
+        }
+    }
+}
+
+GameState game_over_menu_get_selected_action(const GameOverMenu* menu) {
+    if (!menu || !menu->active) return STATE_GAME_OVER;
+    switch (menu->selected) {
+        case GAME_OVER_PLAY_AGAIN:
+            return STATE_GAME;
+        case GAME_OVER_BACK_TO_MENU:
+            return STATE_MENU;
+        case GAME_OVER_QUIT:
+            return STATE_QUIT;
+        default:
+            return STATE_GAME_OVER;
     }
 }
