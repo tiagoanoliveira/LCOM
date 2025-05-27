@@ -46,6 +46,8 @@ int(proj_main_loop)(int argc, char* argv[]) {
     // Initialize game components
     tetris_init();
 
+    needs_redraw = true;
+
     // Subscribes keyboard interrupts
     int ipc_status;
     message msg;

@@ -52,6 +52,8 @@ void* my_vg_init(uint16_t mode) {
         printf("Error while allocating frame buffer\n");
         return NULL;
     }
+    vg_clear_screen(0x00);
+    swap_buffers();
 
     return video_mem;
 }
