@@ -1,119 +1,86 @@
-#include <lcom/lcf.h>
-#include <stdbool.h>
-#include <stdint.h>
 #include "mouse.h"
 
-int hook_id_mouse = 3;
-struct packet mouse_packet;
-uint8_t packet_byte_index = 0;
-uint8_t packet_bytes[3];
-uint8_t current_byte;
+uint8_t packet[3];         // Pacote do rato
+uint8_t current_byte;      // Último byte lido
 
-void (mouse_ih)(){
-    if(read_KBC_output(KBC_OUTPUT_BUF, &current_byte, 1)) printf("Error in reading byte from mouse\n");
+// Subscrever interrupções do rato
+int mouse_subscribe_int(uint8_t *bit_no) {
+    if (bit_no == NULL) return 1; // Verifica se o ponteiro é válido
+    *bit_no = BIT(mouse_hook_id);  // Define a máscara para o rato
+    return sys_irqsetpolicy(MOUSE_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &mouse_hook_id); // Subscreve as interrupções com o modo exclusive
 }
 
-int (mouse_write)(uint8_t command) {
-  uint8_t attemps = MAX_ATTEMPS;
-  uint8_t mouse_response;
-
-  do {
-    attemps--;
-    if (write_KBC_command(KBC_INPUT_BUF, KBC_WRITE_TO_MOUSE)) return 1;
-    if (write_KBC_command(KBC_OUTPUT_BUF, command)) return 1;
-    tickdelay(micros_to_ticks(KBC_DELAY_US));
-    if (util_sys_inb(KBC_OUTPUT_BUF, &mouse_response)) return 1;
-    if (mouse_response == MOUSE_ACK) return 0;
-  } while (mouse_response != MOUSE_ACK && attemps);
-
-  return 1;
+// Desativar a subscrição das interrupções do rato
+int mouse_unsubscribe_int() {
+    return sys_irqrmpolicy(&mouse_hook_id); // Remove a política de interrupção
 }
 
-int (mouse_disable_data_reporting)() {
-    uint8_t status, answer;
-    int attempts = 5;
+// Função para lidar com interrupções do rato
+void (mouse_ih)() {
+    kbc_read_output(KBC_OUTPUT_BUF, &current_byte); // Lê um byte do rato
+}
 
+// Função para sincronizar bytes do pacote
+void mouse_sync_bytes() {
+    if (byte_index == 0 && (current_byte & BIT(3))) { // Verifica se é o byte CONTROL
+        packet[byte_index] = current_byte;
+        byte_index++;
+    } else if (byte_index > 0 && byte_index < 3) { // Recebe DELTA_X e DELTA_Y
+        packet[byte_index] = current_byte;
+        byte_index++;
+    }
+    if (byte_index == 3) { // Pacote completo
+        mouse_bytes_to_packet(); // Converte o array de bytes para a struct
+        byte_index = 0; // Reseta o índice para o próximo pacote
+    }
+}
+
+// Função para transformar o array de bytes numa struct
+void mouse_bytes_to_packet() {
+    struct packet pp; // Defina a struct packet conforme a documentação
+    pp.bytes[0] = packet[0];
+    pp.bytes[1] = packet[1];
+    pp.bytes[2] = packet[2];
+
+    // Processar os dados do pacote
+    pp.lb = pp.bytes[0] & MOUSE_LB; // Botão esquerdo
+    pp.rb = pp.bytes[0] & MOUSE_RB; // Botão direito
+    pp.mb = pp.bytes[0] & MOUSE_MB; // Botão do meio
+    pp.delta_x = (int8_t)pp.bytes[1]; // Deslocamento em X
+    pp.delta_y = (int8_t)pp.bytes[2]; // Deslocamento em Y
+    pp.x_ov = pp.bytes[0] & MOUSE_X_OVERFLOW; // Overflow em X
+    pp.y_ov = pp.bytes[0] & MOUSE_Y_OVERFLOW; // Overflow em Y
+
+    // Exibir o pacote
+    mouse_print_packet(&pp);
+}
+
+// Função para escrever um comando no KBC
+int mouse_write_cmd(uint8_t command) {
+    uint8_t attempts = 10; // Número máximo de tentativas
+    uint8_t response;
+
+    // Tenta enviar o comando
     while (attempts > 0) {
-        // Esperar que input buffer esteja livre antes de enviar 0xD4
-        if(util_sys_inb(KBC_STATUS_REG, &status) != 0) return 1;
-        if(status & KBC_INPUT_BUFFER_FULL) {
-            tickdelay(micros_to_ticks(KBC_DELAY_US));
-            continue;
+        if (kbc_write_command(KBC_CMD_REG, KBC_WRITE_TO_MOUSE) != 0) {
+            return 1; // Erro ao escrever o comando
+        }
+        if (kbc_write_command(KBC_OUTPUT_BUF, command) != 0) {
+            return 1; // Erro ao escrever o comando no buffer de saída
         }
 
-        if(sys_outb(KBC_CMD_REG, KBC_WRITE_TO_MOUSE) != 0) return 1;
-
-        // Esperar que input buffer esteja livre antes de enviar 0xF4
-        if(util_sys_inb(KBC_STATUS_REG, &status) != 0) return 1;
-        if(status & KBC_INPUT_BUFFER_FULL) {
-            tickdelay(micros_to_ticks(KBC_DELAY_US));
-            continue;
+        // Espera pela resposta do rato
+        tickdelay(micros_to_ticks(KBC_DELAY_US)); // Atraso de 20ms
+        if (util_sys_inb(KBC_OUTPUT_BUF, &response) != 0) {
+            return 1; // Erro ao ler a resposta
         }
 
-        if(sys_outb(KBC_INPUT_BUF, MOUSE_DISABLE_DATA_REPORTING) != 0) return 1;
-
-        // Esperar por resposta do rato (ACK, NACK ou ERROR)
-        if(util_sys_inb(KBC_STATUS_REG, &status) != 0) return 1;
-
-        // Esperar até haver dado no buffer e que venha do rato
-        if(!(status & KBC_OUTPUT_BUFFER_FULL) || !(status & KBC_STATUS_AUX)) {
-            tickdelay(micros_to_ticks(KBC_DELAY_US));
-            continue;
-        }
-
-        if(util_sys_inb(KBC_OUTPUT_BUF, &answer) != 0) return 1;
-
-        if(answer == MOUSE_ACK) {
-            return 0;
-        } else if(answer == MOUSE_RESEND) {
-            attempts--;
-            tickdelay(micros_to_ticks(KBC_DELAY_US));
-            continue;
-        } else if(answer == MOUSE_ERROR) {
-            return 1;
+        if (response == MOUSE_ACK) {
+            return 0; // Comando aceito
+        } else if (response == MOUSE_NACK) {
+            attempts--; // Tenta novamente se receber NACK
         }
     }
 
-    return 1; // Se esgotar as tentativas todas
-}
-
-void mouse_sync_bytes() {
-  if (packet_byte_index == 0 && (current_byte & FIRST_BYTE)) { // é o byte CONTROL, o bit 3 está ativo
-    packet_bytes[packet_byte_index]= current_byte;
-    packet_byte_index++;
-  }
-  else if (packet_byte_index > 0) {                            // recebe os deslocamentos em X e Y
-    packet_bytes[packet_byte_index] = current_byte;
-    packet_byte_index++;
-  }
-}
-
-void (parse_packet)(){
-  for (int i = 0 ; i < 3 ; i++) {
-    mouse_packet.bytes[i] = packet_bytes[i];
-  }
-
-  mouse_packet.lb = packet_bytes[0] & MOUSE_LB;
-  mouse_packet.mb = packet_bytes[0] & MOUSE_MB;
-  mouse_packet.rb = packet_bytes[0] & MOUSE_RB;
-  mouse_packet.x_ov = packet_bytes[0] & MOUSE_X_OVERFLOW;
-  mouse_packet.y_ov = packet_bytes[0] & MOUSE_Y_OVERFLOW;
-  mouse_packet.delta_x = (packet_bytes[0] & MOUSE_X_SIGNAL) ? (0xFF00 | packet_bytes[1]) : packet_bytes[1];
-  mouse_packet.delta_y = (packet_bytes[0] & MOUSE_Y_SIGNAL) ? (0xFF00 | packet_bytes[2]) : packet_bytes[2];
-}
-
-int (mouse_subscribe_int)(uint8_t *bit_no) {
-    if(bit_no == NULL) return 1;
-
-    *bit_no = BIT(hook_id_mouse);
-
-    if((sys_irqsetpolicy(IRQ_MOUSE, (IRQ_REENABLE | IRQ_EXCLUSIVE), &hook_id_mouse)) != 0) return 1;
-
-    return 0;
-}
-
-int (mouse_unsubscribe_int)() {
-    if((sys_irqrmpolicy(&hook_id_mouse)) != 0) return 1;
-
-    return 0;
+    return 1; // Falha após todas as tentativas
 }

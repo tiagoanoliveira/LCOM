@@ -1,19 +1,18 @@
 #include <lcom/lcf.h>
-
 #include <lcom/lab3.h>
-#include "utils.h"
-#include "i8042.h"
-#include "keyboard.h"
 
 #include <stdbool.h>
 #include <stdint.h>
 
-extern int hook_id_timer;
-extern int hook_id_kbd;
-extern uint32_t counter;
-extern uint8_t scancode[2];
+#include "i8042.h"
+#include "keyboard.h"
+#include "KBC.h"
+#include "timer.h"
+
+// Variáveis globais externas
+extern uint8_t scancode;
 extern bool two_byte;
-extern uint32_t sys_inb_counter;
+extern int error_flag;
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -39,127 +38,157 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-int(kbd_test_scan)() {
-  uint8_t irq_set;
-  int ipc_status, r;
-  message msg;
-  uint8_t size;
-  bool make;
-  bool done = false;
+// Leitura por interrupções
+int (kbd_test_scan)() {
+  uint8_t bit_no;         // Variável para armazenar o número da máscara de interrupção
+  int r;
+  int ipc_status;         // Status das interrupções
+  message msg;            // Mensagem da comunicação entre processos
+  uint8_t bytes[2];       // Array para guardar até 2 bytes do scancode
+  uint8_t size = 0;       // Tamanho do scancode
+  bool make;              // Indica se é makecode ou breakcode
 
-  if ((keyboard_subscribe_int(&irq_set)) != 0) return 1;
+  // Subscreve a interrupção do teclado
+  if (kbd_subscribe_int(&bit_no)!=0) return 1;
 
-  while (!done) {
-    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
-      printf("driver_receive failed with: %d", r);
-      continue;
-    }
+  // Loop até o utilizador pressionar a tecla ESC
+  while (scancode != ESC_BREAKCODE) {
+    // Esperar por uma notificação/interrupção
+    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) continue;
+
     if (is_ipc_notify(ipc_status)) {
       switch (_ENDPOINT_P(msg.m_source)) {
         case HARDWARE:
-          if (msg.m_notify.interrupts & irq_set) {
-            kbc_ih();
-            size = (scancode[0] == SCANCODE_TWO_BYTE) ? 2 : 1;
-            make = (scancode[size - 1] & BIT(7)) ? false : true;
-            kbd_print_scancode(make, size, scancode);
-            if(scancode[0] == ESC_BREAK_CODE && size == 1) done = true;
+          // Se a interrupção for do teclado
+          if (msg.m_notify.interrupts & bit_no) {
+            kbc_ih();  // Chama o handler
+
+            if (error_flag) continue; // Ignora se houve erro
+
+            // Se for scancode de 2 bytes
+            if (two_byte) {
+              bytes[0] = SCANCODE_TWO_BYTE;
+              bytes[1] = scancode;
+              size = 2;
+              two_byte = false;
+            } else {
+              bytes[0] = scancode;
+              size = 1;
+            }
+
+            make = !(bytes[size - 1] & BIT(7)); // Bit mais significativo indica make ou break
+            kbd_print_scancode(make, size, bytes);
           }
-            break;
-        default:
           break;
+        }
       }
     }
-  }
 
-  if((keyboard_unsubscribe_int()) != 0) return 1;
-  kbd_print_no_sysinb(sys_inb_counter);
+    // Cancelar subscrição da interrupção
+    if (kbd_unsubscribe_int()!=0) return 1;
 
-  return 0;
+    // Mostrar o número de chamadas a sys_inb
+    kbd_print_no_sysinb(counter);
+
+    return 0;
 }
 
-int(kbd_test_poll)() {
-  uint8_t status, byte;
-  uint8_t size;
+// Leitura por polling
+int (kbd_test_poll)() {
+  uint8_t bytes[2];
+  uint8_t size=0;
   bool make;
-  bool done = false;
 
-  while (!done) {
-    if ((kbc_read_output(&byte, &status)) != 0) continue;
-
-    if (byte == SCANCODE_TWO_BYTE) {
-      scancode[0] = byte;
-      two_byte = true;
-    } else if (two_byte) {
-      scancode[1] = byte;
-      two_byte = false;
-    } else {
-      scancode[0] = byte;
-      two_byte = false;
+  // Loop até o utilizador pressionar a tecla ESC
+  while (scancode != ESC_BREAKCODE) {
+    uint8_t data;
+    // Tenta ler do buffer de saída (output) do KBC
+    if (kbc_read_output(KBC_OUTPUT_BUF, &data) == 0) {
+      if (data == SCANCODE_TWO_BYTE) {
+        // Se for scancode de 2 bytes, guarda o prefixo e lê o próximo
+        two_byte=true;
+      } else {
+        if (two_byte) {
+          bytes[0] = SCANCODE_TWO_BYTE;
+          bytes[1] = data;
+          size = 2;
+          two_byte = false;
+        } else {
+          // Se for de 1 byte
+          bytes[0] = data;
+          size = 1;
+        }
+        scancode = data;  // Atualiza o scancode global
+        make = !(bytes[size - 1] & BIT(7)); // Bit mais significativo indica se é makecode ou breakcode
+        kbd_print_scancode(make, size, bytes);
+      }
     }
-
-    size = (scancode[0] == SCANCODE_TWO_BYTE) ? 2 : 1;
-    make = !(scancode[size - 1] & BIT(7));
-    kbd_print_scancode(make, size, scancode);
-
-    if (scancode[0] == ESC_BREAK_CODE && size == 1)
-      done = true;
-
     tickdelay(micros_to_ticks(KBC_DELAY_US));
-  }
-
-  // Reativar interrupções
-  if ((sys_outb(KBC_CMD_REG, KBC_READ_CMD_BYTE)) != 0) return 1;
-  if ((util_sys_inb(KBC_OUTPUT_BUF, &byte)) != 0) return 1;
-
-  byte |= KBC_CMD_BYTE_ENABLE_INT_KBD; // ativa a interrupção do teclado
-
-  if ((sys_outb(KBC_CMD_REG, KBC_WRITE_CMD_BYTE)) != 0) return 1;
-  if ((sys_outb(KBC_INPUT_BUF, byte)) != 0) return 1;
-
-  kbd_print_no_sysinb(sys_inb_counter);
-  return 0;
+   }
+    // Reativar interrupções do teclado
+    if (kbd_restore_interrupts()!=0) return 1;
+    // Mostrar o número de chamadas a sys_inb
+    kbd_print_no_sysinb(counter);
+    return 0;
 }
 
-int(kbd_test_timed_scan)(uint8_t n) {
-  uint8_t irq_set_kbd, irq_set_timer;
-  int ipc_status, r;
+// Leitura por interrupção com timeout (timer)
+int (kbd_test_timed_scan)(uint8_t n) {
+  uint8_t kbd_bit, timer_bit;
+  int ipc_status;
+  int r;
   message msg;
-  uint8_t size;
+  uint8_t bytes[2];
+  uint8_t size = 0;
   bool make;
-  bool done = false;
 
-  if ((keyboard_subscribe_int(&irq_set_kbd)) != 0) return 1;
-  if ((timer_subscribe_int(&irq_set_timer)) != 0) return 1;
+  counter = 0; // Reset ao contador
 
-  while (!done) {
-    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
-      printf("driver_receive failed with: %d", r);
-      continue;
-    }
+  // Subscrição das interrupções do teclado e do timer
+  if (kbd_subscribe_int(&kbd_bit) != 0) return 1;
+  if (timer_subscribe_int(&timer_bit) != 0) return 1;
+
+  while (scancode != ESC_BREAKCODE && counter < n * 60) {
+    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) continue;
+
     if (is_ipc_notify(ipc_status)) {
       switch (_ENDPOINT_P(msg.m_source)) {
         case HARDWARE:
-          if (msg.m_notify.interrupts & irq_set_kbd) {
-            kbc_ih();
-            size = (scancode[0] == SCANCODE_TWO_BYTE) ? 2 : 1;
-            make = (scancode[size - 1] & BIT(7)) ? false : true;
-            kbd_print_scancode(make, size, scancode);
-            counter = 0;
-            if(scancode[0] == ESC_BREAK_CODE && size == 1) done = true;
-          } else if (msg.m_notify.interrupts & irq_set_timer) {
-            timer_int_handler();
-            if (counter >= n * 60) done = true;
+          // Timer interrupt
+          if (msg.m_notify.interrupts & timer_bit) {
+            timer_int_handler(); // Incrementa o contador
           }
-            break;
-        default:
+          // Teclado interrupt
+          if (msg.m_notify.interrupts & kbd_bit) {
+            kbc_ih();
+            if (error_flag) continue;
+
+            counter = 0; // Reset do timer sempre que uma tecla é lida
+
+            if (two_byte) {
+              bytes[0] = SCANCODE_TWO_BYTE;
+              bytes[1] = scancode;
+              size = 2;
+              two_byte = false;
+            } else {
+              bytes[0] = scancode;
+              size = 1;
+            }
+
+            make = !(bytes[size - 1] & BIT(7));
+            kbd_print_scancode(make, size, bytes);
+          }
           break;
       }
     }
   }
 
-  if ((keyboard_unsubscribe_int()) != 0) return 1;
-  if ((timer_unsubscribe_int()) != 0) return 1;
-  kbd_print_no_sysinb(sys_inb_counter);
+  // Cancelar subscrições
+  if (kbd_unsubscribe_int() != 0) return 1;
+  if (timer_unsubscribe_int() != 0) return 1;
+
+  // Mostrar o número de chamadas a sys_inb
+  kbd_print_no_sysinb(counter);
 
   return 0;
 }

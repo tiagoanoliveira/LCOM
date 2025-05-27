@@ -1,69 +1,85 @@
 #include "KBC.h"
+#include "i8042.h"
 
-int (read_KBC_status)(uint8_t* status) {
+// Ler o registo de estado do KBC
+int kbc_read_status(uint8_t *status) {
+    // Verificar se o ponteiro é válido
+    if (status == NULL) return 1;
+
+    // Ler o registo de estado do KBC
     return util_sys_inb(KBC_STATUS_REG, status);
 }
 
-int read_KBC_output(uint8_t port, uint8_t *output, uint8_t mouse) {
+// Ler dados do buffer de saída do KBC (com verificação de erros)
+int kbc_read_output(uint8_t port, uint8_t *data) {
     uint8_t status;
-    uint8_t attemps = 10;
+    uint8_t attempts = MAX_ATTEMPTS;
 
-    while (attemps) {
-        if (read_KBC_status(&status) != 0) {                // lê o status
-            printf("Error: Status not available!\n");
+    while (attempts > 0) {
+        // Ler o status atual do KBC
+        if (kbc_read_status(&status) != 0) {
+            printf("Erro: Status não disponível!\n");
             return 1;
         }
 
-        if ((status & BIT(0)) != 0) {                       // o output buffer está cheio, posso ler
-            if(util_sys_inb(port, output) != 0){            // leitura do buffer de saída
-                printf("Error: Could not read output!\n");
+        // Verificar se o buffer de saída está cheio (bit 0 = 1)
+        if (status & KBC_OUTPUT_BUFFER_FULL) {
+            // Buffer de saída está cheio, posso ler
+            if (util_sys_inb(port, data) != 0) {
+                printf("Erro: Não foi possível ler os dados!\n");
                 return 1;
             }
-            if((status & BIT(7)) != 0){                     // verifica erro de paridade
-                printf("Error: Parity error!\n");           // se existir, descarta
+
+            // Verificar erros de paridade e timeout
+            if (status & KBC_STATUS_PARITY_ERR) {
+                printf("Erro: Erro de paridade detectado!\n");
                 return 1;
             }
-            if((status & BIT(6)) != 0){                     // verifica erro de timeout
-                printf("Error: Timeout error!\n");          // se existir, descarta
+
+            if (status & KBC_STATUS_TIMEOUT_ERR) {
+                printf("Erro: Erro de timeout detectado!\n");
                 return 1;
             }
-            if (mouse && !(status & BIT(5))) {              // está à espera do output do rato
-                printf("Error: Mouse output not found\n");  // mas o output não é do rato
-                return 1;
-            } 
-            if (!mouse && (status & BIT(5))) {                 // está à espera do output do teclado
-                printf("Error: Keyboard output not found\n"); // mas o output não é do teclado
-                return 1;
-            } 
-            return 0; // sucesso: output correto lido sem erros de timeout ou de paridade
+
+            return 0; // Sucesso, dados lidos sem erros
         }
-        //tickdelay(micros_to_ticks(20000));
-        attemps--;
+
+        // Esperar antes de tentar novamente
+        tickdelay(micros_to_ticks(KBC_DELAY_US));
+        attempts--;
     }
-    return 1; // se ultrapassar o número de tentativas lança um erro
+
+    printf("Erro: Número máximo de tentativas excedido!\n");
+    return 1; // Falha após todas as tentativas
 }
 
-int (write_KBC_command)(uint8_t port, uint8_t commandByte) {
+// Escreve um comando no KBC
+int kbc_write_command(uint8_t port, uint8_t cmd) {
     uint8_t status;
-    uint8_t attemps = MAX_ATTEMPS;
+    uint8_t attempts = MAX_ATTEMPTS;
 
-    while (attemps) {
-        if (read_KBC_status(&status) != 0){
-            printf("Error: Status not available!\n");
+    while (attempts > 0) {
+        // Ler o status atual do KBC
+        if (kbc_read_status(&status) != 0) {
+            printf("Erro: Status não disponível!\n");
             return 1;
         }
 
-        if ((status & KBC_INPUT_BUFFER_FULL) == 0){
-            if(sys_outb(port, commandByte) != 0){
-                printf("Error: Could not write commandByte!\n");
+        // Verificar se o buffer de entrada está vazio (bit 1 = 0)
+        if ((status & KBC_INPUT_BUFFER_FULL) == 0) {
+            // Buffer de entrada está vazio, posso escrever
+            if (sys_outb(port, cmd) != 0) {
+                printf("Erro: Não foi possível escrever o comando!\n");
                 return 1;
             }
-
-            return 0;
+            return 0; // Sucesso
         }
+
+        // Esperar antes de tentar novamente
         tickdelay(micros_to_ticks(KBC_DELAY_US));
-        attemps--;
+        attempts--;
     }
 
-    return 1;
+    printf("Erro: Número máximo de tentativas excedido!\n");
+    return 1; // Falha após todas as tentativas
 }

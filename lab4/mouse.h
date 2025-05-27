@@ -1,21 +1,23 @@
-#ifndef _LCOM_MOUSE_H_
-#define _LCOM_MOUSE_H_
+#ifndef MOUSE_H
+#define MOUSE_H
 
+#include <minix/sysutil.h>
 #include <lcom/lcf.h>
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "utils.h"
-#include "KBC.h"
 #include "i8042.h"
-#include "i8254.h"
+#include "KBC.h"
 
-void (mouse_ih)();
-int (mouse_write)(uint8_t command);
-int (mouse_disable_data_reporting)();
-void (parse_packet)();
+static uint8_t timer_hook_id = 0;
+static int mouse_hook_id = 2;        // hook_id para o rato - o valor não tem significado, só tem que ser diferente do valor do teclado e do timer
+static uint8_t byte_index = 0;       // Índice do byte do pacote
+
+extern uint8_t packet[3];            // Pacote do rato
+extern uint8_t current_byte;         // Último byte lido
+
 int (mouse_subscribe_int)(uint8_t *bit_no);
-int (mouse_unsubscribe_int)(void);
+int (mouse_unsubscribe_int)();
+void (mouse_ih)();
 void (mouse_sync_bytes)();
+void (mouse_bytes_to_packet)();
+int (mouse_write_cmd)(uint8_t cmd);
 
-#endif /* _LCOM_MOUSE_H_ */
+#endif //MOUSE_H

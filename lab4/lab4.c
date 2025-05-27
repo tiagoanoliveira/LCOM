@@ -1,30 +1,11 @@
-// IMPORTANT: you must include the following line in all your C files
 #include <lcom/lcf.h>
-#include <lcom/lab4.h>
+
 #include <stdint.h>
 #include <stdio.h>
 
-#include "utils.h"
 #include "mouse.h"
 #include "i8042.h"
-#include "i8254.h"
-
-typedef enum {
-  START,
-  UP,
-  VERTEX,
-  DOWN,
-  END_STATE
-} SystemState;
-
-extern struct packet mouse_packet;
-extern uint8_t packet_byte_index;
-extern uint32_t idle_counter;
-
-static SystemState state = START;
-static int16_t x_len_total = 0;
-
-static void update_state_machine(uint8_t x_len, uint8_t tolerance);
+#include "timer.h"
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -51,227 +32,373 @@ int main(int argc, char *argv[]) {
 }
 
 int (mouse_test_packet)(uint32_t cnt) {
-  uint8_t irq_set;
-  int ipc_status, r;
-  message msg;
+    uint8_t bit_no;
+    int ipc_status;
+    message msg;
+    uint32_t packets_processed = 0;
 
-  if(mouse_subscribe_int(&irq_set) != 0) return 1;
-
-  if(mouse_enable_data_reporting() != 0) {
-      mouse_unsubscribe_int();
-      return 1;
-  }
-
-  while (cnt) {
-    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
-        printf("driver_receive failed with: %d", r);
-        continue;
+    // Subscrever interrupções do rato
+    if (mouse_subscribe_int(&bit_no) != 0) {
+        printf("Erro ao subscrever interrupções do rato\n");
+        return 1;
     }
 
-    if (is_ipc_notify(ipc_status)) {
-        switch (_ENDPOINT_P(msg.m_source)) {
-          case HARDWARE:
-              if (msg.m_notify.interrupts & irq_set) {
-                mouse_ih();                               // Lemos mais um byte
-                mouse_sync_bytes();                       // Sincronizamos esse byte no pacote respectivo
+    // Ativar data reporting (stream mode)
+    if (mouse_write_cmd(MOUSE_ENABLE_DATA_REPORTING) != 0) {
+        printf("Erro ao ativar data reporting\n");
+        mouse_unsubscribe_int();
+        return 1;
+    }
 
-                if (packet_byte_index == 3) {             // Quando tivermos três bytes do mesmo pacote
-                  parse_packet();                         // Formamos o pacote
-                  mouse_print_packet(&mouse_packet);      // Mostramos o pacote
-                  packet_byte_index = 0;
-                  cnt--;
-                }
-              }
-              break;
-          default:
-              break;
+    // Processar interrupções até receber o número de pacotes especificado
+    while (packets_processed < cnt) {
+        // Obter uma mensagem do driver
+        if (driver_receive(ANY, &msg, &ipc_status) != 0) {
+            printf("Erro ao receber driver\n");
+            continue;
+        }
+
+        if (is_ipc_notify(ipc_status)) { // Recebeu notificação
+            switch (_ENDPOINT_P(msg.m_source)) {
+                case HARDWARE: // Interrupção de hardware
+                    if (msg.m_notify.interrupts & bit_no) { // Interrupção do rato
+                        mouse_ih(); // Chama o interrupt handler do rato
+                        mouse_sync_bytes(); // Sincroniza os bytes do pacote
+
+                        if (byte_index == 0) { // Pacote completo foi processado
+                            packets_processed++;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
-  }
 
-  if(mouse_disable_data_reporting() != 0) {
-      mouse_unsubscribe_int();
-      return 1;
-  }
+    // Desativar data reporting
+    if (mouse_write_cmd(MOUSE_DISABLE_DATA_REPORTING) != 0) {
+        printf("Erro ao desativar data reporting\n");
+        mouse_unsubscribe_int();
+        return 1;
+    }
 
-  if(mouse_unsubscribe_int() != 0) return 1;
+    // Cancelar subscrição de interrupções
+    if (mouse_unsubscribe_int() != 0) {
+        printf("Erro ao cancelar subscrição de interrupções do rato\n");
+        return 1;
+    }
 
-  return 0;
+    return 0;
 }
 
 int (mouse_test_async)(uint8_t idle_time) {
-  uint8_t irq_set_mouse, irq_set_timer;
-  int ipc_status, r;
-  message msg;
-  bool done = false;
+    uint8_t mouse_bit_no, timer_bit_no;
+    int ipc_status;
+    message msg;
+    uint32_t seconds_elapsed = 0;
 
-  if(timer_subscribe_int(&irq_set_timer) != 0) return 1;
-  if(mouse_subscribe_int(&irq_set_mouse) != 0) return 1;
+    // Converter tempo de idle para interrupções do timer (60Hz)
+    uint8_t idle_ticks = idle_time * sys_hz();
 
-  if(mouse_enable_data_reporting() != 0) {
-    mouse_unsubscribe_int();
-    return 1;
-  }
-
-  while(!done) {
-    if((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
-        printf("driver_receive failed with: %d", r);
-        continue;
+    // Subscrever interrupções do rato
+    if (mouse_subscribe_int(&mouse_bit_no) != 0) {
+        printf("Erro ao subscrever interrupções do rato\n");
+        return 1;
     }
 
-    if(is_ipc_notify(ipc_status)) {
-        switch(_ENDPOINT_P(msg.m_source)) {
-          case HARDWARE:
-              if(msg.m_notify.interrupts & irq_set_mouse) {
-                mouse_ih();                               // Lemos mais um byte
-                mouse_sync_bytes();                       // Sincronizamos esse byte no pacote respectivo
+    // Subscrever interrupções do timer
+    if (timer_subscribe_int(&timer_bit_no) != 0) {
+        printf("Erro ao subscrever interrupções do timer\n");
+        mouse_unsubscribe_int();
+        return 1;
+    }
 
-                if(packet_byte_index == 3) {              // Quando tivermos três bytes do mesmo pacote
-                  idle_counter = 0;
-                  parse_packet();                         // Formamos o pacote
-                  mouse_print_packet(&mouse_packet);      // Mostramos o pacote
-                  packet_byte_index = 0;
-                }
-              } else if(msg.m_notify.interrupts & irq_set_timer) {
-                timer_int_handler();
-                if(idle_counter >= idle_time * 60){
-                  done = true;
-                }
-              }
-              break;
-          default:
-              break;
+    // Ativar data reporting (stream mode)
+    if (mouse_write_cmd(MOUSE_ENABLE_DATA_REPORTING) != 0) {
+        printf("Erro ao ativar data reporting\n");
+        timer_unsubscribe_int();
+        mouse_unsubscribe_int();
+        return 1;
+    }
+
+    // Inicializar contador para verificar tempo de idle
+    counter = 0;
+
+    // Processar interrupções até ultrapassar o tempo de idle
+    while (counter < idle_ticks) {
+        // Obter uma mensagem do driver
+        if (driver_receive(ANY, &msg, &ipc_status) != 0) {
+            printf("Erro ao receber driver\n");
+            continue;
+        }
+
+        if (is_ipc_notify(ipc_status)) { // Recebeu notificação
+            switch (_ENDPOINT_P(msg.m_source)) {
+                case HARDWARE: // Interrupção de hardware
+                    if (msg.m_notify.interrupts & mouse_bit_no) { // Interrupção do rato
+                        mouse_ih(); // Chama o interrupt handler do rato
+                        mouse_sync_bytes(); // Sincroniza os bytes do pacote
+
+                        // Resetar contador ao receber pacote completo
+                        if (byte_index == 0) {
+                            counter = 0;
+                        }
+                    }
+
+                    if (msg.m_notify.interrupts & timer_bit_no) { // Interrupção do timer
+                        timer_int_handler(); // Incrementa o contador global
+
+                        // Verifica se um segundo passou
+                        if (counter % sys_hz() == 0 && counter > 0) {
+                            seconds_elapsed++;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
-  }
 
-  if(mouse_disable_data_reporting() != 0) {
-    mouse_unsubscribe_int();
-    return 1;
-  }
+    // Desativar data reporting
+    if (mouse_write_cmd(MOUSE_DISABLE_DATA_REPORTING) != 0) {
+        printf("Erro ao desativar data reporting\n");
+        timer_unsubscribe_int();
+        mouse_unsubscribe_int();
+        return 1;
+    }
 
-  if(mouse_unsubscribe_int() != 0) return 1;
-  if(timer_unsubscribe_int() != 0) return 1;
+    // Cancelar subscrição de interrupções do timer
+    if (timer_unsubscribe_int() != 0) {
+        printf("Erro ao cancelar subscrição de interrupções do timer\n");
+        mouse_unsubscribe_int();
+        return 1;
+    }
 
-  return 0;
+    // Cancelar subscrição de interrupções do rato
+    if (mouse_unsubscribe_int() != 0) {
+        printf("Erro ao cancelar subscrição de interrupções do rato\n");
+        return 1;
+    }
+
+    return 0;
 }
 
 int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
-  uint8_t irq_set;
-  int ipc_status, r;
-  message msg;
+	uint8_t bit_no;
+  	int ipc_status;
+  	message msg;
 
-  if(mouse_subscribe_int(&irq_set) != 0) return 1;
+ 	 // Estados para a máquina de estados
+	typedef enum {
+    	INIT,       // Estado inicial
+    	DRAW_UP,    // Desenhando a primeira linha (botão esquerdo)
+    	VERTEX,     // Esperando no vértice
+    	DRAW_DOWN,  // Desenhando a segunda linha (botão direito)
+    	DETECTED    // Gesto detectado
+  	} GestureState;
 
-  if(mouse_write(MOUSE_ENABLE_DATA_REPORTING) != 0) {
-      mouse_unsubscribe_int();
-      return 1;
-  }
+	GestureState state = INIT;
+  	struct packet pp;
+  	int x_displacement = 0;
 
-  printf("Subscribed on mouse IRQ mask = 0x%02X\n", irq_set);
-
-  while (state != END_STATE) {
-    printf("ENTROU NO LOOP\n");
-    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
-      printf("driver_receive failed: %d\n", r);
-      continue;
+    // Subscrever interrupções do rato
+    if (mouse_subscribe_int(&bit_no) != 0) {
+        printf("Erro ao subscrever interrupções do rato\n");
+        return 1;
     }
 
-    if(is_ipc_notify(ipc_status)) {
-      switch(_ENDPOINT_P(msg.m_source)) {
-        case HARDWARE:
-          mouse_ih();
-          mouse_sync_bytes();
-
-          if (packet_byte_index == 3) {
-            parse_packet(&mouse_packet);
-            mouse_print_packet(&mouse_packet);
-            printf("delta_x = %d, delta_y = %d\n", mouse_packet.delta_x, mouse_packet.delta_y);
-            packet_byte_index = 0;
-            update_state_machine(x_len, tolerance);
-          }
-          break;
-
-        default:
-          break;
-      }
+    // Ativar data reporting (stream mode)
+    if (mouse_write_cmd(MOUSE_ENABLE_DATA_REPORTING) != 0) {
+        printf("Erro ao desativar data reporting\n");
+        mouse_unsubscribe_int();
+        return 1;
     }
-  }
 
-  if(mouse_disable_data_reporting() != 0) {
-    mouse_unsubscribe_int();
-    return 1;
-  }
+    // Processar interrupções até reconhecer o gesto
+    while (state != DETECTED) {
+        // Obter uma mensagem do driver
+        if (driver_receive(ANY, &msg, &ipc_status) != 0) {
+            printf("Erro ao receber driver\n");
+            break;
+        }
 
-  if(mouse_unsubscribe_int() != 0) return 1;
+        if (is_ipc_notify(ipc_status)) { // Recebeu notificação
+            switch (_ENDPOINT_P(msg.m_source)) {
+                case HARDWARE: // Interrupção de hardware
+                    if (msg.m_notify.interrupts & bit_no) { // Interrupção do rato
+                        mouse_ih(); // Chama o interrupt handler do rato
 
-  return 0;
-}
+						// Atualizar o índice e o pacote
+            			if (byte_index == 0 && (current_byte & BIT(3))) {
+              				packet[byte_index] = current_byte;
+              				byte_index++;
+           				} else if (byte_index > 0 && byte_index < 3) {
+              				packet[byte_index] = current_byte;
+              				byte_index++;
+            			}
 
-static void update_state_machine(uint8_t x_len, uint8_t tolerance) {
-  struct mouse_ev *ev = mouse_detect_event(&mouse_packet);
+        			    // Se completou um pacote, processar e atualizar a máquina de estados
+            			if (byte_index == 3) {
+              				// Preencher a estrutura do pacote
+              				pp.bytes[0] = packet[0];
+      				        pp.bytes[1] = packet[1];
+              				pp.bytes[2] = packet[2];
 
-  switch (state) {
-    case START:
-      if (ev->type == LB_PRESSED) {
-        state = UP;
-        x_len_total = 0;
-      }
-      break;
+				            pp.lb = pp.bytes[0] & MOUSE_LB;
+              				pp.rb = pp.bytes[0] & MOUSE_RB;
+              				pp.mb = pp.bytes[0] & MOUSE_MB;
 
-    case UP:
-      if (ev->type == MOUSE_MOV &&
-          ev->delta_y  >  0 &&                                // subindo
-          abs(ev->delta_x) <= tolerance &&                    // desvio X dentro da tolerância
-          abs(ev->delta_y) > abs(ev->delta_x)) {              // slope > 1
-        x_len_total += abs(ev->delta_x);
-      }
-      else if (ev->type == LB_RELEASED) {
-        if (x_len_total >= x_len)
-          state = VERTEX;
-        else
-          state = START;
-      }
-      else {
-        state = START;
-      }
-      break;
+			             	// Calcular os deslocamentos
+              				if (pp.bytes[0] & MOUSE_X_SIGN) {
+                				pp.delta_x = pp.bytes[1] | 0xFF00; // Complemento de 2 para valores negativos
+              				} else {
+                				pp.delta_x = pp.bytes[1];
+              				}
 
-    case VERTEX:
-      if (ev->type == RB_PRESSED) {
-        state = DOWN;
-        x_len_total = 0;
-      }
-      else if (ev->type == MOUSE_MOV && abs(ev->delta_x) <= tolerance && abs(ev->delta_y) <= tolerance) {
-        /* permanece em VERTEX */
-      }
-      else {
-        state = START;
-      }
-      break;
+            				if (pp.bytes[0] & MOUSE_Y_SIGN) {
+                				pp.delta_y = pp.bytes[2] | 0xFF00; // Complemento de 2 para valores negativos
+              				} else {
+                				pp.delta_y = pp.bytes[2];
+              				}
 
-    case DOWN:
-      if (ev->type == MOUSE_MOV &&
-          ev->delta_y  <  0 &&                               // descendo
-          abs(ev->delta_x) <= tolerance &&                   // desvio X dentro da tolerância
-          abs(ev->delta_y) > abs(ev->delta_x)) {             // slope > 1
-        x_len_total += abs(ev->delta_x);
-      }
-      else if (ev->type == RB_RELEASED) {
-        if (x_len_total >= x_len)
-          state = END_STATE;
-        else
-          state = START;
-      }
-      else {
-        state = START;
-      }
-      break;
+				            pp.x_ov = pp.bytes[0] & MOUSE_X_OVERFLOW;
+              				pp.y_ov = pp.bytes[0] & MOUSE_Y_OVERFLOW;
 
-    case END_STATE:
-      /* nada a fazer */
-      break;
-  }
+							// Exibir o pacote
+                            mouse_print_packet(&pp);
+
+                            // Máquina de estados para reconhecer o gesto
+                            switch (state) {
+                                case INIT:
+                                    // Verifica se o botão esquerdo foi pressionado (sem outros botões)
+                                    if (pp.lb && !pp.rb && !pp.mb) {
+                                        state = DRAW_UP;
+                                        x_displacement = 0;
+                                    }
+                                    break;
+
+                                case DRAW_UP:
+                                    // Verifica se ainda está a desenhar
+                                    if (pp.lb && !pp.rb && !pp.mb) {
+               						    // Verificar se o movimento tem inclinação positiva (slope > 1)
+                  						if (pp.delta_x > -tolerance && pp.delta_y > -tolerance) {
+                      						// Aceitar movimento se a inclinação for maior que 1
+                      						if (abs(pp.delta_y) > abs(pp.delta_x)) {
+                        						x_displacement += pp.delta_x;
+                      						} else {
+                        						// Reset se a inclinação não for adequada
+                        						state = INIT;
+                        						x_displacement = 0;
+                      						}
+                    					} else {
+                      						// Reset se houver um movimento negativo maior que a tolerância
+                      						state = INIT;
+                      						x_displacement = 0;
+                   						}
+                  					}
+                  					// Transição para VERTEX quando LB é disponibilizado
+                  					else if (!pp.lb && !pp.rb && !pp.mb) {
+                    					// Verificar se o deslocamento horizontal é suficiente
+                    					if (x_displacement >= x_len) {
+                      						state = VERTEX;
+                    					} else {
+                      						state = INIT;
+                     						x_displacement = 0;
+                    					}
+                  					} else {
+                    					// Reset se outros botões forem pressionados
+                    					state = INIT;
+                    					x_displacement = 0;
+                  					}
+                  					break;
+
+                                case VERTEX:
+                                    // Verificar se está no vértice (sem botões pressionados)
+                 					if (!pp.lb && !pp.rb && !pp.mb) {
+                 				   		// Verificar se há movimento residual
+                    					if (abs(pp.delta_x) <= tolerance && abs(pp.delta_y) <= tolerance) {
+                      						// Continuar no estado VERTEX
+                    					} else {
+											// Reset se o movimento for maior que a tolerância
+                                        	state = INIT;
+											x_displacement=0;
+                                 		}
+									}
+									// Transição para DRAW_DOWN quando RB é pressionado e outros não
+                 					else if (!pp.lb && pp.rb && !pp.mb) {
+                    					state = DRAW_DOWN;
+                    					x_displacement = 0;
+                  					} else {
+                    					// Reset se outros botões forem pressionados
+                    					state = INIT;
+                    					x_displacement = 0;
+                  					}
+                                    break;
+								case DRAW_DOWN:
+             				    	// Verificar se ainda está desenhando a segunda linha
+                  					if (!pp.lb && pp.rb && !pp.mb) {
+                    					// Verificar se o movimento tem inclinação negativa (slope < -1)
+                    					if (pp.delta_x > -tolerance && pp.delta_y < tolerance) {
+                      						// Aceitar movimento se a inclinação for menor que -1
+                      						if (abs(pp.delta_y) > abs(pp.delta_x)) {
+                        						x_displacement += pp.delta_x;
+                      						} else {
+                        						// Reset se a inclinação não for adequada
+                        						state = INIT;
+                        						x_displacement = 0;
+                      						}
+                    					} else {
+                      						// Reset se houver um movimento inadequado
+                      						state = INIT;
+                      						x_displacement = 0;
+                      					}
+                    				}
+                  					// Transição para DETECTED quando RB é liberado
+                    				else if (!pp.lb && !pp.rb && !pp.mb) {
+                      					// Verificar se o deslocamento horizontal é suficiente
+                      					if (x_displacement >= x_len) {
+                        					state = DETECTED;
+                      					} else {
+                        					state = INIT;
+                        					x_displacement = 0;
+                      					}
+                    				} else {
+                      					// Reset se outros botões forem pressionados
+                      					state = INIT;
+                  					    x_displacement = 0;
+                    				}
+                  					break;
+				                default:
+            				    	break;
+              				}
+
+					   		// Resetar o índice para o próximo pacote
+					        byte_index = 0;
+            			}
+          			}
+                   	break;
+                default:
+                  	break;
+           	}
+        }
+	}
+
+    // Desativar data reporting
+    if (mouse_write_cmd(MOUSE_DISABLE_DATA_REPORTING) != 0) {
+        printf("Erro ao desativar data reporting\n");
+        mouse_unsubscribe_int();
+        return 1;
+    }
+
+    // Cancelar subscrição de interrupções
+    if (mouse_unsubscribe_int() != 0) {
+        printf("Erro ao cancelar subscrição de interrupções do rato\n");
+        return 1;
+    }
+
+    return 0;
 }
 
 int (mouse_test_remote)(uint16_t period, uint8_t cnt) {

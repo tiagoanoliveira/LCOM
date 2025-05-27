@@ -2,3 +2,15 @@ lab2_backup/*
 lab3_backup/*
 lab2/Gui\303\243o_Lab3.txt
 lab3/Gui\303\243o_Lab3.txt
+
+.minix-src/include
+.idea/
+.vscode/
+*.o
+
+/lab2/trace.txt
+/lab2/output.txt
+/lab3/trace.txt
+/lab3/output.txt
+/lab4/output.txt
+/lab4/trace.txt
