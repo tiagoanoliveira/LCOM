@@ -147,7 +147,4 @@ void game_logic_render(const GameLogic* game) {
     if (!game->game_over) {
         draw_current_piece(&game->current_piece);
     }
-
-    // Desenhar informações do jogo (score, level, etc.)
-    // Isto pode ser movido para uma função UI separada
 }

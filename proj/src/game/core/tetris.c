@@ -10,8 +10,7 @@ void tetris_init() {
         }
     }
 
-    // Initialize the current piece at the starting position
-    extern Piece current_piece; // Make sure this is declared somewhere globally
+    extern Piece current_piece;
     piece_init(&current_piece, random_piece_type(), 3, 0);
 }
 
