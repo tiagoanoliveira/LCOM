@@ -1,5 +1,5 @@
-#ifndef PIECE_H
-#define PIECE_H
+#ifndef _PIECE_H_
+#define _PIECE_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -33,4 +33,4 @@ uint32_t piece_get_color(PieceType type);
 // Check if a piece fits in the grid at a given position
 bool piece_fits(const Piece* piece, int new_x, int new_y);
 
-#endif // PIECE_H
+#endif /* _PIECE_H_ */

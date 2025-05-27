@@ -1,5 +1,5 @@
-#ifndef TETRIS_H
-#define TETRIS_H
+#ifndef _TETRIS_H_
+#define _TETRIS_H_
 
 #include <lcom/lcf.h>
 #include <lcom/vbe.h>
@@ -16,11 +16,18 @@
 #include "../objects/grid.h"
 
 extern int grid[GRID_ROWS][GRID_COLS];
+extern Piece current_piece;
 
+void game_tick();
+void logic_tick();
 void tetris_init();
 void tetris_draw();
+void render_frame();
+void handle_keyboard_input();
 void fix_piece_to_grid(const Piece* piece);
-PieceType random_piece_type();
+
 int clear_full_lines();
 
-#endif // TETRIS_H
+PieceType random_piece_type();
+
+#endif /* _TETRIS_H_ */

@@ -1,5 +1,5 @@
-#ifndef GRAPHICS_H
-#define GRAPHICS_H
+#ifndef _GRAPHICS_H_
+#define _GRAPHICS_H_
 
 #include <lcom/lcf.h>
 #include <lcom/vbe.h>
@@ -37,4 +37,4 @@ int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color);
 int draw_rectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color);
 void swap_buffers();
 
-#endif // GRAPHICS_H
+#endif /* _GRAPHICS_H_ */

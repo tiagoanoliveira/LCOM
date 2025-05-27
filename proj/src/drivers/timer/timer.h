@@ -1,5 +1,10 @@
-#ifndef TIMER_H
-#define TIMER_H
+#ifndef _TIMER_H_
+#define _TIMER_H_
+
+#include <lcom/lcf.h>
+
+#include <stdint.h>
+#include <stdbool.h>
 
 int timer_init();
 int timer_exit();
@@ -12,4 +17,4 @@ void (timer_int_handler)();
 int (timer_get_conf)(uint8_t timer, uint8_t *st);
 int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field field);
 
-#endif // TIMER_H
+#endif /* _TIMER_H_ */

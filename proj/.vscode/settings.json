@@ -11,6 +11,8 @@
     "*.pl": "prolog",
     "graphics.h": "c",
     "timer.h": "c",
-    "keyboard.h": "c"
+    "keyboard.h": "c",
+    "lcf.h": "c",
+    "vbe.h": "c"
   },
 }

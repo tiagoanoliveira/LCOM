@@ -1,5 +1,5 @@
-#ifndef _LCOM_I8042_H_
-#define _LCOM_I8042_H_
+#ifndef _I8042_H_
+#define _I8042_H_
 
 #include <lcom/lcf.h>
 
@@ -73,4 +73,4 @@
 #define MOUSE_NACK 0xFE
 #define MOUSE_ERROR 0xFC
 
-#endif /* _LCOM_I8042_H_ */
+#endif /* _I8042_H_ */
