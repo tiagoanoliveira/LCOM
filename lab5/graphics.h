@@ -1,27 +1,24 @@
-#ifndef __GRAPHICS_H
-#define __GRAPHICS_H
+#ifndef GRAPHICS_H
+#define GRAPHICS_H
 
 #include <lcom/lcf.h>
-#include "VBE.h"
+#include <lcom/vbe.h>
 
-vbe_mode_info_t mode_info;
-uint8_t* frame_buffer;
+#include <stdint.h>
+#include <string.h>
+#include <sys/mman.h>     // vm_map_phys
+#include <machine/int86.h> // sys_int86
+#include <minix/syslib.h>  // sys_privctl
+#include <minix/sysutil.h> // printf
 
-int (set_graphic_mode)(uint16_t submode);
-int (set_text_mode)();
-int (set_frame_buffer)(uint16_t mode);
-int (vg_draw_pixel)(uint16_t x, uint16_t y, uint32_t color);
-int (vg_draw_hline)(uint16_t x, uint16_t y, uint16_t len, uint32_t color);
-int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color);
-int (print_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y);
-int (normalize_color)(uint32_t color, uint32_t *new_color);
-uint32_t (direct_mode)(uint32_t R, uint32_t G, uint32_t B);
-uint32_t (indexed_mode)(uint16_t col, uint16_t row, uint8_t step, uint32_t first, uint8_t n);
-uint32_t (Red)(unsigned j, uint8_t step, uint32_t first);
-uint32_t (Green)(unsigned i, uint8_t step, uint32_t first);
-uint32_t (Blue)(unsigned j, unsigned i, uint8_t step, uint32_t first);
-uint32_t (R)(uint32_t first);
-uint32_t (G)(uint32_t first);
-uint32_t (B)(uint32_t first);
+// Apontador global para o frame buffer (zona de memória gráfica)
+extern uint8_t *frame_buffer;
+// Informação do modo gráfico atual
+extern vbe_mode_info_t mode_info;
 
-#endif /* __GRAPHICS_H */
+int set_graphic_mode(uint16_t mode);
+int set_frame_buffer(uint16_t mode);
+int draw_rectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color);
+int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color);
+
+#endif // GRAPHICS_H

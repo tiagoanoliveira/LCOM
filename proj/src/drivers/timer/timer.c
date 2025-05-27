@@ -8,6 +8,15 @@
 int hook_id_timer = 0;
 uint32_t idle_counter = 0;
 
+int timer_init() {
+  uint8_t bit_no;
+  return timer_subscribe_int(&bit_no); // subscreve o timer (e inicializa bitmask)
+}
+
+int timer_exit() {
+  return timer_unsubscribe_int(); // remove subscrição
+}
+
 int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
   if (timer > 2) return 1;
   if (freq < 19 || freq > TIMER_FREQ) return 1;
@@ -111,4 +120,8 @@ int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field fiel
 
   if ((timer_print_config(timer, field, config)) != 0) return 1;
   return 0;
+}
+
+uint32_t timer_get_ticks() {
+  return idle_counter;
 }

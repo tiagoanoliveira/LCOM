@@ -3,7 +3,7 @@
 #include <stddef.h>
 
 // needs the typedef xpm_row_t
-#include "xpm.h"
+#include "lcom/xpm.h"
 
 /** @defgroup xpm xpm
  * @{
