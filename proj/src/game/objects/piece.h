@@ -18,6 +18,8 @@ typedef struct {
     uint32_t color;         // Color of the piece
 } Piece;
 
+extern Piece current_piece;
+
 // Initialize a piece of a given type at a given position
 void piece_init(Piece *piece, PieceType type, int x, int y);
 

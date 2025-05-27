@@ -10,7 +10,7 @@
 
 static GameState currentState = STATE_MENU;
 static bool needsRedraw = true;
-static Piece currentPiece;
+Piece current_piece;
 static bool gameOver = false;
 
 void state_init(void) {
@@ -31,7 +31,7 @@ void state_set_current(GameState newState) {
 
         switch (newState) {
             case STATE_GAME:
-                piece_init(&currentPiece, random_piece_type(), 3, 0);
+                tetris_init(); // Initialize the game state
                 gameOver = false;
                 break;
             case STATE_MENU:
@@ -106,7 +106,7 @@ void state_render(void) {
             vg_clear_screen(BACKGROUND_COLOR);
             draw_grid();
             draw_grid_contents(grid);
-            draw_current_piece(&currentPiece);
+            draw_current_piece(&current_piece);
             break;
         case STATE_GAME_OVER:
             game_over_menu_draw(&gameOverMenu); // draw game over screen
@@ -125,7 +125,7 @@ void state_render(void) {
 }
 
 Piece* state_get_current_piece(void) {
-    return &currentPiece;
+    return &current_piece;
 }
 
 bool state_is_game_over(void) {
@@ -135,7 +135,8 @@ bool state_is_game_over(void) {
 void state_set_game_over(bool over) {
     gameOver = over;
     if (over) {
-        printf("Game Over! Return to menu\n");
-        state_set_current(STATE_MENU);
+        printf("Game Over! Going to game over menu\n");
+        state_set_current(STATE_GAME_OVER); // <-- Go to game over menu!
+        game_over_menu_init(&gameOverMenu);
     }
 }

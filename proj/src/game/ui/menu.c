@@ -201,9 +201,11 @@ void game_over_menu_handle_input(GameOverMenu* menu, uint8_t scancode[2], bool t
         switch (scancode[1]) {
             case 0x48: // Up arrow
                 menu->selected = (menu->selected == 0) ? GAME_OVER_OPTIONS_COUNT - 1 : menu->selected - 1;
+                state_set_redraw(true);
                 break;
             case 0x50: // Down arrow
                 menu->selected = (menu->selected + 1) % GAME_OVER_OPTIONS_COUNT;
+                state_set_redraw(true);
                 break;
         }
     }
