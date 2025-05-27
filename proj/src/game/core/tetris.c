@@ -1,5 +1,4 @@
 #include "tetris.h"
-#include "../ui/render.h"
 
 int grid[GRID_ROWS][GRID_COLS] = {{0}}; // 0 means empty cell
 
@@ -8,8 +7,8 @@ void tetris_init() {
 }
 
 void tetris_draw() {
-    vg_clear_screen(0x00); // black background
-    draw_grid();           // Tetris grid
+    vg_clear_screen(BACKGROUND_COLOR);
+    draw_grid();
 }
 
 PieceType random_piece_type() {
@@ -48,15 +47,12 @@ int clear_full_lines() {
                     grid[r][c] = grid[r - 1][c];
                 }
             }
-
             for (int c = 0; c < GRID_COLS; c++) {
                 grid[0][c] = 0;
             }
-
             lines_cleared++;
             row++; // Re-check this row
         }
     }
-
     return lines_cleared;
 }

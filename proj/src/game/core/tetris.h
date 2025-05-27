@@ -13,7 +13,8 @@
 
 #include "../../drivers/graphics/graphics.h"
 #include "../objects/piece.h"
-#include "../objects/grid.h"
+#include "config.h"
+#include "../ui/render.h"
 
 extern int grid[GRID_ROWS][GRID_COLS];
 

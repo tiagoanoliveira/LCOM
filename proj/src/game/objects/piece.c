@@ -1,5 +1,6 @@
 #include "piece.h"
 #include "../ui/render.h"
+#include "../core/config.h"
 
 extern int grid[GRID_ROWS][GRID_COLS];
 
@@ -56,15 +57,7 @@ static const uint8_t PIECE_SHAPES[7][4][4][4] = {
     }
 };
 
-static const uint32_t PIECE_COLORS[7] = {
-    0x03, // I - Cyan
-    0x04, // O - Yellow
-    0x05, // T - Purple
-    0x06, // S - Green
-    0x07, // Z - Red
-    0x08, // J - Blue
-    0x09  // L - Orange
-};
+static const uint32_t PIECE_COLORS[7] = {COLOR_I,COLOR_O,COLOR_T,COLOR_S,COLOR_Z,COLOR_J,COLOR_L};
 
 void piece_init(Piece *piece, PieceType type, int x, int y) {
     piece->type = type;
