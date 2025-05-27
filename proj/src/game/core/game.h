@@ -1,30 +1,31 @@
-//
-// Created by tiago-oliveira on 27-05-2025.
-//
-
 #ifndef GAME_H
 #define GAME_H
 
 #include <stdint.h>
 #include <stdbool.h>
 #include "../objects/piece.h"
-#include "state.h"
-#include "tetris.h"
-#include "config.h"
+#include "input.h"
 
-// Inicialização e cleanup do jogo
-void game_init(void);
-void game_cleanup(void);
+typedef struct {
+    Piece current_piece;
+    int score;
+    int lines_cleared;
+    int level;
+    int drop_timer;
+    bool game_over;
+} GameLogic;
 
-// Handlers de input e update
-void game_handle_input(uint8_t scancode[2], bool twoByte);
-void game_update(void);
-
-// Gestão de peças
-void game_spawn_new_piece(void);
-bool game_move_piece(int deltaX, int deltaY);
-void game_rotate_piece(bool clockwise);
-void game_drop_piece(void);
+// Pure game logic - sem input ou rendering
+void game_logic_init(GameLogic* game);
+void game_logic_update(GameLogic* game);
+bool game_logic_move_piece(GameLogic* game, int deltaX, int deltaY);
+void game_logic_rotate_piece(GameLogic* game);
+void game_logic_drop_piece(GameLogic* game);
+void game_logic_fix_piece(GameLogic* game);
+int game_logic_clear_lines(GameLogic* game);
+void game_logic_spawn_piece(GameLogic* game);
+bool game_logic_is_game_over(const GameLogic* game);
+void game_logic_handle_input(GameLogic* game, InputEvent event);
+void game_logic_render(const GameLogic* game);
 
 #endif
-

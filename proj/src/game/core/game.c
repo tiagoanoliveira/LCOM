@@ -1,100 +1,153 @@
-//
-// Created by tiago-oliveira on 27-05-2025.
-//
-
 #include "game.h"
+#include "../ui/render.h"
+#include "../../drivers/graphics/graphics.h"
+#include "tetris.h"
 
-static int dropTimer = 0;
+void game_logic_init(GameLogic* game) {
+    if (!game) return;
 
-void game_init(void) {
+    game->score = 0;
+    game->lines_cleared = 0;
+    game->level = 1;
+    game->drop_timer = 0;
+    game->game_over = false;
+
+    // Inicializar Tetris
     tetris_init();
-    dropTimer = 0;
+
+    // Spawn primeira peça
+    game_logic_spawn_piece(game);
 }
 
-void game_cleanup(void) {
-    // Cleanup se necessário
-}
+void game_logic_update(GameLogic* game) {
+    if (!game || game->game_over) return;
 
-void game_handle_input(uint8_t scancode[2], bool two_byte) {
-    // ESC - voltar ao menu
-    if (scancode[0] == 0x81) {
-        state_set_current(STATE_MENU);
-        state_set_redraw(true);
-        return;
-    }
-
-    if (two_byte && scancode[0] == 0xE0) {
-        switch (scancode[1]) {
-            case 0x4B: // Seta esquerda
-                game_move_piece(-1, 0);
-                break;
-            case 0x4D: // Seta direita
-                game_move_piece(1, 0);
-                break;
-            case 0x50: // Seta baixo
-                game_move_piece(0, 1);
-                break;
-        }
-    }
-
-    // Rotação com espaço
-    if (scancode[0] == 0x39) { // Espaço
-        game_rotate_piece(true);
+    // Timer de queda automática
+    game->drop_timer++;
+    if (game->drop_timer >= DROP_SPEED_INITIAL) {
+        game->drop_timer = 0;
+        game_logic_drop_piece(game);
     }
 }
 
-void game_update(void) {
-    dropTimer++;
-    if (dropTimer >= DROP_SPEED_INITIAL) {
-        dropTimer = 0;
-        game_drop_piece();
-    }
-}
+bool game_logic_move_piece(GameLogic* game, int deltaX, int deltaY) {
+    if (!game || game->game_over) return false;
 
-bool game_move_piece(int deltaX, int deltaY) {
-    Piece* piece = state_get_current_piece();
+    Piece* piece = &game->current_piece;
+
     if (piece_fits(piece, piece->x + deltaX, piece->y + deltaY)) {
         piece->x += deltaX;
         piece->y += deltaY;
-        state_set_redraw(true);
         return true;
     }
+
     return false;
 }
 
-void game_rotate_piece(bool clockwise) {
-    Piece* piece = state_get_current_piece();
-    int oldRotation = piece->rotation;
+void game_logic_rotate_piece(GameLogic* game) {
+    if (!game || game->game_over) return;
 
-    piece_rotate(piece, clockwise);
+    Piece* piece = &game->current_piece;
+    int old_rotation = piece->rotation;
+
+    piece_rotate(piece, true);
 
     if (!piece_fits(piece, piece->x, piece->y)) {
         // Reverter rotação se não couber
-        piece->rotation = oldRotation;
+        piece->rotation = old_rotation;
         piece_update_shape(piece);
-    } else {
-        state_set_redraw(true);
     }
 }
 
-void game_drop_piece(void) {
-    if (!game_move_piece(0, 1)) {
+void game_logic_drop_piece(GameLogic* game) {
+    if (!game || game->game_over) return;
+
+    if (!game_logic_move_piece(game, 0, 1)) {
         // Peça não pode descer mais
-        Piece* piece = state_get_current_piece();
-        fix_piece_to_grid(piece);
-        clear_full_lines();
-        game_spawn_new_piece();
+        game_logic_fix_piece(game);
+
+        int lines = game_logic_clear_lines(game);
+        if (lines > 0) {
+            game->lines_cleared += lines;
+            game->score += lines * 100 * game->level;
+            game->level = 1 + game->lines_cleared / 10;
+        }
+
+        game_logic_spawn_piece(game);
     }
 }
 
-void game_spawn_new_piece(void) {
-    Piece* piece = state_get_current_piece();
-    piece_init(piece, random_piece_type(), 3, 0);
+void game_logic_fix_piece(GameLogic* game) {
+    if (!game) return;
 
-    if (!piece_fits(piece, piece->x, piece->y)) {
-        state_set_game_over(true);
-    } else {
-        state_set_redraw(true);
+    fix_piece_to_grid(&game->current_piece);
+}
+
+int game_logic_clear_lines(GameLogic* game) {
+    if (!game) return 0;
+
+    return clear_full_lines();
+}
+
+void game_logic_spawn_piece(GameLogic* game) {
+    if (!game) return;
+
+    piece_init(&game->current_piece, random_piece_type(), 3, 0);
+
+    if (!piece_fits(&game->current_piece, game->current_piece.x, game->current_piece.y)) {
+        game->game_over = true;
     }
 }
 
+bool game_logic_is_game_over(const GameLogic* game) {
+    return game ? game->game_over : true;
+}
+
+void game_logic_handle_input(GameLogic* game, InputEvent event) {
+    if (!game || game->game_over || !event.pressed) return;
+
+    switch (event.action) {
+        case INPUT_LEFT:
+            game_logic_move_piece(game, -1, 0);
+            break;
+        case INPUT_RIGHT:
+            game_logic_move_piece(game, 1, 0);
+            break;
+        case INPUT_DOWN:
+            game_logic_move_piece(game, 0, 1);
+            break;
+        case INPUT_ROTATE:
+            game_logic_rotate_piece(game);
+            break;
+        case INPUT_DROP:
+            // Drop rápido
+            while (game_logic_move_piece(game, 0, 1)) {
+                // Continue dropping
+            }
+            game_logic_drop_piece(game);
+            break;
+        default:
+            break;
+    }
+}
+
+void game_logic_render(const GameLogic* game) {
+    if (!game) return;
+
+    vg_clear_screen(BACKGROUND_COLOR);
+
+    // Desenhar grid
+    draw_grid();
+
+    // Desenhar conteúdo da grid
+    extern int grid[GRID_ROWS][GRID_COLS];
+    draw_grid_contents(grid);
+
+    // Desenhar peça atual
+    if (!game->game_over) {
+        draw_current_piece(&game->current_piece);
+    }
+
+    // Desenhar informações do jogo (score, level, etc.)
+    // Isto pode ser movido para uma função UI separada
+}

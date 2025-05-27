@@ -11,8 +11,8 @@
 #include "drivers/keyboardMouse/keyboard.h"
 #include "drivers/graphics/graphics.h"
 #include "drivers/timer/timer.h"
-#include "game/core/state.h"
-#include "game/core/game.h"
+#include "game/states/state.h"
+#include "game/core/input.h"
 #include "game/core/config.h"
 
 int (proj_main_loop)(int argc, char *argv[]) {
@@ -26,47 +26,56 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
     // Subscrições de interrupções
     uint8_t irq_kbd, irq_timer;
-    if (keyboard_subscribe_int(&irq_kbd) || timer_subscribe_int(&irq_timer)) {
-        printf("Error subscribing interrupts.\n");
+    if (keyboard_subscribe_int(&irq_kbd) ||
+        timer_subscribe_int(&irq_timer)) {
         vg_exit();
         return 1;
     }
 
-    state_init();
-    game_init();
+    // Inicializar sistemas
+    state_manager_init();
+    input_init();
 
     int ipc_status;
     message msg;
     bool running = true;
     int tick_count = 0;
 
-    while (running && state_get_current() != STATE_QUIT) {
-        if (driver_receive(ANY, &msg, &ipc_status) != 0) continue;
-
+    while (running && !state_manager_should_quit()) {
+        if (driver_receive(ANY, &msg, &ipc_status) != 0) {
+            continue;
+        }
         if (is_ipc_notify(ipc_status)) {
             switch (_ENDPOINT_P(msg.m_source)) {
                 case HARDWARE:
+                    // Processar interrupção do teclado
                     if (msg.m_notify.interrupts & irq_kbd) {
                         kbc_ih();
-                        state_handle_input(scancode, two_byte);
+
+                        // Processar input usando o novo sistema
+                        InputEvent event = input_process_scancode(scancode, two_byte);
+                        if (event.action != INPUT_NONE) {
+                            state_manager_handle_input(event);
+                        }
                     }
 
+                    // Processar interrupção do timer
                     if (msg.m_notify.interrupts & irq_timer) {
                         tick_count++;
                         if (tick_count >= 1) { // 60 FPS
                             tick_count = 0;
-                            state_update();
+                            state_manager_update();
                         }
                     }
                     break;
             }
         }
-
-        state_render();
+        // Renderizar apenas quando necessário
+        state_manager_render();
     }
 
     // Cleanup
-    game_cleanup();
+    state_manager_cleanup();
     keyboard_unsubscribe_int();
     timer_unsubscribe_int();
     vg_exit();
@@ -74,13 +83,14 @@ int (proj_main_loop)(int argc, char *argv[]) {
     return 0;
 }
 
-
 int main(int argc, char *argv[]) {
     // LCF setup
     lcf_set_language("EN-US");
     lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
     lcf_log_output("/home/lcom/labs/proj/output.txt");
-    if (lcf_start(argc, argv)) return 1;
+
+    if (lcf_start(argc, argv))
+        return 1;
 
     lcf_cleanup();
     return 0;

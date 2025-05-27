@@ -10,16 +10,18 @@ PROG=proj
 .PATH: ${.CURDIR}/game
 .PATH: ${.CURDIR}/game/core
 .PATH: ${.CURDIR}/game/objects
+.PATH: ${.CURDIR}/game/states
 .PATH: ${.CURDIR}/game/ui
 
 
 # source code files to be compiled
 DRIVER_SRCS = graphics.c timer.c keyboard.c mouse.c KBC.c utils.c
-CORE_SRCS = state.c game.c tetris.c
+CORE_SRCS = game.c tetris.c input.c
 OBJECT_SRCS = piece.c score.c
-UI_SRCS = menu.c font.c render.c
+STATES_SRCS = state.c menu_state.c gameover_state.c
+UI_SRCS = font.c render.c menu_ui.c gameover_ui.c
 
-SRCS = main.c $(DRIVER_SRCS) $(CORE_SRCS) $(OBJECT_SRCS) $(UI_SRCS)
+SRCS = main.c $(DRIVER_SRCS) $(CORE_SRCS) $(OBJECT_SRCS) $(STATES_SRCS) $(UI_SRCS)
 
 # additional compilation flags
 # "-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set

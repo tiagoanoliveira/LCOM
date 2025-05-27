@@ -28,4 +28,12 @@
 #define COLOR_J 0x08  // Blue
 #define COLOR_L 0x09  // Orange
 
+// Cores do Menu e GameOver
+static const uint32_t COLOR_BACKGROUND = 0x00;
+static const uint32_t COLOR_TITLE = 0x0F;
+static const uint32_t COLOR_SELECTED = 0x0E;
+static const uint32_t COLOR_NORMAL = 0x07;
+static const uint32_t COLOR_BORDER = 0x03;
+static const uint32_t COLOR_SCORE = 0x0A;
+
 #endif //CONFIG_H
