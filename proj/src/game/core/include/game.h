@@ -15,6 +15,7 @@ typedef struct {
     int lines_cleared;
     int level;
     int drop_timer;
+    int current_drop_speed;
     bool game_over;
 } GameLogic;
 
@@ -30,5 +31,6 @@ void game_logic_spawn_piece(GameLogic* game);
 bool game_logic_is_game_over(const GameLogic* game);
 void game_logic_handle_input(GameLogic* game, InputEvent event);
 void game_logic_render(const GameLogic* game);
+void game_logic_update_speed(GameLogic* game);
 
 #endif

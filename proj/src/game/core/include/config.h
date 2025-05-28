@@ -4,7 +4,7 @@
 // Configurações do jogo
 #define GAME_FPS 60
 #define DROP_SPEED_INITIAL 60  // frames
-#define DROP_SPEED_FAST 6      // frames
+#define DROP_SPEED_FAST 5      // frames
 
 // Configurações gráficas
 #define SCREEN_MODE 0x105
