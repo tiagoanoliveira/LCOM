@@ -52,15 +52,10 @@ void gameover_ui_draw_title(void) {
     int screen_height = mode_info.YResolution;
 
     int title_y = screen_height / 4;
-    int title_width = strlen(GAMEOVER_TITLE) * CHAR_WIDTH;
+    int title_width = strlen(GAMEOVER_TITLE) * TITLE_CHAR_WIDTH;
     int title_x = (screen_width - title_width) / 2;
 
-    // Fundo do título
-    draw_rectangle(title_x - 30, title_y - 25, title_width + 60, CHAR_HEIGHT + 50, COLOR_BORDER);
-    draw_rectangle(title_x - 25, title_y - 20, title_width + 50, CHAR_HEIGHT + 40, COLOR_BACKGROUND);
-
-    // Texto do título
-    draw_text(title_x, title_y, GAMEOVER_TITLE, COLOR_TITLE, COLOR_BACKGROUND);
+    draw_title_text(title_x, title_y, GAMEOVER_TITLE, COLOR_TITLE, COLOR_BACKGROUND);
 }
 
 void gameover_ui_draw_score(int score, int lines) {

@@ -3,9 +3,12 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "font.h"
 #include "../states/menu_state.h"
 #include "../../drivers/graphics/graphics.h"
 #include "../core/config.h"
+
+#define BUTTON_WIDTH 250
 
 // Menu UI functions - apenas renderização
 void menu_ui_draw(const MenuState* state);

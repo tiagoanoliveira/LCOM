@@ -4,9 +4,9 @@
 #include <stdint.h>
 
 typedef struct {
-    uint32_t score;
-    uint32_t lines;
-    uint32_t level;
+    unsigned int score;
+    unsigned int lines;
+    unsigned int level;
 } GameScore;
 
 void scoreInit(GameScore* score);

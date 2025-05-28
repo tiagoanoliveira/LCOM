@@ -1,6 +1,5 @@
 #include "state.h"
 #include "menu_state.h"
-#include "game_state.h"
 #include "gameover_state.h"
 #include "../ui/menu_ui.h"
 #include "../ui/gameover_ui.h"

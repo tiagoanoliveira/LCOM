@@ -1,6 +1,11 @@
 #include "tetris.h"
 
 int grid[GRID_ROWS][GRID_COLS] = {{0}}; // 0 means empty cell
+static GameScore scoreData;
+
+GameScore* tetris_get_score() {
+    return &scoreData;
+}
 
 void tetris_init() {
     // Clear the grid
@@ -12,6 +17,7 @@ void tetris_init() {
 
     extern Piece current_piece;
     piece_init(&current_piece, random_piece_type(), 3, 0);
+    scoreInit(&scoreData);
 }
 
 void tetris_draw() {
@@ -34,7 +40,10 @@ void fix_piece_to_grid(const Piece* piece) {
             }
         }
     }
-    clear_full_lines();
+    int cleared = clear_full_lines(); // clears full lines and returns the number of lines cleared
+    if (cleared > 0) {
+        scoreAddLines(&scoreData, cleared); // Updates score
+    }
 }
 
 int clear_full_lines() {

@@ -263,6 +263,69 @@ void draw_character(int x, int y, char c, uint32_t fg_color, uint32_t bg_color) 
             // Bottom horizontal
             draw_rectangle(x + 2, y + 18, 12, 4, fg_color);
             break;
+        case '0':
+            draw_rectangle(x + 2, y + 2, 12, 4, fg_color);    // Top
+            draw_rectangle(x + 2, y + 18, 12, 4, fg_color);   // Bottom
+            draw_rectangle(x + 2, y + 6, 4, 12, fg_color);    // Left
+            draw_rectangle(x + 10, y + 6, 4, 12, fg_color);   // Right
+            break;
+        case '1':
+            draw_rectangle(x + 6, y + 2, 4, 20, fg_color);
+            break;
+        case '2':
+            draw_rectangle(x + 2, y + 2, 12, 4, fg_color);    // Top
+            draw_rectangle(x + 10, y + 6, 4, 6, fg_color);    // Top right
+            draw_rectangle(x + 2, y + 10, 12, 4, fg_color);   // Middle
+            draw_rectangle(x + 2, y + 14, 4, 6, fg_color);    // Bottom left
+            draw_rectangle(x + 2, y + 18, 12, 4, fg_color);   // Bottom
+            break;
+        case '3':
+            draw_rectangle(x + 2, y + 2, 12, 4, fg_color);
+            draw_rectangle(x + 10, y + 6, 4, 6, fg_color);
+            draw_rectangle(x + 6, y + 10, 6, 4, fg_color);
+            draw_rectangle(x + 10, y + 14, 4, 6, fg_color);
+            draw_rectangle(x + 2, y + 18, 12, 4, fg_color);
+            break;
+        case '4':
+            draw_rectangle(x + 2, y + 2, 4, 12, fg_color);
+            draw_rectangle(x + 10, y + 2, 4, 20, fg_color);
+            draw_rectangle(x + 2, y + 10, 12, 4, fg_color);
+            break;
+        case '5':
+            draw_rectangle(x + 2, y + 2, 12, 4, fg_color);
+            draw_rectangle(x + 2, y + 2, 4, 10, fg_color);
+            draw_rectangle(x + 2, y + 10, 12, 4, fg_color);
+            draw_rectangle(x + 10, y + 14, 4, 6, fg_color);
+            draw_rectangle(x + 2, y + 18, 12, 4, fg_color);
+            break;
+        case '6':
+            draw_rectangle(x + 2, y + 2, 12, 4, fg_color);
+            draw_rectangle(x + 2, y + 6, 4, 16, fg_color);
+            draw_rectangle(x + 2, y + 10, 12, 4, fg_color);
+            draw_rectangle(x + 10, y + 14, 4, 6, fg_color);
+            draw_rectangle(x + 2, y + 18, 12, 4, fg_color);
+            break;
+        case '7':
+            draw_rectangle(x + 2, y + 2, 12, 4, fg_color);
+            draw_rectangle(x + 10, y + 6, 4, 16, fg_color);
+            break;
+        case '8':
+            draw_rectangle(x + 2, y + 2, 12, 4, fg_color);
+            draw_rectangle(x + 2, y + 6, 4, 6, fg_color);
+            draw_rectangle(x + 10, y + 6, 4, 6, fg_color);
+            draw_rectangle(x + 2, y + 10, 12, 4, fg_color);
+            draw_rectangle(x + 2, y + 14, 4, 6, fg_color);
+            draw_rectangle(x + 10, y + 14, 4, 6, fg_color);
+            draw_rectangle(x + 2, y + 18, 12, 4, fg_color);
+            break;
+        case '9':
+            draw_rectangle(x + 2, y + 2, 12, 4, fg_color);
+            draw_rectangle(x + 2, y + 6, 4, 6, fg_color);
+            draw_rectangle(x + 10, y + 6, 4, 12, fg_color);
+            draw_rectangle(x + 2, y + 10, 12, 4, fg_color);
+            draw_rectangle(x + 2, y + 18, 12, 4, fg_color);
+            break;
+
         case '-':
             // Horizontal line
             draw_rectangle(x + 4, y + 10, 8, 4, fg_color);
@@ -285,7 +348,91 @@ void draw_character(int x, int y, char c, uint32_t fg_color, uint32_t bg_color) 
             break;
     }
 }
+void draw_title_character(int x, int y, char c, uint32_t fg_color, uint32_t bg_color) {
+    draw_rectangle(x, y, TITLE_CHAR_WIDTH, TITLE_CHAR_HEIGHT, bg_color);
 
+    switch (c) {
+        case 'A':
+            draw_rectangle(x + 2 * TITLE_SCALE, y + 2 * TITLE_SCALE, 12 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            draw_rectangle(x + 2 * TITLE_SCALE, y + 6 * TITLE_SCALE, 4 * TITLE_SCALE, 16 * TITLE_SCALE, fg_color);
+            draw_rectangle(x + 10 * TITLE_SCALE, y + 6 * TITLE_SCALE, 4 * TITLE_SCALE, 16 * TITLE_SCALE, fg_color);
+            draw_rectangle(x + 6 * TITLE_SCALE, y + 10 * TITLE_SCALE, 4 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            break;
+        case 'B':
+            draw_rectangle(x + 2 * TITLE_SCALE, y + 2 * TITLE_SCALE, 4 * TITLE_SCALE, 20 * TITLE_SCALE, fg_color);
+            draw_rectangle(x + 6 * TITLE_SCALE, y + 2 * TITLE_SCALE, 8 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            draw_rectangle(x + 6 * TITLE_SCALE, y + 10 * TITLE_SCALE, 8 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            draw_rectangle(x + 6 * TITLE_SCALE, y + 18 * TITLE_SCALE, 8 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            draw_rectangle(x + 12 * TITLE_SCALE, y + 6 * TITLE_SCALE, 2 * TITLE_SCALE, 6 * TITLE_SCALE, fg_color);
+            draw_rectangle(x + 12 * TITLE_SCALE, y + 14 * TITLE_SCALE, 2 * TITLE_SCALE, 6 * TITLE_SCALE, fg_color);
+            break;
+        case 'E':
+            // Left vertical line
+            draw_rectangle(x + 2 * TITLE_SCALE, y + 2 * TITLE_SCALE, 4 * TITLE_SCALE, 20 * TITLE_SCALE, fg_color);
+            // Top horizontal line
+            draw_rectangle(x + 6 * TITLE_SCALE, y + 2 * TITLE_SCALE, 8 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            // Middle horizontal line
+            draw_rectangle(x + 6 * TITLE_SCALE, y + 10 * TITLE_SCALE, 6 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            // Bottom horizontal line
+            draw_rectangle(x + 6 * TITLE_SCALE, y + 18 * TITLE_SCALE, 8 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            break;
+        case 'I':
+            // Top horizontal line
+            draw_rectangle(x + 2 * TITLE_SCALE, y + 2 * TITLE_SCALE, 12 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            // Middle vertical line
+            draw_rectangle(x + 6 * TITLE_SCALE, y + 6 * TITLE_SCALE, 4 * TITLE_SCALE, 12 * TITLE_SCALE, fg_color);
+            // Bottom horizontal line
+            draw_rectangle(x + 2 * TITLE_SCALE, y + 18 * TITLE_SCALE, 12 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            break;
+        case 'O':
+            // Top horizontal line
+            draw_rectangle(x + 2 * TITLE_SCALE, y + 2 * TITLE_SCALE, 12 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            // Left vertical line
+            draw_rectangle(x + 2 * TITLE_SCALE, y + 6 * TITLE_SCALE, 4 * TITLE_SCALE, 12 * TITLE_SCALE, fg_color);
+            // Right vertical line
+            draw_rectangle(x + 10 * TITLE_SCALE, y + 6 * TITLE_SCALE, 4 * TITLE_SCALE, 12 * TITLE_SCALE, fg_color);
+            // Bottom horizontal line
+            draw_rectangle(x + 2 * TITLE_SCALE, y + 18 * TITLE_SCALE, 12 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            break;
+        case 'R':
+            // Left vertical line
+            draw_rectangle(x + 2 * TITLE_SCALE, y + 2 * TITLE_SCALE, 4 * TITLE_SCALE, 20 * TITLE_SCALE, fg_color);
+            // Top horizontal line
+            draw_rectangle(x + 6 * TITLE_SCALE, y + 2 * TITLE_SCALE, 8 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            // Middle horizontal line
+            draw_rectangle(x + 6 * TITLE_SCALE, y + 10 * TITLE_SCALE, 6 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            // Right top vertical line
+            draw_rectangle(x + 10 * TITLE_SCALE, y + 6 * TITLE_SCALE, 4 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            // Right bottom diagonal
+            draw_rectangle(x + 8 * TITLE_SCALE, y + 14 * TITLE_SCALE, 6 * TITLE_SCALE, 8 * TITLE_SCALE, fg_color);
+            break;
+        case 'S':
+            // Top horizontal line
+            draw_rectangle(x + 2 * TITLE_SCALE, y + 2 * TITLE_SCALE, 12 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            // Left top vertical line
+            draw_rectangle(x + 2 * TITLE_SCALE, y + 6 * TITLE_SCALE, 4 * TITLE_SCALE, 6 * TITLE_SCALE, fg_color);
+            // Middle horizontal line
+            draw_rectangle(x + 6 * TITLE_SCALE, y + 10 * TITLE_SCALE, 4 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            // Right bottom vertical line
+            draw_rectangle(x + 10 * TITLE_SCALE, y + 14 * TITLE_SCALE, 4 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            // Bottom horizontal line
+            draw_rectangle(x + 2 * TITLE_SCALE, y + 18 * TITLE_SCALE, 12 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            break;
+        case 'T':
+            // Top horizontal line
+            draw_rectangle(x + 2 * TITLE_SCALE, y + 2 * TITLE_SCALE, 12 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            // Middle vertical line
+            draw_rectangle(x + 6 * TITLE_SCALE, y + 6 * TITLE_SCALE, 4 * TITLE_SCALE, 16 * TITLE_SCALE, fg_color);
+            break;
+        case '-':
+            // Horizontal line
+            draw_rectangle(x + 4 * TITLE_SCALE, y + 10 * TITLE_SCALE, 8 * TITLE_SCALE, 4 * TITLE_SCALE, fg_color);
+            break;
+        default:
+            draw_rectangle(x + 4 * TITLE_SCALE, y + 4 * TITLE_SCALE, 8 * TITLE_SCALE, 16 * TITLE_SCALE, fg_color);
+            break;
+    }
+}
 void draw_text(int x, int y, const char* text, uint32_t fg_color, uint32_t bg_color) {
     if (!text) return;
 
@@ -293,5 +440,14 @@ void draw_text(int x, int y, const char* text, uint32_t fg_color, uint32_t bg_co
     for (int i = 0; i < (int)strlen(text); i++) {
         draw_character(current_x, y, text[i], fg_color, bg_color);
         current_x += CHAR_WIDTH;
+    }
+}
+
+void draw_title_text(int x, int y, const char* text, uint32_t fg_color, uint32_t bg_color) {
+    if (!text) return;
+    int current_x = x;
+    for (int i = 0; i < (int)strlen(text); i++) {
+        draw_title_character(current_x, y, text[i], fg_color, bg_color);
+        current_x += TITLE_CHAR_WIDTH;
     }
 }

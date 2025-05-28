@@ -43,3 +43,20 @@ void draw_grid() {
         draw_rectangle(x, grid_origin_y, 1, GRID_ROWS * CELL_SIZE, color);
     }
 }
+void draw_score_info(void) {
+    GameScore* score = tetris_get_score();
+
+    draw_rectangle(10, 40, 150, 70, 0x222222); // Reactangle for score info background
+
+    char buffer[64];
+    sprintf(buffer, "Score: %u", score->score);
+    draw_text(20, 50, buffer, 0xFFFFFF, 0x222222);
+
+    sprintf(buffer, "Lines: %u", score->lines);
+    draw_text(20, 70, buffer, 0xFFFFFF, 0x222222);
+
+    sprintf(buffer, "Level: %u", score->level);
+    draw_text(20, 90, buffer, 0xFFFFFF, 0x222222);
+
+}
+

@@ -1,5 +1,4 @@
 #include "menu_ui.h"
-#include "font.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -45,16 +44,11 @@ void menu_ui_draw_title(void) {
     int screen_height = mode_info.YResolution;
 
     const char* title = MENU_TITLE;
-    int title_width = strlen(title) * CHAR_WIDTH;
+    int title_width = strlen(title) * TITLE_CHAR_WIDTH;
     int title_x = (screen_width - title_width) / 2;
     int title_y = screen_height / 4;
 
-    // Fundo do título
-    draw_rectangle(title_x - 30, title_y - 25, title_width + 60, CHAR_HEIGHT + 50, COLOR_BORDER);
-    draw_rectangle(title_x - 25, title_y - 20, title_width + 50, CHAR_HEIGHT + 40, COLOR_BACKGROUND);
-
-    // Texto do título
-    draw_text(title_x, title_y, title, COLOR_TITLE, COLOR_BACKGROUND);
+    draw_title_text(title_x, title_y, title, COLOR_TITLE, COLOR_BACKGROUND);
 }
 
 void menu_ui_draw_options(const MenuState* state) {
@@ -80,18 +74,19 @@ void draw_menu_option(int x, int y, const char* text, bool selected) {
     uint32_t border_color = selected ? COLOR_BORDER : COLOR_NORMAL;
 
     int text_width = strlen(text) * CHAR_WIDTH;
-    int start_x = x - text_width / 2;
+    int start_x = x - BUTTON_WIDTH / 2;
 
     int screen_width = mode_info.XResolution;
     if (start_x < 20) start_x = 20;
-    if (start_x + text_width > screen_width - 20) {
-        start_x = screen_width - text_width - 20;
+    if (start_x + BUTTON_WIDTH > screen_width - 20) {
+        start_x = screen_width - BUTTON_WIDTH - 20;
     }
 
-    // Desenhar fundo da opção
-    draw_rectangle(start_x - 25, y - 20, text_width + 50, CHAR_HEIGHT + 40, border_color);
-    draw_rectangle(start_x - 20, y - 15, text_width + 40, CHAR_HEIGHT + 30, bg_color);
+    // Draw option background with border using BUTTON_WIDTH
+    draw_rectangle(start_x - 25, y - 20, BUTTON_WIDTH + 50, CHAR_HEIGHT + 40, border_color);
+    draw_rectangle(start_x - 20, y - 15, BUTTON_WIDTH + 40, CHAR_HEIGHT + 30, bg_color);
 
-    // Desenhar texto
-    draw_text(start_x, y, text, text_color, bg_color);
+    // Draw text centered in the button
+    int text_x = x - text_width / 2;
+    draw_text(text_x, y, text, text_color, bg_color);
 }
