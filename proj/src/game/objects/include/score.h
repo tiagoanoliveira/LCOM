@@ -5,7 +5,7 @@
 
 typedef struct {
     unsigned int score;
-    unsigned int lines;
+    unsigned int lines_cleared;
     unsigned int level;
 } GameScore;
 

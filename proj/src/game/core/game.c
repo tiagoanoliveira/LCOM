@@ -3,9 +3,6 @@
 void game_logic_init(GameLogic* game) {
     if (!game) return;
 
-    game->score = 0;
-    game->lines_cleared = 0;
-    game->level = 1;
     game->drop_timer = 0;
     game->current_drop_speed = DROP_SPEED_INITIAL;
     game->game_over = false;
@@ -66,15 +63,8 @@ void game_logic_drop_piece(GameLogic* game) {
 
         int lines = game_logic_clear_lines(game);
         if (lines > 0) {
-            game->lines_cleared += lines;
-            game->score += lines * 100 * game->level;
-            game->level = 1 + game->lines_cleared / 10;
-
-            GameScore* tetris_score = tetris_get_score();
-            tetris_score->score = game->score;
-            tetris_score->lines = game->lines_cleared;
-            tetris_score->level = game->level;
-
+            GameScore* score = tetris_get_score();
+            scoreAddLines(score, lines);
             game_logic_update_speed(game);
         }
         game_logic_spawn_piece(game);
@@ -156,8 +146,10 @@ void game_logic_render(const GameLogic* game) {
     draw_grid();
 }
 void game_logic_update_speed(GameLogic* game) {
+    GameScore* score = tetris_get_score();
+
     // Reduz 1 frames por cada linha completada
-    int speed_reduction = (game->lines_cleared);
+    int speed_reduction = (score->level-1)*5;
     game->current_drop_speed = DROP_SPEED_INITIAL - speed_reduction;
 
     // Limite mínimo para manter jogabilidade - depois podemos mudar isto conforme o nivel

@@ -8,7 +8,7 @@
 
 void scoreInit(GameScore* score) {
     score->score = 0;
-    score->lines = 0;
+    score->lines_cleared = 0;
     score->level = 1;
 }
 
@@ -16,11 +16,11 @@ void scoreAddLines(GameScore* score, int linesCleared) {
     static const uint32_t lineScores[] = { 0, 40, 100, 300, 1200 };
     if (linesCleared < 1 || linesCleared > 4) return;
 
-    score->lines += linesCleared;
+    score->lines_cleared += linesCleared;
     score->score += lineScores[linesCleared] * score->level;
 
     // Level up every 10 lines
-    score->level = score->lines / LINES_PER_LEVEL + 1;
+    score->level = score->lines_cleared / LINES_PER_LEVEL + 1;
 }
 
 uint32_t scoreGetDropSpeed(const GameScore* score) {

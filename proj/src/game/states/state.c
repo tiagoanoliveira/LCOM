@@ -5,6 +5,7 @@
 #include "../ui/include/gameover_ui.h"
 #include "../core/include/game.h"
 #include "../../drivers/graphics/graphics.h"
+#include "../core/include/tetris.h"
 
 // Estados específicos
 static MenuState menu_state;
@@ -44,9 +45,10 @@ void state_manager_set_state(GameStateType type) {
             case STATE_GAME:
                 game_logic_init(&game_logic);
                 break;
-            case STATE_GAME_OVER:
-                gameover_state_init(&gameover_state, game_logic.score, game_logic.lines_cleared);
-                break;
+            case STATE_GAME_OVER: {
+                GameScore* score = tetris_get_score();
+                gameover_state_init(&gameover_state, score->score, score->lines_cleared);
+                break; }
             case STATE_QUIT:
                 should_quit = true;
                 break;
@@ -118,7 +120,6 @@ void state_manager_update(void) {
             game_logic_update(&game_logic);
             needs_redraw = true;
             if (game_logic_is_game_over(&game_logic)) {
-                gameover_state_init(&gameover_state, game_logic.score, game_logic.lines_cleared);
                 state_manager_set_state(STATE_GAME_OVER);
             }
             break;

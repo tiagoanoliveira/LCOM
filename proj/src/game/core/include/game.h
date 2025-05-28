@@ -11,9 +11,6 @@
 
 typedef struct {
     Piece current_piece;
-    int score;
-    int lines_cleared;
-    int level;
     int drop_timer;
     int current_drop_speed;
     bool game_over;

@@ -82,7 +82,7 @@ void draw_score_info() {
     sprintf(buffer, "Score: %u", score->score);
     draw_text(20, 50, buffer, 0xFFFFFF, 0x222222);
 
-    sprintf(buffer, "Lines: %u", score->lines);
+    sprintf(buffer, "Lines: %u", score->lines_cleared);
     draw_text(20, 70, buffer, 0xFFFFFF, 0x222222);
 
     sprintf(buffer, "Level: %u", score->level);
