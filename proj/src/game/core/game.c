@@ -1,7 +1,4 @@
-#include "game.h"
-#include "../ui/render.h"
-#include "../../drivers/graphics/graphics.h"
-#include "tetris.h"
+#include "include/game.h"
 
 void game_logic_init(GameLogic* game) {
     if (!game) return;

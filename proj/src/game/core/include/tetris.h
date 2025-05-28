@@ -11,11 +11,11 @@
 #include <minix/syslib.h>   // sys_privctl
 #include <minix/sysutil.h>  // printf
 
-#include "../../drivers/graphics/graphics.h"
-#include "../objects/piece.h"
+#include "../../../drivers/graphics/graphics.h"
+#include "../../objects/include/piece.h"
 #include "config.h"
-#include "../ui/render.h"
-#include "../objects/score.h"
+#include "../../ui/include/render.h"
+#include "../../objects/include/score.h"
 
 extern int grid[GRID_ROWS][GRID_COLS];
 

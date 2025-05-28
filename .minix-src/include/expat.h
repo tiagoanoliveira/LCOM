@@ -276,7 +276,7 @@ typedef void (XMLCALL *XML_StartCdataSectionHandler) (void *userData);
 typedef void (XMLCALL *XML_EndCdataSectionHandler) (void *userData);
 
 /* This is called for any characters in the XML document for which
-   there is no applicable handler.  This includes both characters that
+   there is no applicable handler.  This include both characters that
    are part of markup which is of a kind that is not reported
    (comments, markup declarations), or characters that are part of a
    construct which could be reported but for which no handler has been

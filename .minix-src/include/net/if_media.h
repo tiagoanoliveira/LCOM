@@ -46,7 +46,7 @@
  *    documentation and/or other materials provided with the distribution.
  * 3. All advertising materials mentioning features or use of this software
  *    must display the following acknowledgement:
- *	This product includes software developed by Jonathan Stone
+ *	This product include software developed by Jonathan Stone
  *	and Jason R. Thorpe for the NetBSD Project.
  * 4. The names of the authors may not be used to endorse or promote products
  *    derived from this software without specific prior written permission.

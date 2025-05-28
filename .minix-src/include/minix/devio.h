@@ -55,7 +55,7 @@ typedef struct { u16_t port; u32_t value; } pvl_pair_t;
 #define PV_BUF_SIZE  64      /* creates char pv_buf[PV_BUF_SIZE] */
 
 /* Note that SYS_VDEVIO sends a pointer to a vector of (port,value)-pairs, 
- * whereas SYS_DEVIO includes a single (port,value)-pair in the messages.
+ * whereas SYS_DEVIO include a single (port,value)-pair in the messages.
  * Calculate maximum number of (port,value)-pairs that can be handled 
  * in a single SYS_VDEVIO system call with above struct definitions. 
  */

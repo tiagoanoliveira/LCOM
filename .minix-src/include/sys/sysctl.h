@@ -1433,7 +1433,7 @@ struct sysctlnode {
 /*
  * when requesting a description of a node (a set of nodes, actually),
  * you get back an "array" of these, where the actual length of the
- * descr_str is noted in descr_len (which includes the trailing nul
+ * descr_str is noted in descr_len (which include the trailing nul
  * byte), rounded up to the nearest four (sizeof(int32_t) actually).
  *
  * NEXT_DESCR() will take a pointer to a description and advance it to

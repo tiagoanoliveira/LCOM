@@ -16,7 +16,7 @@
  *    documentation and/or other materials provided with the distribution.
  * 3. All advertising materials mentioning features or use of this software
  *    must display the following acknowledgement:
- *	This product includes software developed for the NetBSD Project by
+ *	This product include software developed for the NetBSD Project by
  *	Wasabi Systems, Inc.
  * 4. The name of Wasabi Systems, Inc. may not be used to endorse
  *    or promote products derived from this software without specific prior

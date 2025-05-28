@@ -2,11 +2,9 @@
 #define RENDER_H
 
 #include <stdint.h>
-#include "../core/config.h"
-#include "../objects/piece.h"
-#include "../objects/score.h"
-#include "../core/tetris.h"
-#include "../../drivers/graphics/graphics.h"
+#include "../../objects/include/piece.h"
+#include "../../objects/include/score.h"
+#include "../../core/include/tetris.h"
 #include "font.h"
 
 // Draws the Tetris grid

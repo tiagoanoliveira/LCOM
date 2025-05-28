@@ -1,4 +1,4 @@
-#include "input.h"
+#include "include/input.h"
 #include "../../drivers/keyboardMouse/keyboard.h"
 
 static bool action_states[INPUT_ESCAPE + 1] = {false};

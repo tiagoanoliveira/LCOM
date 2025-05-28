@@ -429,7 +429,7 @@ extern LZMA_API(lzma_vli) lzma_block_unpadded_size(const lzma_block *block)
  * \brief       Calculate the total encoded size of a Block
  *
  * This is equivalent to lzma_block_unpadded_size() except that the returned
- * value includes the size of the Block Padding field.
+ * value include the size of the Block Padding field.
  *
  * \return      On success, total encoded size of the Block. On error,
  *              zero is returned.

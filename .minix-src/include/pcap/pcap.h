@@ -15,7 +15,7 @@
  *    documentation and/or other materials provided with the distribution.
  * 3. All advertising materials mentioning features or use of this software
  *    must display the following acknowledgement:
- *	This product includes software developed by the Computer Systems
+ *	This product include software developed by the Computer Systems
  *	Engineering Group at Lawrence Berkeley Laboratory.
  * 4. Neither the name of the University nor of the Laboratory may be used
  *    to endorse or promote products derived from this software without
@@ -91,11 +91,11 @@ typedef struct pcap_addr pcap_addr_t;
  * Many fields here are 32 bit ints so compilers won't insert unwanted
  * padding; these files need to be interchangeable across architectures.
  *
- * Do not change the layout of this structure, in any way (this includes
+ * Do not change the layout of this structure, in any way (this include
  * changes that only affect the length of fields in this structure).
  *
  * Also, do not change the interpretation of any of the members of this
- * structure, in any way (this includes using values other than
+ * structure, in any way (this include using values other than
  * LINKTYPE_ values, as defined in "savefile.c", in the "linktype"
  * field).
  *

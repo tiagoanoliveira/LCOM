@@ -88,7 +88,7 @@ typedef struct {
 		/**
 		 * \brief       Compressed size of this Stream
 		 *
-		 * This includes all headers except the possible
+		 * This include all headers except the possible
 		 * Stream Padding after this Stream.
 		 */
 		lzma_vli compressed_size;
@@ -190,7 +190,7 @@ typedef struct {
 		/**
 		 * \brief       Total compressed size
 		 *
-		 * This includes all headers and padding in this Block.
+		 * This include all headers and padding in this Block.
 		 * This is useful if you need to know how many bytes
 		 * the Block decoder will actually read.
 		 */
@@ -451,7 +451,7 @@ extern LZMA_API(lzma_vli) lzma_index_total_size(const lzma_index *i)
  *
  * When no lzma_indexes have been combined with lzma_index_cat() and there is
  * no Stream Padding, this function is identical to lzma_index_stream_size().
- * If multiple lzma_indexes have been combined, this includes also the headers
+ * If multiple lzma_indexes have been combined, this include also the headers
  * of each separate Stream and the possible Stream Padding fields.
  */
 extern LZMA_API(lzma_vli) lzma_index_file_size(const lzma_index *i)

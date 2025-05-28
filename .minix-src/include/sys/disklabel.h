@@ -42,7 +42,7 @@
 #endif
 
 /*
- * Each disk has a label which includes information about the hardware
+ * Each disk has a label which include information about the hardware
  * disk geometry, filesystem partitions, and drive specific information.
  * The location of the label, as well as the number of partitions the
  * label can describe and the number of the "whole disk" (raw)

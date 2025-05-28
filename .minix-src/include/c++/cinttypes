@@ -16,7 +16,7 @@
 
 This entire header is C99 / C++0X
 
-#include <cstdint>  // <cinttypes> includes <cstdint>
+#include <cstdint>  // <cinttypes> include <cstdint>
 
 Macros:
 

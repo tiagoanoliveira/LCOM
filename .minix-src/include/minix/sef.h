@@ -235,8 +235,8 @@ int sef_cb_lu_response_rs_reply(message *m_ptr);
 #define SEF_LU_SELF          	      0x0100    /* this is a self update */
 #define SEF_LU_ASR           	      0x0200    /* this is an ASR update */
 #define SEF_LU_MULTI         	      0x0400    /* this is a multi-component update */
-#define SEF_LU_INCLUDES_VM     	      0x0800    /* the update includes VM */
-#define SEF_LU_INCLUDES_RS     	      0x1000    /* the update includes RS */
+#define SEF_LU_INCLUDES_VM     	      0x0800    /* the update include VM */
+#define SEF_LU_INCLUDES_RS     	      0x1000    /* the update include RS */
 #define SEF_LU_PREPARE_ONLY           0x2000    /* prepare only, no actual update taking place */
 #define SEF_LU_NOMMAP	      	      0x4000    /* update doesn't inherit mmapped regions */
 #define SEF_LU_DETACHED      	      0x8000    /* update detaches the old instance */

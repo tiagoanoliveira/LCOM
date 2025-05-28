@@ -199,7 +199,7 @@ void evhttp_set_max_body_size(struct evhttp* http, ev_ssize_t max_body_size);
 
   If not supported they will generate a "405 Method not allowed" response.
 
-  By default this includes the following methods: GET, POST, HEAD, PUT, DELETE
+  By default this include the following methods: GET, POST, HEAD, PUT, DELETE
 
   @param http the http server on which to set the methods
   @param methods bit mask constructed from evhttp_cmd_type values
@@ -784,7 +784,7 @@ int evhttp_uri_set_fragment(struct evhttp_uri *uri, const char *fragment);
  * Helper function to parse a URI-Reference as specified by RFC3986.
  *
  * This function matches the URI-Reference production from RFC3986,
- * which includes both URIs like
+ * which include both URIs like
  *
  *    scheme://[[userinfo]@]foo.com[:port]]/[path][?query][#fragment]
  *

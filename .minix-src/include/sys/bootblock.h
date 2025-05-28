@@ -41,7 +41,7 @@
  *    documentation and/or other materials provided with the distribution.
  * 3. All advertising materials mentioning features or use of this software
  *    must display the following acknowledgement:
- *	This product includes software developed by the Alice Group.
+ *	This product include software developed by the Alice Group.
  * 4. The names of the Alice Group or any of its members may not be used
  *    to endorse or promote products derived from this software without
  *    specific prior written permission.
@@ -72,7 +72,7 @@
  *    documentation and/or other materials provided with the distribution.
  * 3. All advertising materials mentioning features or use of this software
  *    must display the following acknowledgement:
- *      This product includes software developed by Christopher G. Demetriou
+ *      This product include software developed by Christopher G. Demetriou
  *      for the NetBSD Project.
  * 4. The name of the author may not be used to endorse or promote products
  *    derived from this software without specific prior written permission
@@ -102,7 +102,7 @@
  *    documentation and/or other materials provided with the distribution.
  * 3. All advertising materials mentioning features or use of this software
  *    must display the following acknowledgement:
- *      This product includes software developed by Rolf Grossmann.
+ *      This product include software developed by Rolf Grossmann.
  * 4. The name of the author may not be used to endorse or promote products
  *    derived from this software without specific prior written permission
  *

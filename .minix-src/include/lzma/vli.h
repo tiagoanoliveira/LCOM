@@ -138,7 +138,7 @@ extern LZMA_API(lzma_ret) lzma_vli_encode(lzma_vli vli, size_t *vli_pos,
  *
  *              Single-call (vli_pos == NULL):
  *              - LZMA_OK: Integer successfully decoded.
- *              - LZMA_DATA_ERROR: Integer is corrupt. This includes hitting
+ *              - LZMA_DATA_ERROR: Integer is corrupt. This include hitting
  *                the end of the input buffer before the whole integer was
  *                decoded; providing no input at all will use LZMA_DATA_ERROR.
  *              - LZMA_PROG_ERROR: Arguments are not sane.

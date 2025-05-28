@@ -1,6 +1,6 @@
-#include "piece.h"
-#include "../ui/render.h"
-#include "../core/config.h"
+#include "include/piece.h"
+#include "../ui/include/render.h"
+#include "../core/include/config.h"
 
 extern int grid[GRID_ROWS][GRID_COLS];
 

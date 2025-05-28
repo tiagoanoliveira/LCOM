@@ -1,4 +1,4 @@
-/* This is the master header for all device drivers. It includes some other
+/* This is the master header for all device drivers. It include some other
  * files and defines the principal constants.
  */
 

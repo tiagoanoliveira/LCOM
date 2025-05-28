@@ -3,8 +3,11 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "../objects/piece.h"
+#include "../../objects/include/piece.h"
 #include "input.h"
+#include "../../ui/include/render.h"
+#include "../../../drivers/graphics/graphics.h"
+#include "tetris.h"
 
 typedef struct {
     Piece current_piece;

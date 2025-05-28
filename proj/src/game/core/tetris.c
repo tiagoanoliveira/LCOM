@@ -1,4 +1,4 @@
-#include "tetris.h"
+#include "include/tetris.h"
 
 int grid[GRID_ROWS][GRID_COLS] = {{0}}; // 0 means empty cell
 static GameScore scoreData;

@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "../core/input.h"
 #include "state.h"
 
 typedef enum {

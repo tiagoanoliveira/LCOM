@@ -23,7 +23,7 @@
  *
  * 3. All advertising materials mentioning features or use of this
  *    software must display the following acknowledgment:
- *    "This product includes software developed by the OpenSSL Project
+ *    "This product include software developed by the OpenSSL Project
  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"
  *
  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
@@ -37,7 +37,7 @@
  *
  * 6. Redistributions of any form whatsoever must retain the following
  *    acknowledgment:
- *    "This product includes software developed by the OpenSSL Project
+ *    "This product include software developed by the OpenSSL Project
  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"
  *
  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
@@ -54,8 +54,8 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  * ====================================================================
  *
- * This product includes cryptographic software written by Eric Young
- * (eay@cryptsoft.com).  This product includes software written by Tim
+ * This product include cryptographic software written by Eric Young
+ * (eay@cryptsoft.com).  This product include software written by Tim
  * Hudson (tjh@cryptsoft.com).
  *
  */

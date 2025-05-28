@@ -1,5 +1,4 @@
-#include "gameover_state.h"
-#include "../core/config.h"
+#include "include/gameover_state.h"
 
 void gameover_state_init(GameOverState* state, int score, int lines) {
     if (!state) return;

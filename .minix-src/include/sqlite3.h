@@ -232,7 +232,7 @@ typedef struct sqlite3 sqlite3;
 ** KEYWORDS: sqlite_int64 sqlite_uint64
 **
 ** Because there is no cross-platform way to specify 64-bit integer types
-** SQLite includes typedefs for 64-bit signed and unsigned integers.
+** SQLite include typedefs for 64-bit signed and unsigned integers.
 **
 ** The sqlite3_int64 and sqlite3_uint64 are the preferred type definitions.
 ** The sqlite_int64 and sqlite_uint64 types are supported for backwards
@@ -1031,9 +1031,9 @@ typedef struct sqlite3_mutex sqlite3_mutex;
 ** xFilename parameter is NULL it will also be the case that the
 ** flags parameter will include [SQLITE_OPEN_DELETEONCLOSE].
 **
-** The flags argument to xOpen() includes all bits set in
+** The flags argument to xOpen() include all bits set in
 ** the flags argument to [sqlite3_open_v2()].  Or if [sqlite3_open()]
-** or [sqlite3_open16()] is used, then flags includes at least
+** or [sqlite3_open16()] is used, then flags include at least
 ** [SQLITE_OPEN_READWRITE] | [SQLITE_OPEN_CREATE]. 
 ** If xOpen() opens a file read-only then it sets *pOutFlags to
 ** include [SQLITE_OPEN_READONLY].  Other bits in *pOutFlags may be set.
@@ -1927,7 +1927,7 @@ SQLITE_API int sqlite3_changes(sqlite3*);
 **
 ** ^This function returns the number of row changes caused by [INSERT],
 ** [UPDATE] or [DELETE] statements since the [database connection] was opened.
-** ^(The count returned by sqlite3_total_changes() includes all changes
+** ^(The count returned by sqlite3_total_changes() include all changes
 ** from all [CREATE TRIGGER | trigger] contexts and changes made by
 ** [foreign key actions]. However,
 ** the count does not include changes used to implement [REPLACE] constraints,
@@ -6167,7 +6167,7 @@ SQLITE_API int sqlite3_status(int op, int *pCurrent, int *pHighwater, int resetF
 ** [[SQLITE_STATUS_MEMORY_USED]] ^(<dt>SQLITE_STATUS_MEMORY_USED</dt>
 ** <dd>This parameter is the current amount of memory checked out
 ** using [sqlite3_malloc()], either directly or indirectly.  The
-** figure includes calls made to [sqlite3_malloc()] by the application
+** figure include calls made to [sqlite3_malloc()] by the application
 ** and internal memory usage by the SQLite library.  Scratch memory
 ** controlled by [SQLITE_CONFIG_SCRATCH] and auxiliary page-cache
 ** memory controlled by [SQLITE_CONFIG_PAGECACHE] is not included in
@@ -6196,7 +6196,7 @@ SQLITE_API int sqlite3_status(int op, int *pCurrent, int *pHighwater, int resetF
 ** <dd>This parameter returns the number of bytes of page cache
 ** allocation which could not be satisfied by the [SQLITE_CONFIG_PAGECACHE]
 ** buffer and where forced to overflow to [sqlite3_malloc()].  The
-** returned value includes allocations that overflowed because they
+** returned value include allocations that overflowed because they
 ** where too large (they were larger than the "sz" parameter to
 ** [SQLITE_CONFIG_PAGECACHE]) and allocations that overflowed because
 ** no space was left in the page cache.</dd>)^

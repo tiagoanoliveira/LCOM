@@ -61,7 +61,7 @@ typedef wchar_t	attr_t;
 #ifdef HAVE_WCHAR
 /* 
  * The complex character structure required by the X/Open reference and used
- * in * functions such as in_wchstr(). It includes a string of up to 8 wide
+ * in * functions such as in_wchstr(). It include a string of up to 8 wide
  * characters and its length, an attribute, and a color-pair.
  */
 #define CURSES_CCHAR_MAX 8

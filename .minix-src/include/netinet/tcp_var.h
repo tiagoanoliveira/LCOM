@@ -43,9 +43,9 @@
  *    documentation and/or other materials provided with the distribution.
  * 3. All advertising materials mentioning features or use of this software
  *    must display the following acknowledgements:
- *      This product includes software developed by the University of
+ *      This product include software developed by the University of
  *      California, Berkeley and its contributors.
- *      This product includes software developed at the Information
+ *      This product include software developed at the Information
  *      Technology Division, US Naval Research Laboratory.
  * 4. Neither the name of the NRL nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
@@ -637,7 +637,7 @@ struct syn_cache_head {
 #define	TCP_STAT_CONNECTS	2	/* connections established */
 #define	TCP_STAT_DROPS		3	/* connections dropped */
 #define	TCP_STAT_CONNDROPS	4	/* embryonic connections dropped */
-#define	TCP_STAT_CLOSED		5	/* conn. closed (includes drops) */
+#define	TCP_STAT_CLOSED		5	/* conn. closed (include drops) */
 #define	TCP_STAT_SEGSTIMED	6	/* segs where we tried to get rtt */
 #define	TCP_STAT_RTTUPDATED	7	/* times we succeeded */
 #define	TCP_STAT_DELACK		8	/* delayed ACKs sent */

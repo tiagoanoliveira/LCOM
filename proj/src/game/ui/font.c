@@ -1,4 +1,4 @@
-#include "font.h"
+#include "include/font.h"
 #include <string.h>
 
 void draw_character(int x, int y, char c, uint32_t fg_color, uint32_t bg_color) {

@@ -66,7 +66,7 @@
 #include <sys/rwlock.h>
 #include <sys/mutex.h>
 
-/* XXX: clean up includes later */
+/* XXX: clean up include later */
 #include <uvm/uvm_param.h>	/* XXX */
 #include <uvm/uvm_pglist.h>	/* XXX */
 #include <uvm/uvm_object.h>	/* XXX */

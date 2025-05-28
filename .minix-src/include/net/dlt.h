@@ -19,7 +19,7 @@
  *    documentation and/or other materials provided with the distribution.
  * 3. All advertising materials mentioning features or use of this software
  *    must display the following acknowledgement:
- *      This product includes software developed by the University of
+ *      This product include software developed by the University of
  *      California, Berkeley and its contributors.
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
@@ -389,7 +389,7 @@
  * Reserved for the TZSP encapsulation, as per request from
  * Chris Waters <chris.waters@networkchemistry.com>
  * TZSP is a generic encapsulation for any other link type,
- * which includes a means to include meta-information
+ * which include a means to include meta-information
  * with the packet, e.g. signal strength and channel
  * for 802.11 packets.
  */
@@ -606,7 +606,7 @@
 /*
  * Requested by Daniele Orlandi <daniele@orlandi.com> for raw LAPD
  * for vISDN (http://www.orlandi.com/visdn/).  Its link-layer header
- * includes additional information before the LAPD header, so it's
+ * include additional information before the LAPD header, so it's
  * not necessarily a generic LAPD header.
  */
 #define DLT_LINUX_LAPD		177
@@ -755,7 +755,7 @@
 
 /*
  * Bluetooth HCI UART transport layer (part H:4), with pseudo-header
- * that includes direction information; requested by Paolo Abeni.
+ * that include direction information; requested by Paolo Abeni.
  */
 #define DLT_BLUETOOTH_HCI_H4_WITH_PHDR	201
 

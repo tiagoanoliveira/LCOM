@@ -286,7 +286,7 @@ typedef struct ifnet {
 #define	if_watchdog	if_slowtimo
 	void	(*if_drain)		/* routine to release resources */
 		    (struct ifnet *);
-	struct ifaltq if_snd;		/* output queue (includes altq) */
+	struct ifaltq if_snd;		/* output queue (include altq) */
 	struct ifaddr	*if_dl;		/* identity of this interface. */
 	const struct	sockaddr_dl *if_sadl;	/* pointer to sockaddr_dl
 						 * of if_dl

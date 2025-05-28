@@ -1,5 +1,4 @@
-#include "menu_state.h"
-#include "../core/config.h"
+#include "include/menu_state.h"
 
 void menu_state_init(MenuState* state) {
     if (!state) return;

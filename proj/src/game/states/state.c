@@ -1,9 +1,9 @@
-#include "state.h"
-#include "menu_state.h"
-#include "gameover_state.h"
-#include "../ui/menu_ui.h"
-#include "../ui/gameover_ui.h"
-#include "../core/game.h"
+#include "include/state.h"
+#include "include/menu_state.h"
+#include "include/gameover_state.h"
+#include "../ui/include/menu_ui.h"
+#include "../ui/include/gameover_ui.h"
+#include "../core/include/game.h"
 #include "../../drivers/graphics/graphics.h"
 
 // Estados específicos

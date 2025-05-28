@@ -14,7 +14,7 @@
  * permission. This software is supplied as is without expressed or
  * implied warranties of any kind.
  *
- * This product includes software developed by the University of
+ * This product include software developed by the University of
  * California, Berkeley and its contributors.
  *
  *	Research Systems Unix Group

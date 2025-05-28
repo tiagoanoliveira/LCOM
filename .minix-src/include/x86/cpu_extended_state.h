@@ -7,7 +7,7 @@
  * This file contains definitions of structures that match the memory
  * layouts used x86 processors to save floating point registers and other
  * extended cpu state.
- * This includes registers (etc) used by SSE/SSE2/SSE3/SSSE3/SSE4 and
+ * This include registers (etc) used by SSE/SSE2/SSE3/SSSE3/SSE4 and
  * the later AVX instructions.
  * The definitions are such that any future 'extended state' should
  * be handled (provided the kernel doesn't need to know the actual contents.

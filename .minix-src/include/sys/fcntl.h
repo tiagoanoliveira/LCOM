@@ -40,8 +40,8 @@
 #define	_SYS_FCNTL_H_
 
 /*
- * This file includes the definitions for open and fcntl
- * described by POSIX for <fcntl.h>; it also includes
+ * This file include the definitions for open and fcntl
+ * described by POSIX for <fcntl.h>; it also include
  * related kernel definitions.
  */
 

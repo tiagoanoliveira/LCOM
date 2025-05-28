@@ -2,8 +2,9 @@
 #define FONT_H
 
 #include <stdint.h>
-#include "../../drivers/graphics/graphics.h"
 #include <ctype.h>
+#include "../../../drivers/graphics/graphics.h"
+#include "../../core/include/config.h"
 
 // Font dimensions
 #define CHAR_WIDTH 16
@@ -12,7 +13,7 @@
 // Title font dimensions
 #define TITLE_SCALE 3
 #define TITLE_CHAR_WIDTH  (CHAR_WIDTH * TITLE_SCALE)
-#define TITLE_CHAR_HEIGHT (CHAR_HEIGHT * TITLE_SCALE)git
+#define TITLE_CHAR_HEIGHT (CHAR_HEIGHT * TITLE_SCALE)
 
 // Font drawing function
 void draw_character(int x, int y, char c, uint32_t fg_color, uint32_t bg_color);

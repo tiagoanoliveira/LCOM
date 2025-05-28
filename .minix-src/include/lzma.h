@@ -7,7 +7,7 @@
  * format and raw (no headers) streams are supported. Multiple compression
  * algorithms (filters) are supported. Currently LZMA2 is the primary filter.
  *
- * liblzma is part of XZ Utils <http://tukaani.org/xz/>. XZ Utils includes
+ * liblzma is part of XZ Utils <http://tukaani.org/xz/>. XZ Utils include
  * a gzip-like command line tool named xz and some other tools. XZ Utils
  * is developed and maintained by Lasse Collin.
  *
@@ -37,7 +37,7 @@
 /*
  * liblzma API headers need some standard types and macros. To allow
  * including lzma.h without requiring the application to include other
- * headers first, lzma.h includes the required standard headers unless
+ * headers first, lzma.h include the required standard headers unless
  * they already seem to be included already or if LZMA_MANUAL_HEADERS
  * has been defined.
  *

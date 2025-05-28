@@ -4,9 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "font.h"
-#include "../states/menu_state.h"
-#include "../../drivers/graphics/graphics.h"
-#include "../core/config.h"
+#include "../../states/include/menu_state.h"
 
 #define BUTTON_WIDTH 250
 

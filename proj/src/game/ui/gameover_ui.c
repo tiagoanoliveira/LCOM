@@ -1,7 +1,6 @@
-#include "gameover_ui.h"
-#include "font.h"
 #include <string.h>
 #include <stdio.h>
+#include "include/gameover_ui.h"
 
 // Textos
 static const char* GAMEOVER_TITLE = "GAME OVER";

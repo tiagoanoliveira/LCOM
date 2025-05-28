@@ -1,10 +1,9 @@
 #ifndef GAMEOVER_UI_H
 #define GAMEOVER_UI_H
 
-#include "../states/gameover_state.h"
-#include "../../drivers/graphics/graphics.h"
+#include "font.h"
+#include "../../states/include/gameover_state.h"
 #include "menu_ui.h"
-#include "../core/config.h"
 
 void gameover_ui_draw(const GameOverState* state);
 void gameover_ui_draw_background(void);

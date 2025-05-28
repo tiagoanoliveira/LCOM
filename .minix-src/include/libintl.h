@@ -33,7 +33,7 @@
 
 #ifndef _LIBGETTEXT_H
 /*
- * Avoid defining these if the GNU gettext compatibility header includes
+ * Avoid defining these if the GNU gettext compatibility header include
  * us, since it re-defines those unconditionally and creates inline functions
  * for some of them. This is horrible.
  */

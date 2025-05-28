@@ -11,9 +11,9 @@
 #include "drivers/keyboardMouse/keyboard.h"
 #include "drivers/graphics/graphics.h"
 #include "drivers/timer/timer.h"
-#include "game/states/state.h"
-#include "game/core/input.h"
-#include "game/core/config.h"
+#include "game/states/include/state.h"
+#include "game/core/include/input.h"
+#include "game/core/include/config.h"
 
 int (proj_main_loop)(int argc, char *argv[]) {
     // Inicialização dos drivers

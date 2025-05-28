@@ -70,7 +70,7 @@
  *		errors as possible.
  *	EX_OSERR -- An operating system error has been detected.
  *		This is intended to be used for such things as "cannot
- *		fork", "cannot create pipe", or the like.  It includes
+ *		fork", "cannot create pipe", or the like.  It include
  *		things like getuid returning a user that does not
  *		exist in the passwd file.
  *	EX_OSFILE -- Some system file (e.g., /etc/passwd, /etc/utmp,

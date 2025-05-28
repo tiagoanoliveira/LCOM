@@ -1,4 +1,4 @@
-#include "render.h"
+#include "include/render.h"
 
 void draw_block(int col, int row, uint32_t color) {
     int x = grid_origin_x + col * CELL_SIZE;
