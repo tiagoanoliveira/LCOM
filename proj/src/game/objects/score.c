@@ -7,8 +7,8 @@
 #define LINES_PER_LEVEL 10
 
 void scoreInit(GameScore* score) {
-    score->score = 2;
-    score->lines = 2;
+    score->score = 0;
+    score->lines = 0;
     score->level = 1;
 }
 
