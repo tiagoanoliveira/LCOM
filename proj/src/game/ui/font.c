@@ -464,7 +464,8 @@ void draw_text(int x, int y, const char* text, uint32_t fg_color, uint32_t bg_co
 
     int current_x = x;
     for (int i = 0; i < (int)strlen(text); i++) {
-        draw_character(current_x, y, text[i], fg_color, bg_color);
+        char upper = toupper((unsigned char)text[i]);
+        draw_character(current_x, y, upper, fg_color, bg_color);
         current_x += CHAR_WIDTH;
     }
 }
