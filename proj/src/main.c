@@ -50,10 +50,10 @@ int (proj_main_loop)(int argc, char *argv[]) {
                     // Processar interrupção do teclado
                     if (msg.m_notify.interrupts & irq_kbd) {
                         kbc_ih();
-
                         InputEvent event = input_process_scancode(scancode, two_byte);
                         if (event.action != INPUT_NONE) {
                             state_manager_handle_input(event);
+                            needs_redraw = true;
                         }
                     }
 

@@ -14,7 +14,6 @@ static GameOverState gameover_state;
 // State manager
 static GameStateType current_state = STATE_MENU;
 static GameStateType next_state = STATE_MENU;
-static bool needs_redraw = true;
 Piece current_piece;
 static bool should_quit = false;
 

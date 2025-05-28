@@ -12,6 +12,8 @@ typedef enum {
     STATE_QUIT
 } GameStateType;
 
+static bool needs_redraw = true;
+
 // Interface para estados
 typedef struct GameState GameState;
 struct GameState {
