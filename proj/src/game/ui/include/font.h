@@ -6,15 +6,6 @@
 #include "../../../drivers/graphics/graphics.h"
 #include "../../core/include/config.h"
 
-// Font dimensions
-#define CHAR_WIDTH 16
-#define CHAR_HEIGHT 24
-
-// Title font dimensions
-#define TITLE_SCALE 3
-#define TITLE_CHAR_WIDTH  (CHAR_WIDTH * TITLE_SCALE)
-#define TITLE_CHAR_HEIGHT (CHAR_HEIGHT * TITLE_SCALE)
-
 // Font drawing function
 void draw_character(int x, int y, char c, uint32_t fg_color, uint32_t bg_color);
 
@@ -23,5 +14,7 @@ void draw_text(int x, int y, const char* text, uint32_t fg_color, uint32_t bg_co
 
 // Helper functoin to draw title text strings
 void draw_title_text(int x, int y, const char* text, uint32_t fg_color, uint32_t bg_color);
+
+void draw_moldure(void);
 
 #endif // FONT_H

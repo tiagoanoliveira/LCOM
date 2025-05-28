@@ -27,23 +27,53 @@ void draw_grid_contents(int grid[20][10]) {
         }
     }
 }
+void draw_grid_background(){
+    draw_rectangle(grid_origin_x, grid_origin_y, GRID_WIDTH, GRID_HEIGHT, GRID_BACKGROUND_COLOR);
+}
 
 void draw_grid() {
-    const uint32_t color = 0x3F; // Color of the grid lines
-
     // Horizontal lines
     for (int i = 0; i <= GRID_ROWS; i++) {
         int y = grid_origin_y + i * CELL_SIZE;
-        draw_rectangle(grid_origin_x, y, GRID_COLS * CELL_SIZE, 1, color);
+        draw_rectangle(grid_origin_x, y, GRID_WIDTH, 1, GRID_COLOR);
     }
 
     // Vertical lines
     for (int j = 0; j <= GRID_COLS; j++) {
         int x = grid_origin_x + j * CELL_SIZE;
-        draw_rectangle(x, grid_origin_y, 1, GRID_ROWS * CELL_SIZE, color);
+        draw_rectangle(x, grid_origin_y, 1, GRID_HEIGHT, GRID_COLOR);
+    }
+
+    //Moldura da grelha
+    draw_rectangle(GRID_WITH_BORDER_ORIGIN_X, GRID_WITH_BORDER_ORIGIN_Y, CELL_SIZE, GRID_WITH_BORDER_HEIGHT, GRID_BORDER_COLOR); // Linha esquerda
+    draw_rectangle(GRID_WITH_BORDER_ORIGIN_X + GRID_WIDTH + CELL_SIZE + 1, GRID_WITH_BORDER_ORIGIN_Y, CELL_SIZE, GRID_WITH_BORDER_HEIGHT, GRID_BORDER_COLOR); // Linha direita
+    draw_rectangle(GRID_WITH_BORDER_ORIGIN_X, GRID_WITH_BORDER_ORIGIN_Y, GRID_WITH_BORDER_WIDTH, CELL_SIZE, GRID_BORDER_COLOR); // Linha de cima
+    draw_rectangle(GRID_WITH_BORDER_ORIGIN_X, GRID_WITH_BORDER_ORIGIN_Y + GRID_HEIGHT + CELL_SIZE + 1, GRID_WITH_BORDER_WIDTH, CELL_SIZE, GRID_BORDER_COLOR); // Linha de baixo
+
+    // Linhas horizontais na moldura da grelha
+    for (int i = 0; i <= GRID_ROWS; i++) {
+        int y = grid_origin_y + i * CELL_SIZE;
+        if (i==0 || i==GRID_ROWS){
+            draw_rectangle(GRID_WITH_BORDER_ORIGIN_X, y, GRID_WITH_BORDER_WIDTH, 1, GRID_BORDER_LINES_COLOR);
+        }
+        else {
+            draw_rectangle(GRID_WITH_BORDER_ORIGIN_X, y, CELL_SIZE, 1, GRID_BORDER_LINES_COLOR);
+            draw_rectangle(GRID_WITH_BORDER_ORIGIN_X + GRID_WIDTH + CELL_SIZE + 1, y, CELL_SIZE, 1, GRID_BORDER_LINES_COLOR);
+        }
+    }
+
+    // Linhas verticais na moldura da grelha
+    for (int j = 0; j <= GRID_COLS; j++) {
+        int x = grid_origin_x + j * CELL_SIZE;
+        if (j==0 || j==GRID_COLS){
+            draw_rectangle(x, GRID_WITH_BORDER_ORIGIN_Y, 1, GRID_WITH_BORDER_HEIGHT, GRID_BORDER_LINES_COLOR);
+        }
+        draw_rectangle(x, GRID_WITH_BORDER_ORIGIN_Y, 1, CELL_SIZE, GRID_BORDER_LINES_COLOR);
+        draw_rectangle(x, GRID_WITH_BORDER_ORIGIN_Y + GRID_HEIGHT + CELL_SIZE + 1, 1, CELL_SIZE, GRID_BORDER_LINES_COLOR);
     }
 }
-void draw_score_info(void) {
+
+void draw_score_info() {
     GameScore* score = tetris_get_score();
 
     draw_rectangle(10, 40, 150, 70, 0x222222); // Reactangle for score info background
@@ -57,6 +87,4 @@ void draw_score_info(void) {
 
     sprintf(buffer, "Level: %u", score->level);
     draw_text(20, 90, buffer, 0xFFFFFF, 0x222222);
-
 }
-

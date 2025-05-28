@@ -29,6 +29,19 @@ int draw_rectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint
     return 0;
 }
 
+int vg_clear_screen(uint32_t color) {
+    if (frame_buffer == NULL) return 1;
+
+    unsigned bytes_per_pixel = (mode_info.BitsPerPixel + 7) / 8;
+    unsigned total_pixels = mode_info.XResolution * mode_info.YResolution;
+
+    for (unsigned i = 0; i < total_pixels; ++i) {
+        memcpy(&frame_buffer[i * bytes_per_pixel], &color, bytes_per_pixel);
+    }
+
+    return 0;
+}
+
 void* my_vg_init(uint16_t mode) {
     if (set_frame_buffer(mode) != 0) {
         printf("Error while configuring frame buffer.\n");
@@ -70,19 +83,6 @@ int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color) {
 
     // Write color to frame buffer
     memcpy(&frame_buffer[index], &color, bytes_per_pixel);
-
-    return 0;
-}
-
-int vg_clear_screen(uint32_t color) {
-    if (frame_buffer == NULL) return 1;
-
-    unsigned bytes_per_pixel = (mode_info.BitsPerPixel + 7) / 8;
-    unsigned total_pixels = mode_info.XResolution * mode_info.YResolution;
-
-    for (unsigned i = 0; i < total_pixels; ++i) {
-        memcpy(&frame_buffer[i * bytes_per_pixel], &color, bytes_per_pixel);
-    }
 
     return 0;
 }

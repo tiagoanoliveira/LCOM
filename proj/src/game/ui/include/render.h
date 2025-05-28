@@ -10,6 +10,9 @@
 // Draws the Tetris grid
 void draw_grid();
 
+// Draws the backgroud of Tetris grid
+void draw_grid_background();
+
 // Draws a single block (1 Tetris cell)
 void draw_block(int col, int row, uint32_t color);
 
@@ -20,6 +23,6 @@ void draw_current_piece(const Piece* piece);
 void draw_grid_contents(int grid[20][10]);
 
 // Draws the score, lines, and level information
-void draw_score_info(void);
+void draw_score_info();
 
 #endif // RENDER_H

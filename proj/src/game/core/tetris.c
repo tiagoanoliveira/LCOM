@@ -21,7 +21,7 @@ void tetris_init() {
 }
 
 void tetris_draw() {
-    vg_clear_screen(BACKGROUND_COLOR);
+    vg_clear_screen(COLOR_BACKGROUND);
     draw_grid();
 }
 
