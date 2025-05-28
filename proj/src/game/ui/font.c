@@ -477,3 +477,14 @@ void draw_title_text(int x, int y, const char* text, uint32_t fg_color, uint32_t
         current_x += TITLE_CHAR_WIDTH;
     }
 }
+
+void draw_moldure(void) {
+    int screen_width = mode_info.XResolution;
+    int screen_height = mode_info.YResolution;
+
+    // Desenhar moldura
+    draw_rectangle(SCREEN_BORDER_WIDTH, SCREEN_BORDER_WIDTH, screen_width - (SCREEN_BORDER_WIDTH * 2), FRAME_THICKNESS, COLOR_BORDER); // linha superior
+    draw_rectangle(SCREEN_BORDER_WIDTH, screen_height - (SCREEN_BORDER_WIDTH + FRAME_THICKNESS), screen_width - (SCREEN_BORDER_WIDTH * 2), FRAME_THICKNESS, COLOR_BORDER); // linha inferior
+    draw_rectangle(SCREEN_BORDER_WIDTH, SCREEN_BORDER_WIDTH, FRAME_THICKNESS, screen_height - (SCREEN_BORDER_WIDTH * 2), COLOR_BORDER); // linha esquerda
+    draw_rectangle(screen_width - (SCREEN_BORDER_WIDTH + FRAME_THICKNESS), SCREEN_BORDER_WIDTH, FRAME_THICKNESS, screen_height - (SCREEN_BORDER_WIDTH * 2), COLOR_BORDER); // linha direita
+}

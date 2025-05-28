@@ -33,9 +33,7 @@ void gameover_ui_draw_background(void) {
     int screen_width = mode_info.XResolution;
     int screen_height = mode_info.YResolution;
 
-    // Desenhar moldura
-    draw_rectangle(10, 10, screen_width - 20, screen_height - 20, COLOR_BORDER);
-    draw_rectangle(15, 15, screen_width - 30, screen_height - 30, COLOR_BACKGROUND);
+    draw_moldure();
 
     // Blocos decorativos
     for (int i = 0; i < 8; i++) {

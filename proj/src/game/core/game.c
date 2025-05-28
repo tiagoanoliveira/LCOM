@@ -137,11 +137,11 @@ void game_logic_handle_input(GameLogic* game, InputEvent event) {
 
 void game_logic_render(const GameLogic* game) {
     if (!game) return;
+    // Limpar ecrã
+    vg_clear_screen(COLOR_BACKGROUND);
 
-    vg_clear_screen(BACKGROUND_COLOR);
-
-    // Desenhar grid
-    draw_grid();
+    draw_moldure();
+    draw_grid_background();
 
     // Desenhar conteúdo da grid
     extern int grid[GRID_ROWS][GRID_COLS];
@@ -151,6 +151,7 @@ void game_logic_render(const GameLogic* game) {
     if (!game->game_over) {
         draw_current_piece(&game->current_piece);
     }
+    draw_grid();
 }
 void game_logic_update_speed(GameLogic* game) {
     // Reduz 1 frames por cada linha completada
