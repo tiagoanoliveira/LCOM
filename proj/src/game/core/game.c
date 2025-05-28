@@ -147,6 +147,8 @@ void game_logic_render(const GameLogic* game) {
     extern int grid[GRID_ROWS][GRID_COLS];
     draw_grid_contents(grid);
 
+    draw_score_info();
+
     // Desenhar peça atual
     if (!game->game_over) {
         draw_current_piece(&game->current_piece);
