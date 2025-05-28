@@ -3,7 +3,7 @@
 int grid[GRID_ROWS][GRID_COLS] = {{0}}; // 0 means empty cell
 static GameScore scoreData;
 
-GameScore* tetris_get_score() {
+GameScore* tetris_get_score(void) {
     return &scoreData;
 }
 

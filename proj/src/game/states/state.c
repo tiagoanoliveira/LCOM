@@ -118,6 +118,7 @@ void state_manager_update(void) {
             game_logic_update(&game_logic);
             needs_redraw = true;
             if (game_logic_is_game_over(&game_logic)) {
+                gameover_state_init(&gameover_state, game_logic.score, game_logic.lines_cleared);
                 state_manager_set_state(STATE_GAME_OVER);
             }
             break;

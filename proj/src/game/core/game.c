@@ -69,6 +69,12 @@ void game_logic_drop_piece(GameLogic* game) {
             game->lines_cleared += lines;
             game->score += lines * 100 * game->level;
             game->level = 1 + game->lines_cleared / 10;
+
+            GameScore* tetris_score = tetris_get_score();
+            tetris_score->score = game->score;
+            tetris_score->lines = game->lines_cleared;
+            tetris_score->level = game->level;
+
             game_logic_update_speed(game);
         }
         game_logic_spawn_piece(game);
