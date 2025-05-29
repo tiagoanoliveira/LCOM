@@ -46,20 +46,33 @@ void draw_grid() {
     }
 }
 
-void draw_score_info() {
+void draw_game_infos() {
     GameScore* score = tetris_get_score();
 
-    draw_rectangle(10, 40, 150, 70, 0x222222); // Reactangle for score info background
+    // Moldura do score
+    draw_rectangle(LEFT_INFOS_ORIGIN_X, SCORE_ORIGIN_Y, LEFT_INFOS_WIDTH, FRAME_INFOS_THICKNESS, FRAME_INFOS_COLOR); // Linha superior
+    draw_rectangle(LEFT_INFOS_ORIGIN_X, SCORE_ORIGIN_Y + SCORE_HEIGHT, LEFT_INFOS_WIDTH, FRAME_INFOS_THICKNESS, FRAME_INFOS_COLOR); // Linha inferior
+    draw_rectangle(LEFT_INFOS_ORIGIN_X, SCORE_ORIGIN_Y, FRAME_INFOS_THICKNESS, SCORE_HEIGHT, FRAME_INFOS_COLOR); // Linha esquerda
+    draw_rectangle(LEFT_INFOS_ORIGIN_X+LEFT_INFOS_WIDTH, SCORE_ORIGIN_Y, FRAME_INFOS_THICKNESS, SCORE_HEIGHT+FRAME_INFOS_THICKNESS, FRAME_INFOS_COLOR); // Linha direita
 
+    // Moldura das Lines_Cleaned
+
+    // Moldura dos TopScores
+
+    // Moldura da NextPiece
+
+    // Moldura do Level
+
+        // ISTO ESTAVA FEITO JÁ. Não apaguei para depois pegar na informação e meter dentro das molduras conforme design que tinhamos planeado
     char buffer[64];
     sprintf(buffer, "Score: %u", score->score);
-    draw_text(20, 50, buffer, 0xFFFFFF, 0x222222);
+    draw_text(LEFT_INFOS_ORIGIN_X, 200, buffer, 0xFFFFFF, 0x222222);
 
     sprintf(buffer, "Lines: %u", score->lines_cleared);
-    draw_text(20, 70, buffer, 0xFFFFFF, 0x222222);
+    draw_text(LEFT_INFOS_ORIGIN_X, 230, buffer, 0xFFFFFF, 0x222222);
 
     sprintf(buffer, "Level: %u", score->level);
-    draw_text(20, 90, buffer, 0xFFFFFF, 0x222222);
+    draw_text(LEFT_INFOS_ORIGIN_X, 260, buffer, 0xFFFFFF, 0x222222);
 }
 
 void draw_highscores(void) {
@@ -68,12 +81,12 @@ void draw_highscores(void) {
 
     load_high_scores(scores, &count);
 
-    draw_text(20, 110, "Top Scores:", 0xFFFFFF, 0x222222);
+    draw_text(LEFT_INFOS_ORIGIN_X, 300, "Top Scores:", 0xFFFFFF, 0x222222);
 
     for (int i = 0; i < count; i++) {
         char buffer[64];
         sprintf(buffer, "%d. %s - %u", i + 1, scores[i].name, scores[i].score);
-        draw_text(20, 130 + i * 20, buffer, 0xFFFFFF, 0x222222);
+        draw_text(LEFT_INFOS_ORIGIN_X, 330 + i * 25, buffer, 0xFFFFFF, 0x222222);
     }
 }
 

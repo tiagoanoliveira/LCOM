@@ -13,7 +13,7 @@ void draw_grid();
 void draw_grid_background();
 
 // Draws the score, lines, and level information
-void draw_score_info();
+void draw_game_infos();
 
 // Draws the high scores
 void draw_highscores(void);

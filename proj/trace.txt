@@ -145,402 +145,6 @@
   @main.c:44, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:52, proj_main_loop
-    kbc_ih()
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x64, addr: 0xeffff64c)
-    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x60, addr: 0xeffff64c)
-    < sys_inb(0x60, addr: 0xeffff64c [0xe0 = 0b11100000])
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:52, proj_main_loop
-    kbc_ih()
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x64, addr: 0xeffff64c)
-    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x60, addr: 0xeffff64c)
-    < sys_inb(0x60, addr: 0xeffff64c [0x2a = 0b00101010])
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:52, proj_main_loop
-    kbc_ih()
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x64, addr: 0xeffff64c)
-    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x60, addr: 0xeffff64c)
-    < sys_inb(0x60, addr: 0xeffff64c [0xe0 = 0b11100000])
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:52, proj_main_loop
-    kbc_ih()
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x64, addr: 0xeffff64c)
-    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x60, addr: 0xeffff64c)
-    < sys_inb(0x60, addr: 0xeffff64c [0x50 = 0b01010000])
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:52, proj_main_loop
-    kbc_ih()
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x64, addr: 0xeffff64c)
-    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x60, addr: 0xeffff64c)
-    < sys_inb(0x60, addr: 0xeffff64c [0xe0 = 0b11100000])
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000011]>)
-  @main.c:52, proj_main_loop
-    kbc_ih()
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x64, addr: 0xeffff64c)
-    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x60, addr: 0xeffff64c)
-    < sys_inb(0x60, addr: 0xeffff64c [0xd0 = 0b11010000])
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:52, proj_main_loop
-    kbc_ih()
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x64, addr: 0xeffff64c)
-    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x60, addr: 0xeffff64c)
-    < sys_inb(0x60, addr: 0xeffff64c [0xe0 = 0b11100000])
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000011]>)
-  @main.c:52, proj_main_loop
-    kbc_ih()
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x64, addr: 0xeffff64c)
-    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x60, addr: 0xeffff64c)
-    < sys_inb(0x60, addr: 0xeffff64c [0xaa = 0b10101010])
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:52, proj_main_loop
-    kbc_ih()
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x64, addr: 0xeffff64c)
-    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x60, addr: 0xeffff64c)
-    < sys_inb(0x60, addr: 0xeffff64c [0xe0 = 0b11100000])
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:52, proj_main_loop
-    kbc_ih()
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x64, addr: 0xeffff64c)
-    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x60, addr: 0xeffff64c)
-    < sys_inb(0x60, addr: 0xeffff64c [0x2a = 0b00101010])
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:52, proj_main_loop
-    kbc_ih()
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x64, addr: 0xeffff64c)
-    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x60, addr: 0xeffff64c)
-    < sys_inb(0x60, addr: 0xeffff64c [0xe0 = 0b11100000])
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:52, proj_main_loop
-    kbc_ih()
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x64, addr: 0xeffff64c)
-    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x60, addr: 0xeffff64c)
-    < sys_inb(0x60, addr: 0xeffff64c [0x50 = 0b01010000])
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:52, proj_main_loop
-    kbc_ih()
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x64, addr: 0xeffff64c)
-    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x60, addr: 0xeffff64c)
-    < sys_inb(0x60, addr: 0xeffff64c [0xe0 = 0b11100000])
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000011]>)
-  @main.c:52, proj_main_loop
-    kbc_ih()
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x64, addr: 0xeffff64c)
-    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x60, addr: 0xeffff64c)
-    < sys_inb(0x60, addr: 0xeffff64c [0xd0 = 0b11010000])
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:52, proj_main_loop
-    kbc_ih()
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x64, addr: 0xeffff64c)
-    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x60, addr: 0xeffff64c)
-    < sys_inb(0x60, addr: 0xeffff64c [0xe0 = 0b11100000])
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000011]>)
-  @main.c:52, proj_main_loop
-    kbc_ih()
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x64, addr: 0xeffff64c)
-    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
-    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
-      sys_inb(port, &val)
-    > sys_inb(0x60, addr: 0xeffff64c)
-    < sys_inb(0x60, addr: 0xeffff64c [0xaa = 0b10101010])
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @main.c:44, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
   @main.c:52, proj_main_loop
     kbc_ih()
@@ -552,6 +156,214 @@
       sys_inb(port, &val)
     > sys_inb(0x60, addr: 0xeffff64c)
     < sys_inb(0x60, addr: 0xeffff64c [0x1c = 0b00011100])
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000011]>)
+  @main.c:52, proj_main_loop
+    kbc_ih()
+    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
+      sys_inb(port, &val)
+    > sys_inb(0x64, addr: 0xeffff64c)
+    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
+    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
+      sys_inb(port, &val)
+    > sys_inb(0x60, addr: 0xeffff64c)
+    < sys_inb(0x60, addr: 0xeffff64c [0x9c = 0b10011100])
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000011]>)
+  @main.c:52, proj_main_loop
+    kbc_ih()
+    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
+      sys_inb(port, &val)
+    > sys_inb(0x64, addr: 0xeffff64c)
+    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
+    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
+      sys_inb(port, &val)
+    > sys_inb(0x60, addr: 0xeffff64c)
+    < sys_inb(0x60, addr: 0xeffff64c [0x01 = 0b00000001])
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:52, proj_main_loop
+    kbc_ih()
+    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
+      sys_inb(port, &val)
+    > sys_inb(0x64, addr: 0xeffff64c)
+    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
+    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
+      sys_inb(port, &val)
+    > sys_inb(0x60, addr: 0xeffff64c)
+    < sys_inb(0x60, addr: 0xeffff64c [0x81 = 0b10000001])
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @main.c:44, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a4)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:52, proj_main_loop
+    kbc_ih()
+    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
+      sys_inb(port, &val)
+    > sys_inb(0x64, addr: 0xeffff64c)
+    < sys_inb(0x64, addr: 0xeffff64c [0x1d = 0b00011101])
+    @/home/lcom/labs/proj/src/drivers/utils/utils.c:19, util_sys_inb
+      sys_inb(port, &val)
+    > sys_inb(0x60, addr: 0xeffff64c)
+    < sys_inb(0x60, addr: 0xeffff64c [0x01 = 0b00000001])
   @/home/lcom/labs/proj/src/drivers/keyboardMouse/keyboard.c:85, keyboard_unsubscribe_int
     sys_irqrmpolicy(&hook_id_kbd)
   > sys_irqrmpolicy(addr: 0x82341cc [10])

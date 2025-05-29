@@ -41,6 +41,20 @@
 #define GRID_WITH_BORDER_ORIGIN_X (grid_origin_x - CELL_SIZE)
 #define GRID_WITH_BORDER_ORIGIN_Y (grid_origin_y - CELL_SIZE)
 
+// Dimensões, Cores e Posições do Score, Lines_Cleaned, TopScore, NextPiece e Level
+#define LEFT_INFOS_WIDTH 200  // Largura da caixa do Score, Lines_Cleaned e Top Score
+#define RIGHT_INFOS_WIDTH 200   // Largura da caixa da Next Piece e Level
+#define SCORE_HEIGHT 100
+#define LINES_CLEANED_HEIGHT 100
+#define TOP_SCORE_HEIGHT 200
+#define NEXT_PIECE_HEIGHT 140
+#define LEVEL_HEIGHT 100
+#define LEFT_INFOS_ORIGIN_X ((GRID_WITH_BORDER_ORIGIN_X-LEFT_INFOS_WIDTH+SCREEN_BORDER_WIDTH-FRAME_INFOS_THICKNESS)/2)
+#define SCORE_ORIGIN_Y GRID_WITH_BORDER_ORIGIN_Y
+#define FRAME_INFOS_COLOR 0x3F
+#define TEXT_INFOS_COLOR 0x07
+#define FRAME_INFOS_THICKNESS 5
+
 // Font dimensions
 #define CHAR_WIDTH 16
 #define CHAR_HEIGHT 24
