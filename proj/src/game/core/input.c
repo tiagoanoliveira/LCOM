@@ -12,39 +12,47 @@ void input_init(void) {
 
 InputEvent input_process_scancode(uint8_t scancode[2], bool twoByte) {
     InputEvent event = {INPUT_NONE, false};
+    bool is_break_code = false;
 
     if(twoByte && scancode[0] == 0xE0) {
-        switch(scancode[1]) {
+        // Verificar se é break code (bit 7 = 1)
+        is_break_code = (scancode[1] & 0x80) != 0;
+        uint8_t key = scancode[1] & 0x7F; // Remover bit de break
+        switch(key) {
             case 0x4B: // Left arrow
                 event.action = INPUT_LEFT;
-                event.pressed = true;
+                event.pressed = !is_break_code;
                 break;
             case 0x4D: // Right arrow
                 event.action = INPUT_RIGHT;
-                event.pressed = true;
+                event.pressed = !is_break_code;
                 break;
             case 0x50: // Down arrow
                 event.action = INPUT_DOWN;
-                event.pressed = true;
+                event.pressed = !is_break_code;
                 break;
             case 0x48: // Up arrow
                 event.action = INPUT_UP;
-                event.pressed = true;
+                event.pressed = !is_break_code;
                 break;
         }
     } else {
-        switch(scancode[0]) {
+        // Verificar se é break code
+        is_break_code = (scancode[0] & 0x80) != 0;
+        uint8_t key = scancode[0] & 0x7F;
+
+        switch(key) {
             case 0x39: // Space
                 event.action = INPUT_ROTATE;
-                event.pressed = true;
+                event.pressed = !is_break_code;
                 break;
             case 0x1C: // Enter
                 event.action = INPUT_ENTER;
-                event.pressed = true;
+                event.pressed = !is_break_code;
                 break;
             case 0x01: // Escape
                 event.action = INPUT_ESCAPE;
-                event.pressed = true;
+                event.pressed = !is_break_code;
                 break;
         }
     }

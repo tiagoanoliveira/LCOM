@@ -63,17 +63,20 @@ int (proj_main_loop)(int argc, char *argv[]) {
                         if (tick_count >= 1) { // 60 FPS
                             tick_count = 0;
                             state_manager_update();
+                            needs_redraw = true;
                         }
                     }
                     break;
             }
         }
-        // Renderizar apenas quando necessário
-        state_manager_render();
+        // Renderizar APENAS quando necessário
+        if (needs_redraw) {
+            state_manager_render();
+            needs_redraw = false;
+        }
     }
 
     // Cleanup
-    state_manager_cleanup();
     keyboard_unsubscribe_int();
     timer_unsubscribe_int();
     vg_exit();

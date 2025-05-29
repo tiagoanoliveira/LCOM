@@ -8,6 +8,7 @@
 #include "../../ui/include/render.h"
 #include "../../../drivers/graphics/graphics.h"
 #include "tetris.h"
+#include "../../states/include/state.h"
 
 typedef struct {
     Piece current_piece;

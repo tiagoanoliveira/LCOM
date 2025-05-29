@@ -28,10 +28,6 @@ void state_manager_init(void) {
     menu_state_init(&menu_state);
 }
 
-void state_manager_cleanup(void) {
-    // Cleanup se necessário
-}
-
 void state_manager_set_state(GameStateType type) {
     if (type != current_state) {
         next_state = type;
@@ -56,11 +52,6 @@ void state_manager_set_state(GameStateType type) {
 
         current_state = type;
     }
-}
-
-GameState* state_manager_get_current(void) {
-    // Esta função pode retornar NULL se usarmos o approach simplificado
-    return NULL;
 }
 
 void state_manager_handle_input(InputEvent event) {
