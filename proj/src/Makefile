@@ -19,7 +19,7 @@ DRIVER_SRCS = graphics.c timer.c keyboard.c mouse.c KBC.c utils.c
 CORE_SRCS = game.c tetris.c input.c
 OBJECT_SRCS = piece.c score.c highscore.c
 STATES_SRCS = state.c menu_state.c gameover_state.c
-UI_SRCS = font.c render.c menu_ui.c gameover_ui.c
+UI_SRCS = font.c render.c menu_ui.c gameover_ui.c game_ui.c
 
 SRCS = main.c $(DRIVER_SRCS) $(CORE_SRCS) $(OBJECT_SRCS) $(STATES_SRCS) $(UI_SRCS)
 

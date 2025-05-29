@@ -1,7 +1,6 @@
 #ifndef STATE_H
 #define STATE_H
 
-#include <stdint.h>
 #include <stdbool.h>
 #include "../../core/include/input.h"
 

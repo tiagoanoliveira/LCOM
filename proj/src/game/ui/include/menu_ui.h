@@ -1,9 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include <stdint.h>
 #include <stdbool.h>
-#include "font.h"
 #include "../../states/include/menu_state.h"
 
 #define BUTTON_WIDTH 250

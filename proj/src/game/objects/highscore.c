@@ -1,5 +1,6 @@
+#include <stdio.h>
+#include <string.h>
 #include "include/highscore.h"
-
 
 void load_high_scores(HighScore scores[], int* count) {
     FILE* file = fopen(HIGHSCORE_FILE, "rb");

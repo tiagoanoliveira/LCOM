@@ -1,7 +1,6 @@
 #ifndef GAMEOVER_UI_H
 #define GAMEOVER_UI_H
 
-#include "font.h"
 #include "../../states/include/gameover_state.h"
 #include "menu_ui.h"
 

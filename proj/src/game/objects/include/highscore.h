@@ -1,9 +1,6 @@
 #ifndef HIGHSCORE_H
 #define HIGHSCORE_H
 
-#include <stdio.h>
-#include <string.h>
-
 #define MAX_NAME_LENGTH 5
 #define MAX_HIGH_SCORES 5
 #define HIGHSCORE_FILE "/home/lcom/labs/proj/src/game/objects/include/highscores.dat"

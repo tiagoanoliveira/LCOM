@@ -1,7 +1,6 @@
 #ifndef MENU_STATE_H
 #define MENU_STATE_H
 
-#include <stdint.h>
 #include <stdbool.h>
 #include "state.h"
 

@@ -1,4 +1,6 @@
 #include "include/game.h"
+#include "../ui/include/game_ui.h"
+#include "../states/include/state.h"
 
 void game_logic_init(GameLogic* game) {
     if (!game) return;

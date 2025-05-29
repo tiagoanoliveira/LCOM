@@ -1,7 +1,6 @@
 #ifndef GAMEOVER_STATE_H
 #define GAMEOVER_STATE_H
 
-#include <stdint.h>
 #include <stdbool.h>
 #include "state.h"
 
