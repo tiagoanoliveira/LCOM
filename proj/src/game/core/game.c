@@ -138,6 +138,7 @@ void game_logic_render(const GameLogic* game) {
     draw_grid_contents(grid);
 
     draw_score_info();
+    draw_highscores();
 
     // Desenhar peça atual
     if (!game->game_over) {

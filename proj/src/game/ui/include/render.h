@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "../../objects/include/piece.h"
 #include "../../objects/include/score.h"
+#include "../../objects/include/highscore.h"
 #include "../../core/include/tetris.h"
 #include "font.h"
 
@@ -24,5 +25,8 @@ void draw_grid_contents(int grid[20][10]);
 
 // Draws the score, lines, and level information
 void draw_score_info();
+
+// Draws the high scores
+void draw_highscores(void);
 
 #endif // RENDER_H

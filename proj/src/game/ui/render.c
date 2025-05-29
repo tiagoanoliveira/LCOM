@@ -88,3 +88,20 @@ void draw_score_info() {
     sprintf(buffer, "Level: %u", score->level);
     draw_text(20, 90, buffer, 0xFFFFFF, 0x222222);
 }
+
+void draw_highscores(void) {
+    HighScore scores[MAX_HIGH_SCORES];
+    int count;
+
+    load_high_scores(scores, &count);
+
+    draw_text(20, 110, "Top Scores:", 0xFFFFFF, 0x222222);
+
+    for (int i = 0; i < count; i++) {
+        char buffer[64];
+        sprintf(buffer, "%d. %s - %u", i + 1, scores[i].name, scores[i].score);
+        draw_text(20, 130 + i * 20, buffer, 0xFFFFFF, 0x222222);
+    }
+}
+
+
