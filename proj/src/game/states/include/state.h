@@ -29,9 +29,7 @@ struct GameState {
 
 // State manager
 void state_manager_init(void);
-void state_manager_cleanup(void);
 void state_manager_set_state(GameStateType type);
-GameState* state_manager_get_current(void);
 void state_manager_handle_input(InputEvent event);
 void state_manager_update(void);
 void state_manager_render(void);

@@ -329,6 +329,9 @@ void draw_character(int x, int y, char c, uint32_t fg_color, uint32_t bg_color) 
             draw_rectangle(x + 6, y + 8, 4, 8, fg_color);
             draw_rectangle(x + 2, y + 14, 4, 8, fg_color);
             break;
+        case ':':
+            draw_rectangle(x + 4, y + 7, 3, 3, fg_color);
+            draw_rectangle(x + 4, y + 13, 3, 3, fg_color);
 
         case ' ':
             // Space - just background, no foreground

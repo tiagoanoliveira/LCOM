@@ -22,6 +22,7 @@ void game_logic_update(GameLogic* game) {
     if (game->drop_timer >= game->current_drop_speed) {
         game->drop_timer = 0;
         game_logic_drop_piece(game);
+        needs_redraw = true;
     }
 }
 
@@ -100,18 +101,21 @@ bool game_logic_is_game_over(const GameLogic* game) {
 void game_logic_handle_input(GameLogic* game, InputEvent event) {
     if (!game || game->game_over || !event.pressed) return;
 
+    bool moved = false;
+
     switch (event.action) {
         case INPUT_LEFT:
-            game_logic_move_piece(game, -1, 0);
+            moved = game_logic_move_piece(game, -1, 0);
             break;
         case INPUT_RIGHT:
-            game_logic_move_piece(game, 1, 0);
+            moved = game_logic_move_piece(game, 1, 0);
             break;
         case INPUT_DOWN:
-            game_logic_move_piece(game, 0, 1);
+            moved = game_logic_move_piece(game, 0, 1);
             break;
         case INPUT_ROTATE:
             game_logic_rotate_piece(game);
+            moved = true;
             break;
         case INPUT_DROP:
             // Drop rápido
@@ -119,9 +123,13 @@ void game_logic_handle_input(GameLogic* game, InputEvent event) {
                 // Continue dropping
             }
             game_logic_drop_piece(game);
+            moved = true;
             break;
         default:
             break;
+    }
+    if (moved) {
+        needs_redraw = true;
     }
 }
 
@@ -136,7 +144,6 @@ void game_logic_render(const GameLogic* game) {
     // Desenhar conteúdo da grid
     extern int grid[GRID_ROWS][GRID_COLS];
     draw_grid_contents(grid);
-
     draw_score_info();
     draw_highscores();
 
@@ -146,6 +153,7 @@ void game_logic_render(const GameLogic* game) {
     }
     draw_grid();
 }
+
 void game_logic_update_speed(GameLogic* game) {
     GameScore* score = tetris_get_score();
 
@@ -154,8 +162,8 @@ void game_logic_update_speed(GameLogic* game) {
     game->current_drop_speed = DROP_SPEED_INITIAL - speed_reduction;
 
     // Limite mínimo para manter jogabilidade - depois podemos mudar isto conforme o nivel
-    if (game->current_drop_speed < 10) {
-        game->current_drop_speed = 10;
+    if (game->current_drop_speed < DROP_SPEED_FAST) {
+        game->current_drop_speed = DROP_SPEED_FAST;
     }
 
     // Limite máximo (velocidade mais lenta)
