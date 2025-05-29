@@ -62,8 +62,8 @@ void gameover_ui_draw_score(int score, int lines) {
     char score_text[50];
     char lines_text[50];
 
-    sprintf(score_text, "SCORE: %d", score);
-    sprintf(lines_text, "LINES: %d", lines);
+    sprintf(score_text, "SCORE:%d", score);
+    sprintf(lines_text, "LINES:%d", lines);
 
     int score_y = screen_height / 4 + 80;
     int lines_y = score_y + 40;
