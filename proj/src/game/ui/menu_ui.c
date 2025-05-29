@@ -18,24 +18,10 @@ void menu_ui_draw(const MenuState* state) {
     vg_clear_screen(COLOR_BACKGROUND);
 
     // Desenhar elementos do menu
-    menu_ui_draw_background();
+    draw_moldure();
+    draw_decoration();
     menu_ui_draw_title();
     menu_ui_draw_options(state);
-}
-
-void menu_ui_draw_background(void) {
-    int screen_width = mode_info.XResolution;
-    int screen_height = mode_info.YResolution;
-
-    draw_moldure();
-
-    // Blocos decorativos
-    for (int i = 0; i < 8; i++) {
-        int x = 40 + i * (screen_width - 100) / 7;
-        int y = screen_height - 80;
-        draw_rectangle(x, y, 25, 25, COLOR_BORDER);
-        draw_rectangle(x + 2, y + 2, 21, 21, COLOR_SELECTED);
-    }
 }
 
 void menu_ui_draw_title(void) {

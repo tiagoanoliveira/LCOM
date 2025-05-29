@@ -13,7 +13,8 @@ typedef enum {
     INPUT_DROP,
     INPUT_UP,
     INPUT_ENTER,
-    INPUT_ESCAPE
+    INPUT_ESCAPE,
+    INPUT_Q
 } InputAction;
 
 typedef struct {

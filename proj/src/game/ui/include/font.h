@@ -16,5 +16,6 @@ void draw_text(int x, int y, const char* text, uint32_t fg_color, uint32_t bg_co
 void draw_title_text(int x, int y, const char* text, uint32_t fg_color, uint32_t bg_color);
 
 void draw_moldure(void);
+void draw_decoration(void);
 
 #endif // FONT_H

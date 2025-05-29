@@ -492,3 +492,16 @@ void draw_moldure(void) {
     draw_rectangle(SCREEN_BORDER_WIDTH, SCREEN_BORDER_WIDTH, FRAME_THICKNESS, screen_height - (SCREEN_BORDER_WIDTH * 2), COLOR_BORDER); // linha esquerda
     draw_rectangle(screen_width - (SCREEN_BORDER_WIDTH + FRAME_THICKNESS), SCREEN_BORDER_WIDTH, FRAME_THICKNESS, screen_height - (SCREEN_BORDER_WIDTH * 2), COLOR_BORDER); // linha direita
 }
+
+void draw_decoration() {
+    int screen_width = mode_info.XResolution;
+    int screen_height = mode_info.YResolution;
+
+    // Blocos decorativos
+    for (int i = 0; i < 8; i++) {
+        int x = 40 + i * (screen_width - 100) / 7;
+        int y = screen_height - 80;
+        draw_rectangle(x, y, 25, 25, COLOR_BORDER);
+        draw_rectangle(x + 2, y + 2, 21, 21, COLOR_SELECTED);
+    }
+}

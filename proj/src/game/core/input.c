@@ -54,6 +54,10 @@ InputEvent input_process_scancode(uint8_t scancode[2], bool twoByte) {
                 event.action = INPUT_ESCAPE;
                 event.pressed = !is_break_code;
                 break;
+            case 0x10:
+                event.action = INPUT_Q;
+                event.pressed = !is_break_code;
+                break;
         }
     }
 
