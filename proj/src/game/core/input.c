@@ -11,7 +11,7 @@ void input_init(void) {
 }
 
 InputEvent input_process_scancode(uint8_t scancode[2], bool twoByte) {
-    InputEvent event = {INPUT_NONE, false};
+    InputEvent event = {INPUT_NONE, false, '\0'};
 
     if(twoByte && scancode[0] == 0xE0) {
         switch(scancode[1]) {

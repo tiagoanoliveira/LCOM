@@ -13,12 +13,14 @@ typedef enum {
     INPUT_DROP,
     INPUT_UP,
     INPUT_ENTER,
-    INPUT_ESCAPE
+    INPUT_ESCAPE,
+    INPUT_CHAR
 } InputAction;
 
 typedef struct {
     InputAction action;
     bool pressed;
+    char character;  // Used for INPUT_CHAR action
 } InputEvent;
 
 // Sistema de input

@@ -13,20 +13,18 @@ static const char* GAMEOVER_OPTIONS[] = {
 void gameover_ui_draw(const GameOverState* state) {
     if (!state || !state->active) return;
 
-    // Limpar ecrã
     vg_clear_screen(COLOR_BACKGROUND);
-
-    // Desenhar fundo
     gameover_ui_draw_background();
 
-    // Desenhar título "GAME OVER"
-    gameover_ui_draw_title();
-
-    // Desenhar pontuação
-    gameover_ui_draw_score(state->final_score, state->lines_cleared);
-
-    // Desenhar opções
-    gameover_ui_draw_options(state);
+    if (state->substate == GAMEOVER_SUBSTATE_HIGHSCORE) {
+        // Only draw highscore input
+        draw_highscore_input(state);
+    } else {
+        // Draw normal game over UI
+        gameover_ui_draw_title();
+        gameover_ui_draw_score(state->final_score, state->lines_cleared);
+        gameover_ui_draw_options(state);
+    }
 }
 
 void gameover_ui_draw_background(void) {
@@ -93,3 +91,18 @@ void gameover_ui_draw_options(const GameOverState* state) {
         draw_menu_option(screen_width / 2, option_y, GAMEOVER_OPTIONS[i], is_selected);
     }
 }
+
+void draw_highscore_input(const GameOverState* state) {
+    if (!(state->substate==GAMEOVER_SUBSTATE_HIGHSCORE)) return;
+
+    int screen_width = mode_info.XResolution;
+    int y = mode_info.YResolution / 2 - 100;
+
+    draw_text(screen_width / 2 - 100, y, "NEW HIGHSCORE! ENTER NAME:", 0xFFFFFF, COLOR_BACKGROUND);
+    draw_rectangle(screen_width / 2 - 50, y + 30, 100, 30, 0x444444);
+
+    char display[MAX_NAME_LENGTH + 1] = "";
+    strncpy(display, state->name_input, MAX_NAME_LENGTH);
+    draw_text(screen_width / 2 - 40, y + 35, display, 0xFFFFFF, 0x444444);
+}
+

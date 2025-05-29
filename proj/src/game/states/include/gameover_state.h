@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "state.h"
+#include "../../objects/include/highscore.h"
 
 // Game over options
 typedef enum {
@@ -13,17 +14,28 @@ typedef enum {
     GAMEOVER_OPTIONS_COUNT
 } GameOverOption;
 
+typedef enum {
+    GAMEOVER_SUBSTATE_MENU,
+    GAMEOVER_SUBSTATE_HIGHSCORE
+} GameOverSubState;
+
 typedef struct {
     GameOverOption selected;
     bool active;
     int final_score;
     int lines_cleared;
+    GameOverSubState substate;
+    char name_input[MAX_NAME_LENGTH];
+    int name_input_length;
 } GameOverState;
 
 // Game over state management
-void gameover_state_init(GameOverState* state, int score, int lines);
+//static void handle_name_input(GameOverState* state, InputEvent event);
+//static void handle_menu_input(GameOverState* state, InputEvent event);
+void gameover_state_init(GameOverState* state,unsigned int score, int lines);
 void gameover_state_handle_input(GameOverState* state, InputEvent event);
 void gameover_state_update(GameOverState* state);
 GameStateType gameover_state_get_selected_action(const GameOverState* state);
+
 
 #endif

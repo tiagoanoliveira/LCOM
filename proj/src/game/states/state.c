@@ -91,12 +91,20 @@ void state_manager_handle_input(InputEvent event) {
             if (event.action == INPUT_UP || event.action == INPUT_DOWN || event.action == INPUT_ESCAPE) {
                 needs_redraw = true;
             }
-            if (event.action == INPUT_ENTER && event.pressed) {
+
+            // Only handle Enter when NOT in highscore input substate
+            if (gameover_state.substate == GAMEOVER_SUBSTATE_MENU &&
+                event.action == INPUT_ENTER && event.pressed) {
                 GameStateType action = gameover_state_get_selected_action(&gameover_state);
                 state_manager_set_state(action);
             }
-            break;
 
+            // Always redraw on Enter for highscore input or menu transitions
+            if (event.action == INPUT_ENTER && event.pressed) {
+                needs_redraw = true;
+            }
+
+            break;
         case STATE_QUIT:
             break;
     }
