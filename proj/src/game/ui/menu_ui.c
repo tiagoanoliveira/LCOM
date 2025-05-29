@@ -2,6 +2,7 @@
 #include <string.h>
 #include "include/menu_ui.h"
 #include "include/font.h"
+#include "../../xpm/background.XPM"
 
 // Textos
 static const char* MENU_TITLE = "TETR-IO-S";
@@ -21,6 +22,8 @@ void menu_ui_draw(const MenuState* state) {
     menu_ui_draw_background();
     menu_ui_draw_title();
     menu_ui_draw_options(state);
+
+    draw_xpm(background_xpm, 0, 00);
 }
 
 void menu_ui_draw_background(void) {

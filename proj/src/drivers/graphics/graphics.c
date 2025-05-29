@@ -136,3 +136,15 @@ int set_frame_buffer(uint16_t mode) {
 
     return 0;
 }
+
+void draw_xpm(xpm_map_t xpm, int x, int y) {
+    printf("Drawing XPM at (%d, %d)\n", x, y);
+    xpm_image_t img;
+    if (xpm_load(xpm, XPM_8_8_8, &img) == NULL) return;
+    for (int i = 0; i < img.height; i++) {
+        for (int j = 0; j < img.width; j++) {
+            uint32_t color = ((uint32_t*)img.bytes)[i * img.width + j];
+            vg_draw_pixel(x + j, y + i, color);
+        }
+    }
+}
