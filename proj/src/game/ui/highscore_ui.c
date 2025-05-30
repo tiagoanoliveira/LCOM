@@ -1,4 +1,10 @@
 #include "include/highscore_ui.h"
+#include "../states/include/gameover_state.h"
+#include "../core/include/config.h"
+#include "include/font.h"
+#include "../objects/include/highscore.h"
+#include <string.h>
+#include <stdio.h>
 
 static const char* HIGHSCORE_TITLE = "NEW HIGHSCORE";
 

@@ -136,6 +136,7 @@ void draw_level(void) {
     draw_text(false, level_value_x, level_value_y, buffer, 0xFFFFFF, LEVEL_BG_COLOR);
 }
 
+
 void draw_next_piece(const GameLogic* game) {
     // Draw frame
     draw_rectangle(RIGHT_INFOS_ORIGIN_X-5, NEXT_PIECE_ORIGIN_Y-5, RIGHT_INFOS_WIDTH+10, NEXT_PIECE_HEIGHT+10, FRAME_INFOS_COLOR);
@@ -146,41 +147,45 @@ void draw_next_piece(const GameLogic* game) {
     draw_text(false, label_x, NEXT_PIECE_ORIGIN_Y + 20, "Next", 0xFFFFFF, NEXT_PIECE_BG_COLOR);
 
     if (game && !game->game_over) {
-        // Calcular os limites efetivos da peça
-        int min_x = PIECE_SIZE, max_x = -1;
-        int min_y = PIECE_SIZE, max_y = -1;
+        int spacing = 20;
 
-        for (int i = 0; i < PIECE_SIZE; i++) {
-            for (int j = 0; j < PIECE_SIZE; j++) {
-                if (game->next_piece.shape[i][j]) {
-                    if (j < min_x) min_x = j;
-                    if (j > max_x) max_x = j;
-                    if (i < min_y) min_y = i;
-                    if (i > max_y) max_y = i;
+        for (int piece_index = 0; piece_index < 3; piece_index++) {
+
+            // Calcular os limites efetivos da peça
+            int min_x = PIECE_SIZE, max_x = -1;
+            int min_y = PIECE_SIZE, max_y = -1;
+
+            for (int i = 0; i < PIECE_SIZE; i++) {
+                for (int j = 0; j < PIECE_SIZE; j++) {
+                    if (game->next_pieces[piece_index].shape[i][j]) {
+                        if (j < min_x) min_x = j;
+                        if (j > max_x) max_x = j;
+                        if (i < min_y) min_y = i;
+                        if (i > max_y) max_y = i;
+                    }
                 }
             }
-        }
 
-        // Calcular largura e altura efetivas
-        int effective_width = (max_x - min_x + 1) * CELL_SIZE;
-        int effective_height = (max_y - min_y + 1) * CELL_SIZE;
+            // Calcular largura e altura efetivas
+            int effective_width = (max_x - min_x + 1) * CELL_SIZE;
 
-        // Centrar baseado nas dimensões efetivas
-        int piece_start_x = RIGHT_INFOS_ORIGIN_X + (RIGHT_INFOS_WIDTH - effective_width) / 2 - min_x * CELL_SIZE;
-        int piece_start_y = NEXT_PIECE_ORIGIN_Y + CHAR_HEIGHT + 20 + 20 + (NEXT_PIECE_HEIGHT - CHAR_HEIGHT - 60 - effective_height) / 2 - min_y * CELL_SIZE;
+            // Centrar baseado nas dimensões efetivas
+            int piece_start_x = RIGHT_INFOS_ORIGIN_X + (RIGHT_INFOS_WIDTH - effective_width) / 2 - min_x * CELL_SIZE;
+            int piece_start_y = NEXT_PIECE_ORIGIN_Y + CHAR_HEIGHT + 40 + piece_index * (((max_y - min_y + 1) * CELL_SIZE)+spacing) - min_y * CELL_SIZE;
 
-        for (int i = 0; i < PIECE_SIZE; i++) {
-            for (int j = 0; j < PIECE_SIZE; j++) {
-                if (game->next_piece.shape[i][j]) {
-                    int x = piece_start_x + j * CELL_SIZE;
-                    int y = piece_start_y + i * CELL_SIZE;
-                    draw_rectangle(x, y, CELL_SIZE, CELL_SIZE, game->next_piece.color);
+            for (int i = 0; i < PIECE_SIZE; i++) {
+                for (int j = 0; j < PIECE_SIZE; j++) {
+                    if (game->next_pieces[piece_index].shape[i][j]) {
+                        int x = piece_start_x + j * CELL_SIZE;
+                        int y = piece_start_y + i * CELL_SIZE;
+                        draw_rectangle(x, y, CELL_SIZE, CELL_SIZE, game->next_pieces[piece_index].color);
 
-                    // Desenhar bordas da célula
-                    draw_rectangle(x, y, CELL_SIZE, 1, GRID_COLOR);
-                    draw_rectangle(x, y, 1, CELL_SIZE, GRID_COLOR);
-                    draw_rectangle(x + CELL_SIZE - 1, y, 1, CELL_SIZE, GRID_COLOR);
-                    draw_rectangle(x, y + CELL_SIZE - 1, CELL_SIZE, 1, GRID_COLOR);
+                        // Desenhar bordas da célula (igual ao anterior)
+                        draw_rectangle(x, y, CELL_SIZE, 1, GRID_COLOR);
+                        draw_rectangle(x, y, 1, CELL_SIZE, GRID_COLOR);
+                        draw_rectangle(x + CELL_SIZE - 1, y, 1, CELL_SIZE, GRID_COLOR);
+                        draw_rectangle(x, y + CELL_SIZE - 1, CELL_SIZE, 1, GRID_COLOR);
+                    }
                 }
             }
         }

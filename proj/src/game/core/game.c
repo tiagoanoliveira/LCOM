@@ -19,8 +19,10 @@ void game_logic_init(GameLogic* game) {
 
     tetris_init();
 
-    // Gerar a próxima peça
-    piece_init(&game->next_piece, random_piece_type(), 3, 0);
+    // Gerar as próximas 3 peças
+    for (int i = 0; i < 3; i++) {
+        piece_init(&game->next_pieces[i], random_piece_type(), 3, 0);
+    }
 
     // Spawnar a primeira peça
     game_logic_spawn_piece(game);
@@ -97,19 +99,22 @@ int game_logic_clear_lines(GameLogic* game) {
 void game_logic_spawn_piece(GameLogic* game) {
     if (!game) return;
 
-    // A peça atual passa a ser a próxima peça
-    game->current_piece = game->next_piece;
+    // A peça atual passa a ser a primeira próxima peça
+    game->current_piece = game->next_pieces[0];
     game->current_piece.x = 3;
     game->current_piece.y = 0;
 
-    // Gerar nova próxima peça
-    piece_init(&game->next_piece, random_piece_type(), 3, 0);
+    // "Shift" as peças: a 2ª vira 1ª, a 3ª vira 2ª
+    game->next_pieces[0] = game->next_pieces[1];
+    game->next_pieces[1] = game->next_pieces[2];
+
+    // Gerar nova terceira peça
+    piece_init(&game->next_pieces[2], random_piece_type(), 3, 0);
 
     if (!piece_fits(&game->current_piece, game->current_piece.x, game->current_piece.y)) {
         game->game_over = true;
     }
 }
-
 
 // ===== SISTEMA DE PAUSE =====
 void game_logic_toggle_pause(GameLogic* game) {
