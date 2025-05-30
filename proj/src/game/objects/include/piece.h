@@ -4,8 +4,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define PIECE_SIZE 4 // Tetris pieces are 4x4
-
 typedef enum {
     PIECE_I, PIECE_O, PIECE_T, PIECE_S, PIECE_Z, PIECE_J, PIECE_L, PIECE_NONE
 } PieceType;

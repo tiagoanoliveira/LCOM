@@ -18,8 +18,14 @@ void game_logic_init(GameLogic* game) {
     game->pause_option = 0;
 
     tetris_init();
+
+    // Gerar a próxima peça
+    piece_init(&game->next_piece, random_piece_type(), 3, 0);
+
+    // Spawnar a primeira peça
     game_logic_spawn_piece(game);
 }
+
 
 // ===== UPDATE LOOP =====
 void game_logic_update(GameLogic* game) {
@@ -91,12 +97,19 @@ int game_logic_clear_lines(GameLogic* game) {
 void game_logic_spawn_piece(GameLogic* game) {
     if (!game) return;
 
-    piece_init(&game->current_piece, random_piece_type(), 3, 0);
+    // A peça atual passa a ser a próxima peça
+    game->current_piece = game->next_piece;
+    game->current_piece.x = 3;
+    game->current_piece.y = 0;
+
+    // Gerar nova próxima peça
+    piece_init(&game->next_piece, random_piece_type(), 3, 0);
 
     if (!piece_fits(&game->current_piece, game->current_piece.x, game->current_piece.y)) {
         game->game_over = true;
     }
 }
+
 
 // ===== SISTEMA DE PAUSE =====
 void game_logic_toggle_pause(GameLogic* game) {
@@ -197,7 +210,7 @@ void game_logic_render(const GameLogic* game) {
 
     extern int grid[GRID_ROWS][GRID_COLS];
     draw_grid_contents(grid);
-    draw_game_infos();
+    draw_game_infos(game);
 
     if (!game->game_over) {
         draw_current_piece(&game->current_piece);
