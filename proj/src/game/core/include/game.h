@@ -7,7 +7,7 @@
 
 typedef struct {
     Piece current_piece;
-    Piece next_piece;
+    Piece next_pieces[3]; // Array to hold next pieces
     int drop_timer;
     int current_drop_speed;
     bool game_over;
