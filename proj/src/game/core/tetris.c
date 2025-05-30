@@ -1,5 +1,7 @@
 #include "include/tetris.h"
+#include <stdlib.h>
 #include "../ui/include/game_ui.h"
+#include "../core/include/game.h"
 
 int grid[GRID_ROWS][GRID_COLS] = {{0}}; // 0 means empty cell
 static GameScore scoreData;
@@ -15,9 +17,6 @@ void tetris_init() {
             grid[i][j] = 0;
         }
     }
-
-    extern Piece current_piece;
-    piece_init(&current_piece, random_piece_type(), 3, 0);
     scoreInit(&scoreData);
 }
 

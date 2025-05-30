@@ -17,13 +17,11 @@ void menu_state_handle_input(MenuState* state, InputEvent event) {
                     MENU_OPTIONS_COUNT - 1 : state->selected - 1;
             }
             break;
-
         case INPUT_DOWN:
             if (event.pressed) {
                 state->selected = (state->selected + 1) % MENU_OPTIONS_COUNT;
             }
             break;
-
         case INPUT_ESCAPE:
             if (event.pressed) {
                 state->selected = MENU_QUIT;
@@ -46,7 +44,7 @@ GameStateType menu_state_get_selected_action(const MenuState* state) {
         case MENU_PLAY:
             return STATE_GAME;
         case MENU_INSTRUCTIONS:
-            return STATE_MENU; // Por agora volta ao menu
+            return STATE_INSTRUCTIONS; // Por agora volta ao menu
         case MENU_QUIT:
             return STATE_QUIT;
         default:

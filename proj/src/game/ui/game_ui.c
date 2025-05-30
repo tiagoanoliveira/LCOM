@@ -80,13 +80,13 @@ void draw_score(void) {
 
     int score_label_x = score_box_x + score_box_w / 2 - strlen("Score") * CHAR_WIDTH / 2;
     int score_label_y = score_box_y + 8;
-    draw_text(score_label_x, score_label_y, "Score", 0xFFFFFF, SCORE_BG_COLOR);
+    draw_text(false, score_label_x, score_label_y, "Score", 0xFFFFFF, SCORE_BG_COLOR);
 
     char buffer[32];
     sprintf(buffer, "%u", score->score);
     int score_value_x = score_box_x + score_box_w / 2 - strlen(buffer) * CHAR_WIDTH / 2;
     int score_value_y = score_box_y + score_box_h / 2 - CHAR_HEIGHT / 2;
-    draw_text(score_value_x, score_value_y, buffer, 0xFFFFFF, SCORE_BG_COLOR);
+    draw_text(false, score_value_x, score_value_y, buffer, 0xFFFFFF, SCORE_BG_COLOR);
 }
 
 void draw_lines(void) {
@@ -103,13 +103,13 @@ void draw_lines(void) {
 
     int lines_label_x = lines_box_x + lines_box_w / 2 - strlen("Lines") * CHAR_WIDTH / 2;
     int lines_label_y = lines_box_y + 8;
-    draw_text(lines_label_x, lines_label_y, "Lines", 0xFFFFFF, LINES_BG_COLOR);
+    draw_text(false, lines_label_x, lines_label_y, "Lines", 0xFFFFFF, LINES_BG_COLOR);
 
     char buffer[32];
     sprintf(buffer, "%u", score->lines_cleared);
     int lines_value_x = lines_box_x + lines_box_w / 2 - strlen(buffer) * CHAR_WIDTH / 2;
     int lines_value_y = lines_box_y + lines_box_h / 2 - CHAR_HEIGHT / 2;
-    draw_text(lines_value_x, lines_value_y, buffer, 0xFFFFFF, LINES_BG_COLOR);
+    draw_text(flase, lines_value_x, lines_value_y, buffer, 0xFFFFFF, LINES_BG_COLOR);
 }
 
 void draw_highscores(void) {
@@ -131,7 +131,7 @@ void draw_highscores(void) {
     // Draw label, centered at the top of the box
     int label_x = hs_box_x + hs_box_w / 2 - strlen("Top Scores:") * CHAR_WIDTH / 2;
     int label_y = hs_box_y + 8;
-    draw_text(label_x, label_y, "Top Scores:", 0xFFFFFF, HIGHSCORES_BG_COLOR);
+    draw_text(false, label_x, label_y, "Top Scores:", 0xFFFFFF, HIGHSCORES_BG_COLOR);
 
     // Draw each high score entry
     for (int i = 0; i < count; i++) {
@@ -139,7 +139,7 @@ void draw_highscores(void) {
         sprintf(buffer, "%d.%s-%u", i + 1, scores[i].name, scores[i].score);
         int entry_x = hs_box_x + 10; // left margin
         int entry_y = label_y + 32 + i * 32; // consistent spacing
-        draw_text(entry_x, entry_y, buffer, 0xFFFFFF, HIGHSCORES_BG_COLOR);
+        draw_text(false, entry_x, entry_y, buffer, 0xFFFFFF, HIGHSCORES_BG_COLOR);
     }
 }
 
@@ -158,14 +158,14 @@ void draw_level(void) {
     // Draw label, centered at the top
     int level_label_x = level_box_x + level_box_w / 2 - strlen("Level") * CHAR_WIDTH / 2;
     int level_label_y = level_box_y + 8;
-    draw_text(level_label_x, level_label_y, "Level", 0xFFFFFF, LEVEL_BG_COLOR);
+    draw_text(false, level_label_x, level_label_y, "Level", 0xFFFFFF, LEVEL_BG_COLOR);
 
     char buffer[16];
     sprintf(buffer, "%u", score->level);
 
     int level_value_x = level_box_x + level_box_w / 2 - strlen(buffer) * CHAR_WIDTH / 2;
     int level_value_y = level_box_y + level_box_h / 2 - CHAR_HEIGHT / 2;
-    draw_text(level_value_x, level_value_y, buffer, 0xFFFFFF, LEVEL_BG_COLOR);
+    draw_text(false, level_value_x, level_value_y, buffer, 0xFFFFFF, LEVEL_BG_COLOR);
 }
 
 void draw_next_piece(void) {
@@ -181,13 +181,13 @@ void draw_next_piece(void) {
     // Draw label
     int label_x = next_box_x + next_box_w / 2 - strlen("Next") * CHAR_WIDTH / 2;
     int label_y = next_box_y + 8;
-    draw_text(label_x, label_y, "Next", 0xFFFFFF, NEXT_PIECE_BG_COLOR);
+    draw_text(false, label_x, label_y, "Next", 0xFFFFFF, NEXT_PIECE_BG_COLOR);
 
     // Placeholder for the next piece 
     char buffer[8];
     sprintf(buffer, "-");
     int value_x = next_box_x + next_box_w / 2 - strlen(buffer) * CHAR_WIDTH / 2;
     int value_y = next_box_y + next_box_h / 2 - CHAR_HEIGHT / 2;
-    draw_text(value_x, value_y, buffer, 0xFFFFFF, NEXT_PIECE_BG_COLOR);
+    draw_text(false, value_x, value_y, buffer, 0xFFFFFF, NEXT_PIECE_BG_COLOR);
 }
 

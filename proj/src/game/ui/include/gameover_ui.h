@@ -5,7 +5,6 @@
 #include "menu_ui.h"
 
 void gameover_ui_draw(const GameOverState* state);
-void gameover_ui_draw_background(void);
 void gameover_ui_draw_title(void);
 void gameover_ui_draw_score(int score, int lines);
 void gameover_ui_draw_options(const GameOverState* state);
