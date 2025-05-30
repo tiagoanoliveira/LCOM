@@ -137,14 +137,34 @@ int set_frame_buffer(uint16_t mode) {
     return 0;
 }
 
-void draw_xpm(xpm_map_t xpm, int x, int y) {
-    printf("Drawing XPM at (%d, %d)\n", x, y);
+int draw_pixel_indexed(uint16_t x, uint16_t y, uint8_t color_index) {
+    if (x >= mode_info.XResolution || y >= mode_info.YResolution)
+        return 1;
+
+    unsigned index = y * mode_info.XResolution + x;
+
+    frame_buffer[index] = color_index;  // 8bpp means 1 byte per pixel
+
+    return 0;
+}
+
+
+void draw_xpm_indexed(xpm_map_t xpm, int x, int y) {
     xpm_image_t img;
-    if (xpm_load(xpm, XPM_8_8_8, &img) == NULL) return;
+    if (xpm_load(xpm, XPM_INDEXED, &img) == NULL) {
+        printf("Failed to load XPM!\n");
+        return;
+    }
+    if (!img.bytes) {
+        printf("XPM data bytes NULL!\n");
+        return;
+    }
+
     for (int i = 0; i < img.height; i++) {
         for (int j = 0; j < img.width; j++) {
-            uint32_t color = ((uint32_t*)img.bytes)[i * img.width + j];
-            vg_draw_pixel(x + j, y + i, color);
+            uint8_t color_index = img.bytes[i * img.width + j];
+            draw_pixel_indexed(x + j, y + i, color_index);
         }
     }
 }
+

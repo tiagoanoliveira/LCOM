@@ -38,6 +38,7 @@ int draw_rectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint
 void swap_buffers();
 
 // Drawing functions
-void draw_xpm(xpm_map_t xpm, int x, int y);
+int draw_pixel_indexed(uint16_t x, uint16_t y, uint8_t color_index);
+void draw_xpm_indexed(xpm_map_t xpm, int x, int y);
 
 #endif // GRAPHICS_H

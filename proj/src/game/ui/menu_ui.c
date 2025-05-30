@@ -23,8 +23,10 @@ void menu_ui_draw(const MenuState* state) {
     menu_ui_draw_title();
     menu_ui_draw_options(state);
 
-    draw_xpm(background_xpm, 0, 00);
-}
+    int x = 16;
+    int y = 768 - 205;  
+
+    draw_xpm_indexed(background_xpm, x, y);}
 
 void menu_ui_draw_background(void) {
     int screen_width = mode_info.XResolution;
