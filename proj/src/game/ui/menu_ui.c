@@ -3,6 +3,7 @@
 #include "include/menu_ui.h"
 #include "include/font.h"
 #include "../../xpm/background.XPM"
+#include "../../xpm/flip_background.XPM"
 
 // Textos
 static const char* MENU_TITLE = "TETR-IO-S";
@@ -26,6 +27,8 @@ void menu_ui_draw(const MenuState* state) {
 
 void menu_ui_draw_background(void) {
     draw_moldure();  
+
+    draw_xpm_indexed(flip_background_xpm, 16, 16);
 
     draw_xpm_indexed(background_xpm, 16, 768 - 205);
 }
