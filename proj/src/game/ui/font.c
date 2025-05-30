@@ -257,9 +257,9 @@ void draw_character(bool is_title, int x, int y, char c, uint32_t fg_color, uint
             draw_rectangle(x + 2 * letter_size, y + 15 * letter_size, 3 * letter_size, 5 * letter_size, fg_color);
             break;
         case ':':
-            draw_rectangle(x + 4 * letter_size, y + 5 * letter_size, 3 * letter_size, 3 * letter_size, fg_color);
-            draw_rectangle(x + 4 * letter_size, y + 12 * letter_size, 3 * letter_size, 3 * letter_size, fg_color);
-
+            draw_rectangle(x + 4, y + 7, 3, 3, fg_color);
+            draw_rectangle(x + 4, y + 13, 3, 3, fg_color);
+            break;
         case '.':
             draw_rectangle(x + 4, y + 16, 4, 4, fg_color);
             break;
