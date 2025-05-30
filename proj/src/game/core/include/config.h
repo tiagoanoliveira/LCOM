@@ -23,10 +23,10 @@
 #define COLOR_SCORE 0x0A
 
 // Cores da área de jogo
-#define GRID_BORDER_COLOR 0x38     // cinzento
-#define GRID_BORDER_LINES_COLOR 0x00
+#define GRID_BORDER_COLOR 0x0F 
+#define GRID_BORDER_LINES_COLOR 0x38
 #define GRID_BACKGROUND_COLOR 0x00  // fundo da grelha
-#define GRID_COLOR 0x07
+#define GRID_COLOR 0x38
 
 // Configurações da grid
 #define GRID_COLS 10
@@ -41,25 +41,28 @@
 #define GRID_WITH_BORDER_ORIGIN_X (grid_origin_x - CELL_SIZE)
 #define GRID_WITH_BORDER_ORIGIN_Y (grid_origin_y - CELL_SIZE)
 
-// Dimensões, Cores e Posições do Score, Lines_Cleaned, TopScore, NextPiece e Level
-#define LEFT_INFOS_WIDTH 200  // Largura da caixa do Score, Lines_Cleaned e Top Score
-#define RIGHT_INFOS_WIDTH 200   // Largura da caixa da Next Piece e Level
+// Dimensions and positions of infos
+#define LEFT_INFOS_WIDTH 200 
+#define RIGHT_INFOS_WIDTH 200 
 #define SCORE_HEIGHT 100
 #define LINES_CLEANED_HEIGHT 100
-#define TOP_SCORE_HEIGHT 200
+#define HIGHSCORES_HEIGHT 200
 #define NEXT_PIECE_HEIGHT 140
 #define LEVEL_HEIGHT 100
 #define LEFT_INFOS_ORIGIN_X ((GRID_WITH_BORDER_ORIGIN_X-LEFT_INFOS_WIDTH+SCREEN_BORDER_WIDTH-FRAME_INFOS_THICKNESS)/2)
+#define RIGHT_INFOS_ORIGIN_X (GRID_WITH_BORDER_ORIGIN_X + GRID_WITH_BORDER_WIDTH + 40)
 #define SCORE_ORIGIN_Y GRID_WITH_BORDER_ORIGIN_Y
-#define FRAME_INFOS_COLOR 0x04
+
+// Colours for the infos
+#define FRAME_INFOS_COLOR 0x03
 #define TEXT_INFOS_COLOR 0x07
 #define FRAME_INFOS_THICKNESS 5
 
 #define SCORE_BG_COLOR 0x3E
 #define LINES_BG_COLOR 0x0A
-#define TOP_SCORE_BG_COLOR 0x3E
-#define NEXT_PIECE_BG_COLOR 0x3E
-#define LEVEL_BG_COLOR 0x3E
+#define HIGHSCORES_BG_COLOR 0x2E
+#define NEXT_PIECE_BG_COLOR 0x07
+#define LEVEL_BG_COLOR 0x0B
 
 // Font dimensions
 #define CHAR_WIDTH 16
