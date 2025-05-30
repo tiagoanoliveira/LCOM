@@ -5,15 +5,8 @@
 #include <lcom/vbe.h>
 
 #include <stdint.h>
-#include <string.h>
-#include <sys/mman.h>       // vm_map_phys
-#include <machine/int86.h>  // sys_int86
-#include <minix/syslib.h>   // sys_privctl
-#include <minix/sysutil.h>  // printf
 
 // Resolution and buffer info
-uint16_t h_res;
-uint16_t v_res;
 static uint8_t bits_per_pixel;
 static uint32_t vram_base;
 static uint32_t vram_size;

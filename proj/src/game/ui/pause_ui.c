@@ -28,22 +28,17 @@ void pause_ui_draw_overlay(void) {
 }
 
 void pause_ui_draw_menu(const GameLogic* game) {
-    int screen_width = mode_info.XResolution;
-    int screen_height = mode_info.YResolution;
-
     // Dimensões da janela de pause
-    int window_width = 300;
-    int window_height = 200;
-    int window_x = (screen_width - window_width) / 2;
-    int window_y = (screen_height - window_height) / 2;
+    int window_x = (SCREEN_WIDTH - PAUSE_WIDTH) / 2;
+    int window_y = (SCREEN_HEIGHT - PAUSE_HEIGHT) / 2;
 
     // Fundo da janela
-    draw_rectangle(window_x, window_y, window_width, window_height, COLOR_BORDER);
-    draw_rectangle(window_x + 5, window_y + 5, window_width - 10, window_height - 10, COLOR_BACKGROUND);
+    draw_rectangle(window_x, window_y, PAUSE_WIDTH, PAUSE_HEIGHT, COLOR_BORDER);
+    draw_rectangle(window_x + 5, window_y + 5, PAUSE_WIDTH - 10, PAUSE_HEIGHT - 10, COLOR_BACKGROUND);
 
     // Título
     int title_width = strlen(PAUSE_TITLE) * CHAR_WIDTH;
-    int title_x = window_x + (window_width - title_width) / 2;
+    int title_x = window_x + (PAUSE_WIDTH - title_width) / 2;
     int title_y = window_y + 30;
     draw_text(false, title_x, title_y, PAUSE_TITLE, COLOR_TITLE, COLOR_BACKGROUND);
 
@@ -59,7 +54,7 @@ void pause_ui_draw_menu(const GameLogic* game) {
         uint32_t text_color = is_selected ? COLOR_BACKGROUND : COLOR_NORMAL;
 
         int text_width = strlen(PAUSE_OPTIONS[i]) * CHAR_WIDTH;
-        int text_x = window_x + (window_width - text_width) / 2;
+        int text_x = window_x + (PAUSE_WIDTH - text_width) / 2;
 
         // Fundo da opção
         if (is_selected) {

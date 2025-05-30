@@ -2,6 +2,10 @@
 #include "../ui/include/game_ui.h"
 #include "../states/include/state.h"
 #include "../ui/include/pause_ui.h"
+#include "../ui/include/render.h"
+#include "../objects/include/score.h"
+#include "../core/include/tetris.h"
+#include "../ui/include/font.h"
 
 // ===== INICIALIZAÇÃO =====
 void game_logic_init(GameLogic* game) {

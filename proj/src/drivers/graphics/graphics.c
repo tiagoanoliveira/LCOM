@@ -1,5 +1,11 @@
 #include "graphics.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "../../game/core/include/config.h"
+
 vbe_mode_info_t mode_info;
 uint8_t *video_mem = NULL;
 uint8_t *frame_buffer = NULL;
@@ -7,8 +13,8 @@ int grid_origin_x = 0;
 int grid_origin_y = 0;
 
 void vg_set_grid_position(int grid_cols, int grid_rows, int cell_w, int cell_h) {
-    grid_origin_x = (h_res - grid_cols * cell_w) / 2;
-    grid_origin_y = (v_res - grid_rows * cell_h) / 2;
+    grid_origin_x = (SCREEN_WIDTH - grid_cols * cell_w) / 2;
+    grid_origin_y = (SCREEN_HEIGHT - grid_rows * cell_h) / 2;
 }
 
 void swap_buffers() {
@@ -33,7 +39,7 @@ int vg_clear_screen(uint32_t color) {
     if (frame_buffer == NULL) return 1;
 
     unsigned bytes_per_pixel = (mode_info.BitsPerPixel + 7) / 8;
-    unsigned total_pixels = mode_info.XResolution * mode_info.YResolution;
+    unsigned total_pixels = SCREEN_WIDTH * SCREEN_HEIGHT;
 
     for (unsigned i = 0; i < total_pixels; ++i) {
         memcpy(&frame_buffer[i * bytes_per_pixel], &color, bytes_per_pixel);
@@ -54,11 +60,9 @@ void* my_vg_init(uint16_t mode) {
     }
 
     // Update global variables
-    h_res = mode_info.XResolution;
-    v_res = mode_info.YResolution;
     bits_per_pixel = mode_info.BitsPerPixel;
     vram_base = mode_info.PhysBasePtr;
-    vram_size = h_res * v_res * ((bits_per_pixel + 7) / 8);
+    vram_size = SCREEN_WIDTH * SCREEN_HEIGHT * ((bits_per_pixel + 7) / 8);
 
     frame_buffer = malloc(vram_size);
     if (frame_buffer == NULL) {
@@ -73,13 +77,13 @@ void* my_vg_init(uint16_t mode) {
 
 int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color) {
     // Check if coordinates are valid
-    if (x >= mode_info.XResolution || y >= mode_info.YResolution) return 1;
+    if (x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT) return 1;
 
     // Calculate how many bytes each pixel occupies (round up)
     unsigned bytes_per_pixel = (mode_info.BitsPerPixel + 7) / 8;
 
     // Calculate index in frame_buffer array
-    unsigned int index = (y * mode_info.XResolution + x) * bytes_per_pixel;
+    unsigned int index = (y * SCREEN_WIDTH + x) * bytes_per_pixel;
 
     // Write color to frame buffer
     memcpy(&frame_buffer[index], &color, bytes_per_pixel);
@@ -114,7 +118,7 @@ int set_frame_buffer(uint16_t mode) {
 
     // Calculate bytes per pixel (round up)
     uint8_t bytes_per_pixel = (mode_info.BitsPerPixel + 7) / 8;
-    unsigned int frame_size = mode_info.XResolution * mode_info.YResolution * bytes_per_pixel;
+    unsigned int frame_size = SCREEN_WIDTH * SCREEN_HEIGHT * bytes_per_pixel;
 
     // Fill structure with physical addresses of VRAM
     struct minix_mem_range mr;
@@ -138,10 +142,10 @@ int set_frame_buffer(uint16_t mode) {
 }
 
 int draw_pixel_indexed(uint16_t x, uint16_t y, uint8_t color_index) {
-    if (x >= mode_info.XResolution || y >= mode_info.YResolution)
+    if (x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT)
         return 1;
 
-    unsigned index = y * mode_info.XResolution + x;
+    unsigned index = y * SCREEN_WIDTH + x;
 
     frame_buffer[index] = color_index;  // 8bpp means 1 byte per pixel
 
