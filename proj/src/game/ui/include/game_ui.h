@@ -1,11 +1,6 @@
 #ifndef GAME_UI_H
 #define GAME_UI_H
 
-#include "../../objects/include/score.h"
-#include "../../objects/include/highscore.h"
-#include "../../core/include/tetris.h"
-#include "font.h"
-
 // Draws the Tetris grid
 void draw_grid();
 

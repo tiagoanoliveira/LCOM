@@ -1,5 +1,12 @@
 #include "include/game_ui.h"
 
+#include <stdio.h>
+#include <string.h>
+#include "../objects/include/score.h"
+#include "../objects/include/highscore.h"
+#include "../core/include/tetris.h"
+#include "include/font.h"
+
 void draw_grid_background(){
     draw_rectangle(grid_origin_x, grid_origin_y, GRID_WIDTH, GRID_HEIGHT, GRID_BACKGROUND_COLOR);
 }
@@ -47,23 +54,11 @@ void draw_grid() {
 }
 
 void draw_game_infos() {
-    
-    // --- Score Box ---
     draw_score();
-
-    // --- Lines Box ---
     draw_lines();
-
-    // --- High Scores ---
     draw_highscores();
-
-
-    // --- Level Box ---
     draw_level();
-
-    // --- Next Piece Box ---
     draw_next_piece();
-
 }
 
 void draw_score(void) {
@@ -185,7 +180,7 @@ void draw_next_piece(void) {
 
     // Placeholder for the next piece 
     char buffer[8];
-    sprintf(buffer, "-");
+    sprintf(buffer, "-"); //\ meter a desenhar a próxima peça
     int value_x = next_box_x + next_box_w / 2 - strlen(buffer) * CHAR_WIDTH / 2;
     int value_y = next_box_y + next_box_h / 2 - CHAR_HEIGHT / 2;
     draw_text(false, value_x, value_y, buffer, 0xFFFFFF, NEXT_PIECE_BG_COLOR);

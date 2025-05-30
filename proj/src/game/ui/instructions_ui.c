@@ -45,23 +45,19 @@ void instructions_ui_draw(const InstructionsState* state) {
 }
 
 void instructions_ui_draw_title(void) {
-    int screen_width = mode_info.XResolution;
-
     const char* title = INSTRUCTIONS_TITLE;
     int title_width = strlen(title) * TITLE_CHAR_WIDTH;
-    int title_x = (screen_width - title_width) / 2;
+    int title_x = (SCREEN_WIDTH - title_width) / 2;
 
     draw_text(true, title_x, TITLE_INSTRUCTIONS_ORIGIN_Y, title, COLOR_TITLE, COLOR_BACKGROUND);
 }
 
 void instructions_ui_draw_content(void) {
-    int screen_width = mode_info.XResolution;
-
     int current_y = INSTRUCTIONS_ORIGIN_Y;
 
     for (int i = 0; i < (int)INSTRUCTIONS_LINES; i++) {
         int text_width = strlen(INSTRUCTIONS_TEXT[i]) * CHAR_WIDTH;
-        int text_x = (screen_width - text_width) / 2;
+        int text_x = (SCREEN_WIDTH - text_width) / 2;
 
         uint32_t color = COLOR_NORMAL;
         if (strstr(INSTRUCTIONS_TEXT[i], "CONTROLS:") ||
@@ -86,7 +82,5 @@ void instructions_ui_draw_content(void) {
 }
 
 void instructions_ui_draw_back_option(void) {
-    int screen_width = mode_info.XResolution;
-
-    draw_menu_option(screen_width / 2, BUTTON_EXIT_INSTRUCTIONS_ORIGIN_Y, BACK_OPTION, true);
+    draw_menu_option(SCREEN_WIDTH / 2, BUTTON_EXIT_INSTRUCTIONS_ORIGIN_Y, BACK_OPTION, true);
 }
