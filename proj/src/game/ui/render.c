@@ -104,4 +104,38 @@ void draw_highscores(void) {
     }
 }
 
+// Highscore entry UI is now only used by STATE_HIGHSCORE
+/*
+void highscore_ui_draw(const HighscoreState* state) {
+    if (!state || !state->active) return;
+
+    vg_clear_screen(COLOR_BACKGROUND);
+    draw_moldure();
+
+    // Draw "NEW HIGHSCORE!" title centered
+    const char* title = "NEW HIGHSCORE!";
+    int title_x = (mode_info.XResolution - (strlen(title) * TITLE_CHAR_WIDTH)) / 2;
+    int title_y = 3 * 10;
+    draw_title_text(title_x, title_y, title, 0xFFFFFF00, 0xFF000000);  // Yellow text, black background
+
+    // Draw the player's score centered
+    char score_str[32];
+    snprintf(score_str, sizeof(score_str), "SCORE: %u", state->score);
+    int score_x = (mode_info.XResolution - (strlen(score_str) * 8)) / 2;
+    draw_text(score_x, 8 * 16, score_str, 0xFFFFFFFF, 0xFF000000);  // White text, black background
+
+    // Prompt for name (left-aligned)
+    draw_text(10, 11 * 16, "ENTER YOUR NAME:", 0xFF00FFFF, 0xFF000000);  // Cyan text, black background
+
+    // Show input field centered
+    char input_display[MAX_NAME_LENGTH + 1] = {0};
+    strncpy(input_display, state->name_input, MAX_NAME_LENGTH);
+    int input_x = (mode_info.XResolution - (strlen(input_display) * 8)) / 2;
+    draw_text(input_x, 13 * 16, input_display, 0xFFFFFFFF, 0xFF000000);  // White text, black background
+
+    // Prompt to continue centered
+    const char* continue_text = "Press ENTER to continue";
+    int continue_x = (mode_info.XResolution - (strlen(continue_text) * 8)) / 2;
+    draw_text(continue_x, 16 * 16, continue_text, 0xFF888888, 0xFF000000);  // Gray text, black background
+}*/
 

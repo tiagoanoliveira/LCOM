@@ -8,6 +8,7 @@
 typedef enum {
     STATE_MENU,
     STATE_GAME,
+    STATE_HIGHSCORE,
     STATE_GAME_OVER,
     STATE_QUIT
 } GameStateType;
@@ -36,6 +37,7 @@ void state_manager_handle_input(InputEvent event);
 void state_manager_update(void);
 void state_manager_render(void);
 bool state_manager_should_quit(void);
+
 
 #endif
 

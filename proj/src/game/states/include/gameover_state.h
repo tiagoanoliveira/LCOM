@@ -14,17 +14,12 @@ typedef enum {
     GAMEOVER_OPTIONS_COUNT
 } GameOverOption;
 
-typedef enum {
-    GAMEOVER_SUBSTATE_MENU,
-    GAMEOVER_SUBSTATE_HIGHSCORE
-} GameOverSubState;
 
 typedef struct {
     GameOverOption selected;
     bool active;
     int final_score;
     int lines_cleared;
-    GameOverSubState substate;
     char name_input[MAX_NAME_LENGTH];
     int name_input_length;
 } GameOverState;

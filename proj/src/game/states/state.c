@@ -3,14 +3,17 @@
 #include "include/gameover_state.h"
 #include "../ui/include/menu_ui.h"
 #include "../ui/include/gameover_ui.h"
+#include "../ui/include/highscore_ui.h"
 #include "../core/include/game.h"
 #include "../../drivers/graphics/graphics.h"
 #include "../core/include/tetris.h"
+#include "include/highscore_state.h"
 
 // Estados específicos
 static MenuState menu_state;
 static GameLogic game_logic;
 static GameOverState gameover_state;
+static HighscoreState highscore_state;
 
 // State manager
 static GameStateType current_state = STATE_MENU;
@@ -49,6 +52,9 @@ void state_manager_set_state(GameStateType type) {
                 GameScore* score = tetris_get_score();
                 gameover_state_init(&gameover_state, score->score, score->lines_cleared);
                 break; }
+            case STATE_HIGHSCORE: 
+                highscore_state_init(&highscore_state, tetris_get_score()->score);
+                break;
             case STATE_QUIT:
                 should_quit = true;
                 break;
@@ -61,6 +67,19 @@ void state_manager_set_state(GameStateType type) {
 GameState* state_manager_get_current(void) {
     // Esta função pode retornar NULL se usarmos o approach simplificado
     return NULL;
+}
+
+// Helper to decide next state after game over
+static void handle_game_over_transition(void) {
+    GameScore* score = tetris_get_score();
+    HighScore scores[MAX_HIGH_SCORES];
+    int count;
+    load_high_scores(scores, &count);
+    if (count < MAX_HIGH_SCORES || score->score > scores[count - 1].score) {
+        state_manager_set_state(STATE_HIGHSCORE);
+    } else {
+        state_manager_set_state(STATE_GAME_OVER);
+    }
 }
 
 void state_manager_handle_input(InputEvent event) {
@@ -82,29 +101,37 @@ void state_manager_handle_input(InputEvent event) {
                 needs_redraw = true;
             }
             if (game_logic_is_game_over(&game_logic)) {
-                state_manager_set_state(STATE_GAME_OVER);
+                handle_game_over_transition();
             }
             break;
-
         case STATE_GAME_OVER:
             gameover_state_handle_input(&gameover_state, event);
             if (event.action == INPUT_UP || event.action == INPUT_DOWN || event.action == INPUT_ESCAPE) {
                 needs_redraw = true;
             }
 
-            // Only handle Enter when NOT in highscore input substate
-            if (gameover_state.substate == GAMEOVER_SUBSTATE_MENU &&
-                event.action == INPUT_ENTER && event.pressed) {
+            // Handle Enter for menu transitions
+            if (event.action == INPUT_ENTER && event.pressed) {
                 GameStateType action = gameover_state_get_selected_action(&gameover_state);
                 state_manager_set_state(action);
-            }
-
-            // Always redraw on Enter for highscore input or menu transitions
-            if (event.action == INPUT_ENTER && event.pressed) {
                 needs_redraw = true;
             }
 
             break;
+        case STATE_HIGHSCORE: {
+            highscore_state_handle_input(&highscore_state, event);
+
+            // Redraw if name changed or on any keypress
+            if (event.action == INPUT_CHAR || event.action == INPUT_ENTER) {
+                needs_redraw = true;
+            }
+
+            // If user pressed Enter and state is now inactive, go to GAME_OVER
+            if (!highscore_state.active) {
+                state_manager_set_state(STATE_GAME_OVER);
+            }
+            break;
+        }
         case STATE_QUIT:
             break;
     }
@@ -128,11 +155,14 @@ void state_manager_update(void) {
             game_logic_update(&game_logic);
             needs_redraw = true;
             if (game_logic_is_game_over(&game_logic)) {
-                state_manager_set_state(STATE_GAME_OVER);
+                handle_game_over_transition();
             }
             break;
         case STATE_GAME_OVER:
             gameover_state_update(&gameover_state);
+            break;
+        case STATE_HIGHSCORE:
+            highscore_state_update(&highscore_state);
             break;
         case STATE_QUIT:
             break;
@@ -152,6 +182,9 @@ void state_manager_render(void) {
         case STATE_GAME_OVER:
             gameover_ui_draw(&gameover_state);
             break;
+        case STATE_HIGHSCORE:
+            highscore_ui_draw(&highscore_state);
+            break;
         case STATE_QUIT:
             break;
     }
@@ -166,3 +199,5 @@ void state_manager_render(void) {
 bool state_manager_should_quit(void) {
     return should_quit;
 }
+
+

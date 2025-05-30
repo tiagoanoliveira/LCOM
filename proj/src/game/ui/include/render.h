@@ -5,6 +5,7 @@
 #include "../../objects/include/piece.h"
 #include "../../objects/include/score.h"
 #include "../../objects/include/highscore.h"
+#include "../../states/include/highscore_state.h"
 #include "../../core/include/tetris.h"
 #include "font.h"
 
@@ -28,5 +29,8 @@ void draw_score_info();
 
 // Draws the high scores
 void draw_highscores(void);
+
+// Draws the Highscore UI
+void highscore_ui_draw(const HighscoreState* state);
 
 #endif // RENDER_H
