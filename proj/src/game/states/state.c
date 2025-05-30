@@ -45,16 +45,14 @@ void state_manager_set_state(GameStateType type) {
             case STATE_GAME_OVER: {
                 GameScore* score = tetris_get_score();
                 gameover_state_init(&gameover_state, score->score, score->lines_cleared);
-<<<<<<< HEAD
                 break;
             }
-            case STATE_INSTRUCTIONS:  // ADICIONADO
+            case STATE_INSTRUCTIONS:
+                {  // ADICIONADO
                 instructions_state_init(&instructions_state);
-=======
                 break; }
             case STATE_HIGHSCORE: 
                 highscore_state_init(&highscore_state, tetris_get_score()->score);
->>>>>>> TopScorers
                 break;
             case STATE_QUIT:
                 should_quit = true;
@@ -63,7 +61,6 @@ void state_manager_set_state(GameStateType type) {
         current_state = type;
     }
 }
-
 GameState* state_manager_get_current(void) {
     // Esta função pode retornar NULL se usarmos o approach simplificado
     return NULL;

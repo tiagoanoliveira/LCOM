@@ -16,15 +16,20 @@ static const char* GAMEOVER_OPTIONS[] = {
 void gameover_ui_draw(const GameOverState* state) {
     if (!state || !state->active) return;
 
+    // Limpar ecrã
     vg_clear_screen(COLOR_BACKGROUND);
 
     // Desenhar fundo
     draw_moldure();
     draw_decoration();
 
-    // Only draw the regular Game Over UI
+    // Desenhar título "GAME OVER"
     gameover_ui_draw_title();
+
+    // Desenhar pontuação
     gameover_ui_draw_score(state->final_score, state->lines_cleared);
+
+    // Desenhar opções
     gameover_ui_draw_options(state);
 
     // Desenhar fundo
@@ -78,4 +83,3 @@ void gameover_ui_draw_options(const GameOverState* state) {
         draw_menu_option(SCREEN_WIDTH / 2, option_y, GAMEOVER_OPTIONS[i], is_selected);
     }
 }
-

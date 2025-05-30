@@ -1,48 +1,71 @@
-#include <string.h>
-#include <stdio.h>
 #include "include/highscore_ui.h"
 
 static const char* HIGHSCORE_TITLE = "NEW HIGHSCORE!";
+
+// Helper declarations
+static void draw_highscore_title(void);
+static void draw_highscore_score(uint32_t score);
+static void draw_name_prompt(void);
+static void draw_name_input(const char* input);
+static void draw_continue_prompt(void);
 
 void highscore_ui_draw(const HighscoreState* state) {
     if (!state || !state->active) return;
 
     vg_clear_screen(COLOR_BACKGROUND);
     draw_moldure();
+    draw_decoration();
 
-    int screen_width = mode_info.XResolution;
-    int screen_height = mode_info.YResolution;
+    draw_highscore_title();
+    draw_highscore_score(state->score);
+    draw_name_prompt();
+    draw_name_input(state->name_input);
+    draw_continue_prompt();
+}
 
-    // Draw title centered
+static void draw_highscore_title(void) {
     int title_width = strlen(HIGHSCORE_TITLE) * TITLE_CHAR_WIDTH;
-    int title_x = (screen_width - title_width) / 2;
-    int title_y = screen_height / 6;
-    draw_title_text(title_x, title_y, HIGHSCORE_TITLE, 0xFFFFFF, 0x222222); // Yellow
+    int title_x = (SCREEN_WIDTH - title_width) / 2;
+    int title_y = SCREEN_HEIGHT / 6;
 
-    // Draw score centered
+    draw_text(true, title_x, title_y, HIGHSCORE_TITLE, COLOR_TITLE, COLOR_BACKGROUND);
+}
+
+static void draw_highscore_score(uint32_t score) {
     char score_str[32];
-    sprintf(score_str, "SCORE: %u", state->score);
+    sprintf(score_str, "SCORE: %u", score);
+
     int score_width = strlen(score_str) * CHAR_WIDTH;
-    int score_x = (screen_width - score_width) / 2;
-    int score_y = title_y + 60;
-    draw_text(score_x, score_y, score_str, 0xFFFFFF, 0x222222); // White
+    int score_x = (SCREEN_WIDTH - score_width) / 2;
+    int score_y = SCREEN_HEIGHT / 6 + 60;
 
-    // Prompt for name (left-aligned)
-    int prompt_y = score_y + 60;
-    draw_text(40, prompt_y, "ENTER YOUR NAME:", 0xFF00FF, 0x222222); // Cyan
+    draw_text(false, score_x, score_y, score_str, COLOR_SCORE, COLOR_BACKGROUND);
+}
 
-    // Show input field centered
+static void draw_name_prompt(void) {
+    int prompt_y = SCREEN_HEIGHT / 6 + 120;
+
+    draw_text(false, 40, prompt_y, "ENTER YOUR NAME:", COLOR_O, COLOR_BACKGROUND);  // Using COLOR_O (red) as prompt color
+}
+
+static void draw_name_input(const char* input) {
     char input_display[MAX_NAME_LENGTH + 1] = {0};
-    strncpy(input_display, state->name_input, MAX_NAME_LENGTH);
-    int input_width = strlen(input_display) * CHAR_WIDTH;
-    int input_x = (screen_width - input_width) / 2;
-    int input_y = prompt_y + 60;
-    draw_text(input_x, input_y, input_display, 0xFFFFFF, 0x222222); // White
+    strncpy(input_display, input, MAX_NAME_LENGTH);
+    input_display[MAX_NAME_LENGTH] = '\0';
 
-    // Prompt to continue centered
+    int input_width = strlen(input_display) * CHAR_WIDTH;
+    int input_x = (SCREEN_WIDTH - input_width) / 2;
+    int input_y = SCREEN_HEIGHT / 6 + 180;
+
+    draw_text(false, input_x, input_y, input_display, COLOR_NORMAL, COLOR_BACKGROUND);
+}
+
+static void draw_continue_prompt(void) {
     const char* continue_text = "Press ENTER to continue";
+
     int continue_width = strlen(continue_text) * CHAR_WIDTH;
-    int continue_x = (screen_width - continue_width) / 2;
-    int continue_y = input_y + 80;
-    draw_text(continue_x, continue_y, continue_text, 0xFF8888, 0x222222); // Gray
+    int continue_x = (SCREEN_WIDTH - continue_width) / 2;
+    int continue_y = SCREEN_HEIGHT / 6 + 260;
+
+    draw_text(false, continue_x, continue_y, continue_text, COLOR_SELECTED, COLOR_BACKGROUND);
 }
