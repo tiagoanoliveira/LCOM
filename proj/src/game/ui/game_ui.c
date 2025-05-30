@@ -49,30 +49,51 @@ void draw_grid() {
 void draw_game_infos() {
     GameScore* score = tetris_get_score();
 
-    // Moldura do score
-    draw_rectangle(LEFT_INFOS_ORIGIN_X, SCORE_ORIGIN_Y, LEFT_INFOS_WIDTH, FRAME_INFOS_THICKNESS, FRAME_INFOS_COLOR); // Linha superior
-    draw_rectangle(LEFT_INFOS_ORIGIN_X, SCORE_ORIGIN_Y + SCORE_HEIGHT, LEFT_INFOS_WIDTH, FRAME_INFOS_THICKNESS, FRAME_INFOS_COLOR); // Linha inferior
-    draw_rectangle(LEFT_INFOS_ORIGIN_X, SCORE_ORIGIN_Y, FRAME_INFOS_THICKNESS, SCORE_HEIGHT, FRAME_INFOS_COLOR); // Linha esquerda
-    draw_rectangle(LEFT_INFOS_ORIGIN_X+LEFT_INFOS_WIDTH, SCORE_ORIGIN_Y, FRAME_INFOS_THICKNESS, SCORE_HEIGHT+FRAME_INFOS_THICKNESS, FRAME_INFOS_COLOR); // Linha direita
+    // --- Score Box ---
+    int score_box_x = LEFT_INFOS_ORIGIN_X;
+    int score_box_y = SCORE_ORIGIN_Y;
+    int score_box_w = LEFT_INFOS_WIDTH;
+    int score_box_h = 100;
 
-    // Moldura das Lines_Cleaned
+    // Draw frame
+    draw_rectangle(score_box_x-2, score_box_y-2, score_box_w+4, score_box_h+4, FRAME_INFOS_COLOR);
+    draw_rectangle(score_box_x, score_box_y, score_box_w, score_box_h, SCORE_BG_COLOR);
+
+    int score_label_x = score_box_x + score_box_w / 2 - strlen("Score") * CHAR_WIDTH / 2;
+    int score_label_y = score_box_y + 8;
+    draw_text(score_label_x, score_label_y, "Score", 0xFFFFFF, SCORE_BG_COLOR);
+
+    char buffer[32];
+    sprintf(buffer, "%u", score->score);
+    int score_value_x = score_box_x + score_box_w / 2 - strlen(buffer) * CHAR_WIDTH / 2;
+    int score_value_y = score_box_y + score_box_h / 2 - CHAR_HEIGHT / 2;
+    draw_text(score_value_x, score_value_y, buffer, 0xFFFFFF, SCORE_BG_COLOR);
+
+
+    // --- Lines Box ---
+    int lines_box_x = LEFT_INFOS_ORIGIN_X;
+    int lines_box_y = score_box_y + score_box_h + 10;
+    int lines_box_w = LEFT_INFOS_WIDTH;
+    int lines_box_h = 100;
+
+    // Draw frame
+    draw_rectangle(lines_box_x-2, lines_box_y-2, lines_box_w+4, lines_box_h+4, FRAME_INFOS_COLOR);
+    draw_rectangle(lines_box_x, lines_box_y, lines_box_w, lines_box_h, LINES_BG_COLOR);
+
+    int lines_label_x = lines_box_x + lines_box_w / 2 - strlen("Lines") * CHAR_WIDTH / 2;
+    int lines_label_y = lines_box_y + 8;
+    draw_text(lines_label_x, lines_label_y, "Lines", 0xFFFFFF, LINES_BG_COLOR);
+
+    sprintf(buffer, "%u", score->lines_cleared);
+    int lines_value_x = lines_box_x + lines_box_w / 2 - strlen(buffer) * CHAR_WIDTH / 2;
+    int lines_value_y = lines_box_y + lines_box_h / 2 - CHAR_HEIGHT / 2;
+    draw_text(lines_value_x, lines_value_y, buffer, 0xFFFFFF, LINES_BG_COLOR);
 
     // Moldura dos TopScores
 
     // Moldura da NextPiece
 
     // Moldura do Level
-
-        // ISTO ESTAVA FEITO JÁ. Não apaguei para depois pegar na informação e meter dentro das molduras conforme design que tinhamos planeado
-    char buffer[64];
-    sprintf(buffer, "Score: %u", score->score);
-    draw_text(LEFT_INFOS_ORIGIN_X, 200, buffer, 0xFFFFFF, 0x222222);
-
-    sprintf(buffer, "Lines: %u", score->lines_cleared);
-    draw_text(LEFT_INFOS_ORIGIN_X, 230, buffer, 0xFFFFFF, 0x222222);
-
-    sprintf(buffer, "Level: %u", score->level);
-    draw_text(LEFT_INFOS_ORIGIN_X, 260, buffer, 0xFFFFFF, 0x222222);
 }
 
 void draw_highscores(void) {

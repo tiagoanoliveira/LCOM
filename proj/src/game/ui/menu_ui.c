@@ -22,25 +22,12 @@ void menu_ui_draw(const MenuState* state) {
     menu_ui_draw_background();
     menu_ui_draw_title();
     menu_ui_draw_options(state);
-
-    int x = 16;
-    int y = 768 - 205;  
-
-    draw_xpm_indexed(background_xpm, x, y);}
+}
 
 void menu_ui_draw_background(void) {
-    int screen_width = mode_info.XResolution;
-    int screen_height = mode_info.YResolution;
+    draw_moldure();  
 
-    draw_moldure();
-
-    // Blocos decorativos
-    for (int i = 0; i < 8; i++) {
-        int x = 40 + i * (screen_width - 100) / 7;
-        int y = screen_height - 80;
-        draw_rectangle(x, y, 25, 25, COLOR_BORDER);
-        draw_rectangle(x + 2, y + 2, 21, 21, COLOR_SELECTED);
-    }
+    draw_xpm_indexed(background_xpm, 16, 768 - 205);
 }
 
 void menu_ui_draw_title(void) {
