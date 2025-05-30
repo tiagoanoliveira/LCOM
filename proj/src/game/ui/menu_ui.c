@@ -41,7 +41,7 @@ void menu_ui_draw_title(void) {
     const char* title = MENU_TITLE;
     int title_width = strlen(title) * TITLE_CHAR_WIDTH;
     int title_x = (SCREEN_WIDTH - title_width) / 2;
-    int title_y = SCREEN_HEIGHT / 4 + 20;
+    int title_y = SCREEN_HEIGHT / 4 + 35;
 
     draw_text(true, title_x, title_y, title, COLOR_TITLE, COLOR_BACKGROUND);
 }
