@@ -32,6 +32,9 @@ void gameover_ui_draw(const GameOverState* state) {
     // Desenhar opções
     gameover_ui_draw_options(state);
 
+    // Desenhar fundo
+    gameover_ui_draw_background();
+
 }
 
 void gameover_ui_draw_background(void) {
@@ -70,7 +73,7 @@ void gameover_ui_draw_score(int score, int lines) {
 }
 
 void gameover_ui_draw_options(const GameOverState* state) {
-    int menu_start_y = SCREEN_HEIGHT / 2;
+    int menu_start_y = SCREEN_HEIGHT / 2 - 23;
     int option_spacing = 80;
 
     for (int i = 0; i < GAMEOVER_OPTIONS_COUNT; i++) {

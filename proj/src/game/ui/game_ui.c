@@ -109,7 +109,7 @@ void draw_lines(void) {
     sprintf(buffer, "%u", score->lines_cleared);
     int lines_value_x = lines_box_x + lines_box_w / 2 - strlen(buffer) * CHAR_WIDTH / 2;
     int lines_value_y = lines_box_y + lines_box_h / 2 - CHAR_HEIGHT / 2;
-    draw_text(flase, lines_value_x, lines_value_y, buffer, 0xFFFFFF, LINES_BG_COLOR);
+    draw_text(false, lines_value_x, lines_value_y, buffer, 0xFFFFFF, LINES_BG_COLOR);
 }
 
 void draw_highscores(void) {

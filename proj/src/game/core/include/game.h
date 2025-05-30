@@ -30,5 +30,4 @@ void game_logic_update_speed(GameLogic* game);
 void game_logic_toggle_pause(GameLogic* game);
 void game_logic_handle_pause_input(GameLogic* game, InputEvent event);
 bool game_logic_is_paused(const GameLogic* game);
-
 #endif

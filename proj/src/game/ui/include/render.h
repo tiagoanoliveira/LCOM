@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "../../objects/include/piece.h"
+#include "../../core/include/config.h"
 
 // Draws a single block (1 Tetris cell)
 void draw_block(int col, int row, uint32_t color);
