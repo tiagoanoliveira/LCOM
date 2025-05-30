@@ -2,6 +2,7 @@
 #include <string.h>
 #include "include/menu_ui.h"
 #include "include/font.h"
+#include "../core/include/config.h"
 
 // Textos
 static const char* MENU_TITLE = "TETR-IO-S";
@@ -25,29 +26,23 @@ void menu_ui_draw(const MenuState* state) {
 }
 
 void menu_ui_draw_title(void) {
-    int screen_width = mode_info.XResolution;
-    int screen_height = mode_info.YResolution;
-
     const char* title = MENU_TITLE;
     int title_width = strlen(title) * TITLE_CHAR_WIDTH;
-    int title_x = (screen_width - title_width) / 2;
-    int title_y = screen_height / 4;
+    int title_x = (SCREEN_WIDTH - title_width) / 2;
+    int title_y = SCREEN_HEIGHT / 4;
 
-    draw_title_text(title_x, title_y, title, COLOR_TITLE, COLOR_BACKGROUND);
+    draw_text(true, title_x, title_y, title, COLOR_TITLE, COLOR_BACKGROUND);
 }
 
 void menu_ui_draw_options(const MenuState* state) {
-    int screen_width = mode_info.XResolution;
-    int screen_height = mode_info.YResolution;
-
-    int menu_start_y = screen_height / 2 - 50;
+    int menu_start_y = SCREEN_HEIGHT / 2 - 50;
     int option_spacing = 80;
 
     for (int i = 0; i < MENU_OPTIONS_COUNT; i++) {
         bool is_selected = (i == state->selected);
         int option_y = menu_start_y + i * option_spacing;
 
-        draw_menu_option(screen_width / 2, option_y, MENU_OPTIONS[i], is_selected);
+        draw_menu_option(SCREEN_WIDTH / 2, option_y, MENU_OPTIONS[i], is_selected);
     }
 }
 
@@ -61,10 +56,9 @@ void draw_menu_option(int x, int y, const char* text, bool selected) {
     int text_width = strlen(text) * CHAR_WIDTH;
     int start_x = x - BUTTON_WIDTH / 2;
 
-    int screen_width = mode_info.XResolution;
     if (start_x < 20) start_x = 20;
-    if (start_x + BUTTON_WIDTH > screen_width - 20) {
-        start_x = screen_width - BUTTON_WIDTH - 20;
+    if (start_x + BUTTON_WIDTH > SCREEN_WIDTH - 20) {
+        start_x = SCREEN_WIDTH - BUTTON_WIDTH - 20;
     }
 
     // Draw option background with border using BUTTON_WIDTH
@@ -73,5 +67,5 @@ void draw_menu_option(int x, int y, const char* text, bool selected) {
 
     // Draw text centered in the button
     int text_x = x - text_width / 2;
-    draw_text(text_x, y, text, text_color, bg_color);
+    draw_text(false, text_x, y, text, text_color, bg_color);
 }

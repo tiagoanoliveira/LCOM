@@ -66,13 +66,13 @@ void draw_game_infos() {
         // ISTO ESTAVA FEITO JÁ. Não apaguei para depois pegar na informação e meter dentro das molduras conforme design que tinhamos planeado
     char buffer[64];
     sprintf(buffer, "Score: %u", score->score);
-    draw_text(LEFT_INFOS_ORIGIN_X, 200, buffer, 0xFFFFFF, 0x222222);
+    draw_text(false, LEFT_INFOS_ORIGIN_X, 200, buffer, 0xFFFFFF, 0x222222);
 
     sprintf(buffer, "Lines: %u", score->lines_cleared);
-    draw_text(LEFT_INFOS_ORIGIN_X, 230, buffer, 0xFFFFFF, 0x222222);
+    draw_text(false, LEFT_INFOS_ORIGIN_X, 230, buffer, 0xFFFFFF, 0x222222);
 
     sprintf(buffer, "Level: %u", score->level);
-    draw_text(LEFT_INFOS_ORIGIN_X, 260, buffer, 0xFFFFFF, 0x222222);
+    draw_text(false, LEFT_INFOS_ORIGIN_X, 260, buffer, 0xFFFFFF, 0x222222);
 }
 
 void draw_highscores(void) {
@@ -81,12 +81,12 @@ void draw_highscores(void) {
 
     load_high_scores(scores, &count);
 
-    draw_text(LEFT_INFOS_ORIGIN_X, 300, "Top Scores:", 0xFFFFFF, 0x222222);
+    draw_text(false,LEFT_INFOS_ORIGIN_X, 300, "Top Scores:", 0xFFFFFF, 0x222222);
 
     for (int i = 0; i < count; i++) {
         char buffer[64];
         sprintf(buffer, "%d. %s - %u", i + 1, scores[i].name, scores[i].score);
-        draw_text(LEFT_INFOS_ORIGIN_X, 330 + i * 25, buffer, 0xFFFFFF, 0x222222);
+        draw_text(false,LEFT_INFOS_ORIGIN_X, 330 + i * 25, buffer, 0xFFFFFF, 0x222222);
     }
 }
 

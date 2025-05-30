@@ -3,17 +3,19 @@
 #include "include/instructions_ui.h"
 #include "include/menu_ui.h"
 #include "include/font.h"
+#include "../../drivers/graphics/graphics.h"
+#include "../core/include/config.h"
 
 // Textos das instruções
 static const char* INSTRUCTIONS_TITLE = "INSTRUCTIONS";
 static const char* INSTRUCTIONS_TEXT[] = {
     "CONTROLS:",
     "",
-    "LEFT/RIGHT ARROW          -         Move piece left/right",
-    "DOWN ARROW                -               Move piece down",
-    "UP ARROW                  -                  Rotate piece",
-    "SPACE/MIDDLE MOUSE BOTTOM -                    Drop piece",
-    "LEFT/RIGHT MOUSE BOTTOM   - Rotate piece to left or right",
+    "         LEFT/RIGHT ARROW - Move piece left/right        ",
+    "               DOWN ARROW - Move piece down              ",
+    "                 UP ARROW - Rotate piece                 ",
+    "SPACE/MIDDLE MOUSE BOTTOM - Drop piece                   ",
+    "  LEFT/RIGHT MOUSE BOTTOM - Rotate piece to left or right",
     "",
     "GAME RULES:",
     "",
@@ -23,7 +25,7 @@ static const char* INSTRUCTIONS_TEXT[] = {
     "",
     "PAUSE:",
     "",
-    "- Press ESC or Q to pause game",
+    "Press ESC or Q to pause game",
 };
 
 #define INSTRUCTIONS_LINES (sizeof(INSTRUCTIONS_TEXT) / sizeof(INSTRUCTIONS_TEXT[0]))
@@ -49,7 +51,7 @@ void instructions_ui_draw_title(void) {
     int title_width = strlen(title) * TITLE_CHAR_WIDTH;
     int title_x = (screen_width - title_width) / 2;
 
-    draw_title_text(title_x, TITLE_INSTRUCTIONS_ORIGIN_Y, title, COLOR_TITLE, COLOR_BACKGROUND);
+    draw_text(true, title_x, TITLE_INSTRUCTIONS_ORIGIN_Y, title, COLOR_TITLE, COLOR_BACKGROUND);
 }
 
 void instructions_ui_draw_content(void) {
@@ -68,7 +70,7 @@ void instructions_ui_draw_content(void) {
             color = COLOR_SELECTED;
             }
 
-        draw_text(text_x, current_y, INSTRUCTIONS_TEXT[i], color, COLOR_BACKGROUND);
+        draw_text(false, text_x, current_y, INSTRUCTIONS_TEXT[i], color, COLOR_BACKGROUND);
 
         // Calcular próxima posição Y
         current_y += SPACE_BETWEEN_EACH_LINE_OF_INSTRUCTIONS;
@@ -85,9 +87,6 @@ void instructions_ui_draw_content(void) {
 
 void instructions_ui_draw_back_option(void) {
     int screen_width = mode_info.XResolution;
-    int screen_height = mode_info.YResolution;
 
-    int option_y = screen_height - 120;
-
-    draw_menu_option(screen_width / 2, option_y, BACK_OPTION, true);
+    draw_menu_option(screen_width / 2, BUTTON_EXIT_INSTRUCTIONS_ORIGIN_Y, BACK_OPTION, true);
 }

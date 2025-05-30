@@ -1,7 +1,8 @@
 #include <string.h>
-#include <stdio.h>
 #include "include/font.h"
 #include "include/pause_ui.h"
+
+#include "../core/include/config.h"
 
 static const char* PAUSE_TITLE = "PAUSED";
 static const char* PAUSE_OPTIONS[] = {"BACK TO GAME", "EXIT"};
@@ -18,12 +19,9 @@ void pause_ui_draw(const GameLogic* game) {
 }
 
 void pause_ui_draw_overlay(void) {
-    int screen_width = mode_info.XResolution;
-    int screen_height = mode_info.YResolution;
-
     // Overlay escuro semi-transparente (simulado com padrão)
-    for (int y = 0; y < screen_height; y += 4) {
-        for (int x = 0; x < screen_width; x += 4) {
+    for (int y = 0; y < SCREEN_HEIGHT; y += 4) {
+        for (int x = 0; x < SCREEN_WIDTH; x += 4) {
             draw_rectangle(x, y, 2, 2, 0x00);
         }
     }
@@ -47,7 +45,7 @@ void pause_ui_draw_menu(const GameLogic* game) {
     int title_width = strlen(PAUSE_TITLE) * CHAR_WIDTH;
     int title_x = window_x + (window_width - title_width) / 2;
     int title_y = window_y + 30;
-    draw_text(title_x, title_y, PAUSE_TITLE, COLOR_TITLE, COLOR_BACKGROUND);
+    draw_text(false, title_x, title_y, PAUSE_TITLE, COLOR_TITLE, COLOR_BACKGROUND);
 
     // Opções
     int options_start_y = window_y + 80;
@@ -68,6 +66,6 @@ void pause_ui_draw_menu(const GameLogic* game) {
             draw_rectangle(text_x - 10, option_y - 5, text_width + 20, CHAR_HEIGHT + 10, bg_color);
         }
 
-        draw_text(text_x, option_y, PAUSE_OPTIONS[i], text_color, bg_color);
+        draw_text(false, text_x, option_y, PAUSE_OPTIONS[i], text_color, bg_color);
     }
 }
