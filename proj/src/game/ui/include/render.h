@@ -4,6 +4,17 @@
 #include <stdint.h>
 #include "../../objects/include/piece.h"
 #include "../../core/include/config.h"
+#include "../../objects/include/score.h"
+#include "../../objects/include/highscore.h"
+#include "../../states/include/highscore_state.h"
+#include "../../core/include/tetris.h"
+#include "font.h"
+
+// Draws the Tetris grid
+void draw_grid();
+
+// Draws the backgroud of Tetris grid
+void draw_grid_background();
 
 // Draws a single block (1 Tetris cell)
 void draw_block(int col, int row, uint32_t color);

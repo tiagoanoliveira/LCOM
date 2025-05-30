@@ -2,6 +2,7 @@
 #define GAMEOVER_UI_H
 
 #include "../../states/include/gameover_state.h"
+#include "../../states/include/highscore_state.h"
 #include "menu_ui.h"
 
 void gameover_ui_draw(const GameOverState* state);

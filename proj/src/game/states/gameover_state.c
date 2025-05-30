@@ -1,22 +1,29 @@
 #include "include/gameover_state.h"
+#include <string.h>  // For memset
 
-void gameover_state_init(GameOverState* state, int score, int lines) {
+// Initialize the game over state
+void gameover_state_init(GameOverState* state, unsigned int score, int lines) {
     if (!state) return;
 
     state->selected = GAMEOVER_PLAY_AGAIN;
     state->active = true;
     state->final_score = score;
     state->lines_cleared = lines;
+
+    state->name_input_length = 0;
+    memset(state->name_input, 0, MAX_NAME_LENGTH);
 }
 
+// Handle game over menu navigation input
 void gameover_state_handle_input(GameOverState* state, InputEvent event) {
     if (!state || !state->active || event.action == INPUT_NONE) return;
 
     switch (event.action) {
         case INPUT_UP:
             if (event.pressed) {
-                state->selected = (state->selected == 0) ?
-                    GAMEOVER_OPTIONS_COUNT - 1 : state->selected - 1;
+                state->selected = (state->selected == 0)
+                    ? GAMEOVER_OPTIONS_COUNT - 1
+                    : state->selected - 1;
             }
             break;
 
@@ -37,23 +44,19 @@ void gameover_state_handle_input(GameOverState* state, InputEvent event) {
     }
 }
 
+// Placeholder for future animation/timer logic
 void gameover_state_update(GameOverState* state) {
-    // Lógica de update se necessário (animações, timers, etc.)
-    // Por agora não há nada específico, se tivermos tempo metemos
+    // animations, timers, etc.
 }
 
+// Return the selected game state based on user choice
 GameStateType gameover_state_get_selected_action(const GameOverState* state) {
-    if (!state || !state->active) return -1;
+    if (!state || !state->active) return STATE_GAME_OVER;
 
     switch (state->selected) {
-        case GAMEOVER_PLAY_AGAIN:
-            return STATE_GAME;
-        case GAMEOVER_BACK_TO_MENU:
-            return STATE_MENU;
-        case GAMEOVER_QUIT:
-            return STATE_QUIT;
-        default:
-            return STATE_GAME_OVER;
+        case GAMEOVER_PLAY_AGAIN: return STATE_GAME;
+        case GAMEOVER_BACK_TO_MENU: return STATE_MENU;
+        case GAMEOVER_QUIT: return STATE_QUIT;
+        default: return STATE_GAME_OVER;
     }
 }
-
