@@ -144,6 +144,8 @@ void draw_highscores(void) {
 }
 
 void draw_level(void) {
+    GameScore* score = tetris_get_score();
+
     int level_box_x = RIGHT_INFOS_ORIGIN_X;
     int level_box_y = SCORE_ORIGIN_Y;
     int level_box_w = RIGHT_INFOS_WIDTH; 
@@ -158,9 +160,8 @@ void draw_level(void) {
     int level_label_y = level_box_y + 8;
     draw_text(level_label_x, level_label_y, "Level", 0xFFFFFF, LEVEL_BG_COLOR);
 
-    // Placeholder for value
     char buffer[16];
-    sprintf(buffer, "-");
+    sprintf(buffer, "%u", score->level);
 
     int level_value_x = level_box_x + level_box_w / 2 - strlen(buffer) * CHAR_WIDTH / 2;
     int level_value_y = level_box_y + level_box_h / 2 - CHAR_HEIGHT / 2;
