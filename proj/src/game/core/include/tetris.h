@@ -1,5 +1,6 @@
-#ifndef TETRIS_H
-#define TETRIS_H
+#ifndef _TETRIS_H_
+#define _TETRIS_H_
+
 
 #include "../../objects/include/piece.h"
 #include "config.h"
@@ -7,11 +8,11 @@
 
 extern int grid[GRID_ROWS][GRID_COLS];
 
+int clear_full_lines();
 void tetris_init();
 void tetris_draw();
 void fix_piece_to_grid(const Piece* piece);
 PieceType random_piece_type();
-int clear_full_lines();
 GameScore* tetris_get_score(void);
 
-#endif // TETRIS_H
+#endif // _TETRIS_H_

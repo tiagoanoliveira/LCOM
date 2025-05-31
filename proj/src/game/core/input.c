@@ -11,7 +11,7 @@ void input_init(void) {
 }
 
 InputEvent input_process_scancode(uint8_t scancode[2], bool twoByte) {
-    InputEvent event = {INPUT_NONE, false, '\0'};
+    InputEvent event = {INPUT_TYPE_KEYBOARD, INPUT_NONE, 0, false, '\0'};
     bool is_break_code = false;
 
     if (twoByte && scancode[0] == 0xE0) {
@@ -30,7 +30,7 @@ InputEvent input_process_scancode(uint8_t scancode[2], bool twoByte) {
         uint8_t key = scancode[0] & 0x7F;
 
         switch (key) {
-            case 0x39: event.action = INPUT_ROTATE; break;
+            case 0x39: event.action = INPUT_DROP; break;
             case 0x1C: event.action = INPUT_ENTER; break;
             case 0x01: event.action = INPUT_ESCAPE; break;
             case 0x0E: // Backspace
@@ -69,6 +69,26 @@ InputEvent input_process_scancode(uint8_t scancode[2], bool twoByte) {
 
     if (event.action != INPUT_NONE && event.action != INPUT_CHAR) {
         action_states[event.action] = event.pressed;
+    }
+
+    return event;
+}
+
+InputEvent input_process_mouse_packet(uint8_t packet[3]) {
+    InputEvent event = {INPUT_TYPE_MOUSE, INPUT_NONE, 0, false, '\0'};
+
+    if (packet[0] & BIT(0)) {           // Left click
+        event.action = INPUT_ROTATE_LEFT;
+        event.pressed = true;
+        event.button = MOUSE_LEFT;
+    } else if (packet[0] & BIT(1)) {    // Right click
+        event.action = INPUT_ROTATE_RIGHT;
+        event.pressed = true;
+        event.button = MOUSE_RIGHT;
+    } else if (packet[0] & BIT(2)) {    // Middle click
+        event.action = INPUT_DROP;      // Hard drop
+        event.pressed = true;
+        event.button = MOUSE_MIDDLE;
     }
 
     return event;

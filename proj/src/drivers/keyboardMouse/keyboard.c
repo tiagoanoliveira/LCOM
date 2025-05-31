@@ -39,7 +39,7 @@ void (kbc_ih)(void) {
 int (kbc_read_output)(uint8_t *data, uint8_t *status) {
   int attempts = 0;
 
-  while(attempts < MAX_ATTEMPS) {
+  while(attempts < MAX_ATTEMPTS) {
     if ((util_sys_inb(KBC_STATUS_REG, status)) != 0) return 1;
 
     if (*status & KBC_OUTPUT_BUFFER_FULL) {
@@ -58,7 +58,7 @@ int (kbc_write_command)(uint8_t cmd) {
   int attempts = 0;
   uint8_t status;
 
-  while(attempts < MAX_ATTEMPS) {
+  while(attempts < MAX_ATTEMPTS) {
     if ((util_sys_inb(KBC_STATUS_REG, &status)) != 0) return 1;
     if ((status & KBC_INPUT_BUFFER_FULL) == 0) {
       if ((sys_outb(KBC_CMD_REG, cmd)) != 0) return 1;

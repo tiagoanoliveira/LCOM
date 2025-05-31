@@ -7,6 +7,8 @@
 #include "../core/include/tetris.h"
 #include "../ui/include/font.h"
 
+int mouse_action_cooldown = 0;
+
 // ===== INICIALIZAÇÃO =====
 void game_logic_init(GameLogic* game) {
     if (!game) return;
@@ -28,10 +30,12 @@ void game_logic_init(GameLogic* game) {
     game_logic_spawn_piece(game);
 }
 
-
 // ===== UPDATE LOOP =====
 void game_logic_update(GameLogic* game) {
     if (!game || game->game_over || game->paused) return;
+
+    if (mouse_action_cooldown > 0)
+        mouse_action_cooldown--;
 
     game->drop_timer++;
     if (game->drop_timer >= game->current_drop_speed) {
@@ -55,15 +59,16 @@ bool game_logic_move_piece(GameLogic* game, int deltaX, int deltaY) {
     return false;
 }
 
-void game_logic_rotate_piece(GameLogic* game) {
-    if (!game || game->game_over || game->paused) return;
+void game_logic_rotate_piece(GameLogic* game, bool clockwise) {
+    if (!game || game->game_over) return;
 
     Piece* piece = &game->current_piece;
     int old_rotation = piece->rotation;
 
-    piece_rotate(piece, true);
+    piece_rotate(piece, clockwise);
 
     if (!piece_fits(piece, piece->x, piece->y)) {
+        // Revert position if doesnt fit
         piece->rotation = old_rotation;
         piece_update_shape(piece);
     }
@@ -174,6 +179,10 @@ void game_logic_handle_input(GameLogic* game, InputEvent event) {
         return;
     }
 
+    // Ignore mouse events if in cooldown
+    if (event.type == INPUT_TYPE_MOUSE && mouse_action_cooldown > 0) return;
+
+
     bool moved = false;
     switch (event.action) {
         case INPUT_LEFT:
@@ -185,16 +194,23 @@ void game_logic_handle_input(GameLogic* game, InputEvent event) {
         case INPUT_DOWN:
             moved = game_logic_move_piece(game, 0, 1);
             break;
-        case INPUT_ROTATE:
-            game_logic_rotate_piece(game);
-            moved = true;
+        case INPUT_ROTATE_LEFT:
+            game_logic_rotate_piece(game, false);
+            if (event.type == INPUT_TYPE_MOUSE)
+                return;
+            break;
+        case INPUT_ROTATE_RIGHT:
+            game_logic_rotate_piece(game, true);
+            if (event.type == INPUT_TYPE_MOUSE)
+                return;
             break;
         case INPUT_DROP:
-            while (game_logic_move_piece(game, 0, 1)) {
-                // Continue dropping
-            }
+            // Fast drop
+            while (game_logic_move_piece(game, 0, 1));
             game_logic_drop_piece(game);
-            moved = true;
+            needs_redraw = true;
+            if (event.type == INPUT_TYPE_MOUSE)
+                return;
             break;
         default:
             break;

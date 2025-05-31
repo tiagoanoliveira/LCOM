@@ -1,5 +1,5 @@
-#ifndef _LCOM_I8042_H_
-#define _LCOM_I8042_H_
+#ifndef _I8042_H_
+#define _I8042_H_
 
 #include <lcom/lcf.h>
 
@@ -9,11 +9,11 @@
  * Constants for programming the i8042 Keyboard Controller (KBC)
  */
 
- // IRQ
+// IRQ
 #define IRQ_KEYBOARD 1
 #define IRQ_MOUSE 12
 
- // I/O Ports
+// I/O Ports
 #define KBC_OUTPUT_BUF 0x60
 #define KBC_INPUT_BUF 0x60
 #define KBC_CMD_REG 0x64
@@ -32,10 +32,10 @@
 #define KBC_WRITE_CMD_BYTE 0x60
 
 // Command Byte Bits
-#define KBC_CMD_BYTE_ENABLE_INT_KBD BIT(0) // Enable keyboard interrupts
-#define KBC_CMD_BYTE_ENABLE_INT_MOUSE BIT(1) // Enable mouse interrupts
-#define KBC_CMD_BYTE_DISABLE_KBD BIT(4) // Disable keyboard interface
-#define KBC_CMD_BYTE_DISABLE_MOUSE BIT(5) // Disable mouse interface
+#define KBC_CMD_BYTE_ENABLE_INT_KBD BIT(0)    // Enable keyboard interrupts
+#define KBC_CMD_BYTE_ENABLE_INT_MOUSE BIT(1)  // Enable mouse interrupts
+#define KBC_CMD_BYTE_DISABLE_KBD BIT(4)       // Disable keyboard interface
+#define KBC_CMD_BYTE_DISABLE_MOUSE BIT(5)     // Disable mouse interface
 
 // Scancode Constants
 #define ESC_BREAK_CODE 0x81
@@ -43,7 +43,7 @@
 
 // Delay between polling attempts (in microseconds)
 #define KBC_DELAY_US 20000
-#define MAX_ATTEMPS 10
+#define MAX_ATTEMPTS 10
 
 // Mouse Commands
 #define MOUSE_LB            BIT(0)
@@ -73,4 +73,4 @@
 #define MOUSE_NACK 0xFE
 #define MOUSE_ERROR 0xFC
 
-#endif /* _LCOM_I8042_H_ */
+#endif /* _I8042_H_ */

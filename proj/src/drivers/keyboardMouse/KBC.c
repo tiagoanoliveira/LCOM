@@ -6,9 +6,9 @@ int (read_KBC_status)(uint8_t* status) {
 
 int read_KBC_output(uint8_t port, uint8_t *output, uint8_t mouse) {
     uint8_t status;
-    uint8_t attemps = 10;
+    uint8_t attempts = 10;
 
-    while (attemps) {
+    while (attempts) {
         if (read_KBC_status(&status) != 0) {                // lê o status
             printf("Error: Status not available!\n");
             return 1;
@@ -38,16 +38,16 @@ int read_KBC_output(uint8_t port, uint8_t *output, uint8_t mouse) {
             return 0; // sucesso: output correto lido sem erros de timeout ou de paridade
         }
         //tickdelay(micros_to_ticks(20000));
-        attemps--;
+        attempts--;
     }
     return 1; // se ultrapassar o número de tentativas lança um erro
 }
 
 int (write_KBC_command)(uint8_t port, uint8_t commandByte) {
     uint8_t status;
-    uint8_t attemps = MAX_ATTEMPS;
+    uint8_t attempts = MAX_ATTEMPTS;
 
-    while (attemps) {
+    while (attempts) {
         if (read_KBC_status(&status) != 0){
             printf("Error: Status not available!\n");
             return 1;
@@ -62,7 +62,7 @@ int (write_KBC_command)(uint8_t port, uint8_t commandByte) {
             return 0;
         }
         tickdelay(micros_to_ticks(KBC_DELAY_US));
-        attemps--;
+        attempts--;
     }
 
     return 1;

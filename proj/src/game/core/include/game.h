@@ -5,6 +5,8 @@
 #include "../../objects/include/piece.h"
 #include "input.h"
 
+extern int mouse_action_cooldown;
+
 typedef struct {
     Piece current_piece;
     Piece next_pieces[3]; // Array to hold next pieces
@@ -19,7 +21,7 @@ typedef struct {
 void game_logic_init(GameLogic* game);
 void game_logic_update(GameLogic* game);
 bool game_logic_move_piece(GameLogic* game, int deltaX, int deltaY);
-void game_logic_rotate_piece(GameLogic* game);
+void game_logic_rotate_piece(GameLogic* game, bool clockwise);
 void game_logic_drop_piece(GameLogic* game);
 void game_logic_fix_piece(GameLogic* game);
 int game_logic_clear_lines(GameLogic* game);

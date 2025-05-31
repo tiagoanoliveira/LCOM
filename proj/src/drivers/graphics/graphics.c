@@ -171,4 +171,3 @@ void draw_xpm_indexed(xpm_map_t xpm, int x, int y) {
         }
     }
 }
-
