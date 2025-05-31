@@ -5,8 +5,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "../utils/utils.h"
-#include "i8042.h"
 
 // Global variables shared with handler
 extern uint8_t scancode[2];     // Para guardar os bytes do scancode atual

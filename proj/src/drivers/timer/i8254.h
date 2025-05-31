@@ -54,4 +54,4 @@
 
 /**@}*/
 
-#endif /* _LCOM_I8254_H */
+#endif /* _LCOM_I8254_H_ */

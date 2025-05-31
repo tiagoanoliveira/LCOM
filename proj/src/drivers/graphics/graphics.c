@@ -12,9 +12,9 @@ uint8_t *frame_buffer = NULL;
 int grid_origin_x = 0;
 int grid_origin_y = 0;
 
-void vg_set_grid_position(int grid_cols, int grid_rows, int cell_w, int cell_h) {
-    grid_origin_x = (SCREEN_WIDTH - grid_cols * cell_w) / 2;
-    grid_origin_y = (SCREEN_HEIGHT - grid_rows * cell_h) / 2;
+void vg_set_grid_position(const int grid_cols, const int grid_rows, int cell_width, int cell_height) {
+    grid_origin_x = (SCREEN_WIDTH - grid_cols * cell_width) / 2;
+    grid_origin_y = (SCREEN_HEIGHT - grid_rows * cell_height) / 2;
 }
 
 void swap_buffers() {
@@ -26,7 +26,7 @@ void swap_buffers() {
     memcpy(video_mem, frame_buffer, vram_size);
 }
 
-int draw_rectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
+int draw_rectangle(const uint16_t x, const uint16_t y, const uint16_t width, const uint16_t height, const uint32_t color) {
     for (uint16_t i = 0; i < height; i++) {
         for (uint16_t j = 0; j < width; j++) {
         if (vg_draw_pixel(x + j, y + i, color) != 0) return 1;
@@ -35,20 +35,32 @@ int draw_rectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint
     return 0;
 }
 
-int vg_clear_screen(uint32_t color) {
+int vg_clear_screen(const uint32_t color) {
     if (frame_buffer == NULL) return 1;
 
     unsigned bytes_per_pixel = (mode_info.BitsPerPixel + 7) / 8;
-    unsigned total_pixels = SCREEN_WIDTH * SCREEN_HEIGHT;
+    const unsigned total_bytes = SCREEN_WIDTH * SCREEN_HEIGHT * bytes_per_pixel;
 
-    for (unsigned i = 0; i < total_pixels; ++i) {
-        memcpy(&frame_buffer[i * bytes_per_pixel], &color, bytes_per_pixel);
-    }
-
+    // Para cores de 32 bits, usar memset se a cor for uniforme
+    if (bytes_per_pixel == 4 && ((color & 0xFF) == ((color >> 8) & 0xFF)) &&
+        ((color & 0xFF) == ((color >> 16) & 0xFF)) && ((color & 0xFF) == ((color >> 24) & 0xFF))) {
+        memset(frame_buffer, color & 0xFF, total_bytes);
+        } else {
+            // Preencher uma linha e depois copiar essa linha
+            for (unsigned i = 0; i < (unsigned int)SCREEN_WIDTH; i++) {
+                memcpy(&frame_buffer[i * bytes_per_pixel], &color, bytes_per_pixel);
+            }
+            // Copiar a primeira linha para todas as outras
+            unsigned line_size = SCREEN_WIDTH * bytes_per_pixel;
+            for (unsigned row = 1; row < (unsigned int)SCREEN_HEIGHT; row++) {
+                memcpy(&frame_buffer[row * line_size], frame_buffer, line_size);
+            }
+        }
     return 0;
 }
 
-void* my_vg_init(uint16_t mode) {
+
+void* my_vg_init(const uint16_t mode) {
     if (set_frame_buffer(mode) != 0) {
         printf("Error while configuring frame buffer.\n");
         return NULL;
@@ -75,7 +87,7 @@ void* my_vg_init(uint16_t mode) {
     return video_mem;
 }
 
-int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color) {
+int vg_draw_pixel(uint16_t x, uint16_t y, const uint32_t color) {
     // Check if coordinates are valid
     if (x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT) return 1;
 

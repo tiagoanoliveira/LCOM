@@ -1,10 +1,14 @@
 #include "KBC.h"
+#include "i8042.h"
+#include "../utils/utils.h"
+#include <stdint.h>
+#include <stdio.h>
 
 int (read_KBC_status)(uint8_t* status) {
     return util_sys_inb(KBC_STATUS_REG, status);
 }
 
-int read_KBC_output(uint8_t port, uint8_t *output, uint8_t mouse) {
+int read_KBC_output(const uint8_t port, uint8_t *output, uint8_t mouse) {
     uint8_t status;
     uint8_t attempts = 10;
 

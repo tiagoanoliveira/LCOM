@@ -1,7 +1,7 @@
 #include "include/highscore_state.h"
 #include <string.h>
 
-void highscore_state_init(HighscoreState* state, unsigned int score) {
+void highscore_state_init(HighscoreState* state, const unsigned int score) {
     if (!state) return;
     state->active = true;
     state->score = score;
@@ -9,7 +9,7 @@ void highscore_state_init(HighscoreState* state, unsigned int score) {
     memset(state->name_input, 0, MAX_NAME_LENGTH);
 }
 
-void highscore_state_handle_input(HighscoreState* state, InputEvent event) {
+void highscore_state_handle_input(HighscoreState* state, const InputEvent event) {
     if (!state || !state->active) return;
     if (event.action == INPUT_CHAR && event.pressed) {
         char c = event.character;

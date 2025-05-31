@@ -37,23 +37,23 @@ void pause_ui_draw_menu(const GameLogic* game) {
     draw_rectangle(window_x + 5, window_y + 5, PAUSE_WIDTH - 10, PAUSE_HEIGHT - 10, COLOR_BACKGROUND);
 
     // Título
-    int title_width = strlen(PAUSE_TITLE) * CHAR_WIDTH;
-    int title_x = window_x + (PAUSE_WIDTH - title_width) / 2;
-    int title_y = window_y + 30;
+    const int title_width = strlen(PAUSE_TITLE) * CHAR_WIDTH;
+    const int title_x = window_x + (PAUSE_WIDTH - title_width) / 2;
+    const int title_y = window_y + 30;
     draw_text(false, title_x, title_y, PAUSE_TITLE, COLOR_TITLE, COLOR_BACKGROUND);
 
     // Opções
     int options_start_y = window_y + 80;
 
     for (int i = 0; i < PAUSE_OPTIONS_COUNT; i++) {
-        int option_spacing = 50;
-        bool is_selected = (i == game->pause_option);
+        const int option_spacing = 50;
+        const bool is_selected = (i == game->pause_option);
         int option_y = options_start_y + i * option_spacing;
 
-        uint32_t bg_color = is_selected ? COLOR_SELECTED : COLOR_BACKGROUND;
-        uint32_t text_color = is_selected ? COLOR_BACKGROUND : COLOR_NORMAL;
+        const uint32_t bg_color = is_selected ? COLOR_SELECTED : COLOR_BACKGROUND;
+        const uint32_t text_color = is_selected ? COLOR_BACKGROUND : COLOR_NORMAL;
 
-        int text_width = strlen(PAUSE_OPTIONS[i]) * CHAR_WIDTH;
+        const int text_width = strlen(PAUSE_OPTIONS[i]) * CHAR_WIDTH;
         int text_x = window_x + (PAUSE_WIDTH - text_width) / 2;
 
         // Fundo da opção

@@ -4,13 +4,6 @@
 #include <lcom/lcf.h>
 
 #include <stdint.h>
-#include <stdbool.h>
-
-#include "KBC.h"
-#include "i8042.h"
-#include "../timer/i8254.h"
-#include "../utils/utils.h"
-#include "../graphics/graphics.h"
 
 extern int mouse_x;
 extern int mouse_y;

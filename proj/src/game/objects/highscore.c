@@ -13,7 +13,7 @@ void load_high_scores(HighScore scores[], int* count) {
     fclose(file);
 }
 
-void save_high_scores(HighScore scores[], int count) {
+void save_high_scores(HighScore scores[], const int count) {
     FILE* file = fopen(HIGHSCORE_FILE, "wb");
     if (!file) return;
 
@@ -21,7 +21,7 @@ void save_high_scores(HighScore scores[], int count) {
     fclose(file);
 }
 
-void try_add_high_score(const char* name, unsigned int new_score) {
+void try_add_high_score(const char* name, const unsigned int new_score) {
     HighScore scores[MAX_HIGH_SCORES + 1];
     int count;
     load_high_scores(scores, &count);

@@ -46,7 +46,7 @@ void game_logic_update(GameLogic* game) {
 }
 
 // ===== MOVIMENTO DAS PEÇAS =====
-bool game_logic_move_piece(GameLogic* game, int deltaX, int deltaY) {
+bool game_logic_move_piece(GameLogic* game, const int deltaX, const int deltaY) {
     if (!game || game->game_over || game->paused) return false;
 
     Piece* piece = &game->current_piece;
@@ -59,11 +59,11 @@ bool game_logic_move_piece(GameLogic* game, int deltaX, int deltaY) {
     return false;
 }
 
-void game_logic_rotate_piece(GameLogic* game, bool clockwise) {
+void game_logic_rotate_piece(GameLogic* game, const bool clockwise) {
     if (!game || game->game_over) return;
 
     Piece* piece = &game->current_piece;
-    int old_rotation = piece->rotation;
+    const int old_rotation = piece->rotation;
 
     piece_rotate(piece, clockwise);
 
@@ -80,7 +80,7 @@ void game_logic_drop_piece(GameLogic* game) {
     if (!game_logic_move_piece(game, 0, 1)) {
         game_logic_fix_piece(game);
 
-        int lines = game_logic_clear_lines(game);
+        const int lines = game_logic_clear_lines(game);
         if (lines > 0) {
             GameScore* score = tetris_get_score();
             scoreAddLines(score, lines);
@@ -132,7 +132,7 @@ void game_logic_toggle_pause(GameLogic* game) {
     needs_redraw = true;
 }
 
-void game_logic_handle_pause_input(GameLogic* game, InputEvent event) {
+void game_logic_handle_pause_input(GameLogic* game, const InputEvent event) {
     if (!game || !game->paused) return;
 
     switch (event.action) {
@@ -164,7 +164,7 @@ bool game_logic_is_paused(const GameLogic* game) {
 }
 
 // ===== INPUT HANDLING =====
-void game_logic_handle_input(GameLogic* game, InputEvent event) {
+void game_logic_handle_input(GameLogic* game, const InputEvent event) {
     if (!game || game->game_over || !event.pressed) return;
 
     // Se pausado, usar handler específico
@@ -206,7 +206,7 @@ void game_logic_handle_input(GameLogic* game, InputEvent event) {
             break;
         case INPUT_DROP:
             // Fast drop
-            while (game_logic_move_piece(game, 0, 1));
+            while (game_logic_move_piece(game, 0, 1)) {}
             game_logic_drop_piece(game);
             needs_redraw = true;
             if (event.type == INPUT_TYPE_MOUSE)
@@ -252,8 +252,8 @@ bool game_logic_is_game_over(const GameLogic* game) {
 void game_logic_update_speed(GameLogic* game) {
     if (!game) return;
 
-    GameScore* score = tetris_get_score();
-    int speed_reduction = (score->level - 1) * 5;
+    const GameScore* score = tetris_get_score();
+    const int speed_reduction = (score->level - 1) * 5;
     game->current_drop_speed = DROP_SPEED_INITIAL - speed_reduction;
 
     if (game->current_drop_speed < DROP_SPEED_FAST) {

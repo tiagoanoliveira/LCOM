@@ -68,7 +68,7 @@ GameState* state_manager_get_current(void) {
 
 // Helper to decide next state after game over
 static void handle_game_over_transition(void) {
-    GameScore* score = tetris_get_score();
+    const GameScore* score = tetris_get_score();
     HighScore scores[MAX_HIGH_SCORES];
     int count;
     load_high_scores(scores, &count);
@@ -79,7 +79,7 @@ static void handle_game_over_transition(void) {
     }
 }
 
-void state_manager_handle_input(InputEvent event) {
+void state_manager_handle_input(const InputEvent event) {
     switch (current_state) {
         case STATE_MENU:
             menu_state_handle_input(&menu_state, event);
@@ -87,7 +87,7 @@ void state_manager_handle_input(InputEvent event) {
                 needs_redraw = true;
             }
             if (event.action == INPUT_ENTER && event.pressed) {
-                GameStateType action = menu_state_get_selected_action(&menu_state);
+                const GameStateType action = menu_state_get_selected_action(&menu_state);
                 state_manager_set_state(action);
             }
             break;
@@ -104,7 +104,7 @@ void state_manager_handle_input(InputEvent event) {
             instructions_state_handle_input(&instructions_state, event);
             if (event.action == INPUT_ENTER || event.action == INPUT_ESCAPE) {
                 needs_redraw = true;
-                GameStateType action = instructions_state_get_selected_action(&instructions_state);
+                const GameStateType action = instructions_state_get_selected_action(&instructions_state);
                 state_manager_set_state(action);
             }
             break;
@@ -116,7 +116,7 @@ void state_manager_handle_input(InputEvent event) {
 
             // Handle Enter for menu transitions
             if (event.action == INPUT_ENTER && event.pressed) {
-                GameStateType action = gameover_state_get_selected_action(&gameover_state);
+                const GameStateType action = gameover_state_get_selected_action(&gameover_state);
                 state_manager_set_state(action);
                 needs_redraw = true;
             }

@@ -1,7 +1,13 @@
 #include <lcom/lcf.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include "mouse.h"
+#include <stdbool.h>
+#include <stdio.h>
+
+#include "KBC.h"
+#include "i8042.h"
+#include "../utils/utils.h"
+#include "../graphics/graphics.h"
 
 int mouse_x = 512;
 int mouse_y = 384;
@@ -85,7 +91,7 @@ void (parse_packet)(){
   mouse_packet.delta_y = (packet_bytes[0] & MOUSE_Y_SIGNAL) ? (0xFF00 | packet_bytes[2]) : packet_bytes[2];
 }
 
-int (mouse_write)(uint8_t command) {
+int (mouse_write)(const uint8_t command) {
   uint8_t attempts = MAX_ATTEMPTS;
   uint8_t mouse_response;
 

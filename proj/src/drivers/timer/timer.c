@@ -1,9 +1,9 @@
 #include <lcom/lcf.h>
 #include <lcom/timer.h>
-
 #include <stdint.h>
-
 #include "i8254.h"
+#include "timer.h"
+#include "../utils/utils.h"
 
 int hook_id_timer = 0;
 uint32_t idle_counter = 0;
@@ -17,7 +17,7 @@ int timer_exit() {
   return timer_unsubscribe_int(); // remove subscrição
 }
 
-int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
+int (timer_set_frequency)(const uint8_t timer, const uint32_t freq) {
   if (timer > 2) return 1;
   if (freq < 19 || freq > TIMER_FREQ) return 1;
 
@@ -76,7 +76,7 @@ void (timer_int_handler)() {
   idle_counter++;
 }
 
-int (timer_get_conf)(uint8_t timer, uint8_t *st) {
+int (timer_get_conf)(const uint8_t timer, uint8_t *st) {
   if (timer < 0 || timer > 2) return 1;
 
   uint8_t cmd = TIMER_RB_CMD | TIMER_RB_COUNT_ | TIMER_RB_SEL(timer);

@@ -1,9 +1,9 @@
 #ifndef _LCOM_KBC_H_
 #define _LCOM_KBC_H_
 
+#include <stdint.h>
 #include <minix/sysutil.h>
 #include <lcom/lcf.h>
-#include "i8042.h"
 
 int (read_KBC_status)(uint8_t* status);
 

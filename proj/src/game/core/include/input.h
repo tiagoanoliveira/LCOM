@@ -5,8 +5,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "../../../drivers/keyboardMouse/mouse.h"
-
 #define MAX_MOUSE_TICKS 20
 
 typedef enum {

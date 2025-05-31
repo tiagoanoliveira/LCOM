@@ -3,12 +3,6 @@
 
 #include <stdint.h>
 #include "../../objects/include/piece.h"
-#include "../../core/include/config.h"
-#include "../../objects/include/score.h"
-#include "../../objects/include/highscore.h"
-#include "../../states/include/highscore_state.h"
-#include "../../core/include/tetris.h"
-#include "font.h"
 
 // Draws the Tetris grid
 void draw_grid();

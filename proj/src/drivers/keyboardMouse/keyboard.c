@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "keyboard.h"
+#include "../utils/utils.h"
+#include "i8042.h"
 
 uint8_t scancode[2];
 int hook_id_kbd = 1;

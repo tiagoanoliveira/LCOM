@@ -7,7 +7,7 @@ void menu_state_init(MenuState* state) {
     state->active = true;
 }
 
-void menu_state_handle_input(MenuState* state, InputEvent event) {
+void menu_state_handle_input(MenuState* state, const InputEvent event) {
     if (!state || !state->active || event.action == INPUT_NONE) return;
 
     switch (event.action) {

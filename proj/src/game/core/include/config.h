@@ -2,11 +2,12 @@
 #define _CONFIG_H_
 
 #include "../../../drivers/graphics/graphics.h"
+#include "../../objects/include/piece.h"
 
 // Game configs
 #define GAME_FPS 60
 #define DROP_SPEED_FAST 5      // frames
-#define DROP_SPEED_INITIAL 50  // frames
+#define DROP_SPEED_INITIAL 30  // frames
 
 // Graphic configs
 #define SCREEN_MODE 0x105
@@ -92,11 +93,7 @@
 #define INSTRUCTIONS_ORIGIN_Y (TITLE_INSTRUCTIONS_ORIGIN_Y+TITLE_CHAR_HEIGHT+30)
 #define BUTTON_EXIT_INSTRUCTIONS_ORIGIN_Y (SCREEN_HEIGHT - 80)
 
-<<<<<<< Updated upstream
-// Cores das peças
-=======
 // Piece colors
->>>>>>> Stashed changes
 #define COLOR_I 0x03  // Cyan
 #define COLOR_O 0x04  // Red
 #define COLOR_T 0x05  // Rose

@@ -10,29 +10,59 @@ void input_init(void) {
     }
 }
 
-InputEvent input_process_scancode(uint8_t scancode[2], bool twoByte) {
+InputEvent input_process_scancode(uint8_t scancode[2], const bool twoByte) {
     InputEvent event = {INPUT_TYPE_KEYBOARD, INPUT_NONE, 0, false, '\0'};
     bool is_break_code = false;
 
     if (twoByte && scancode[0] == 0xE0) {
         is_break_code = (scancode[1] & 0x80) != 0;
-        uint8_t key = scancode[1] & 0x7F;
+        const uint8_t key = scancode[1] & 0x7F;
 
         switch (key) {
             case 0x4B: event.action = INPUT_LEFT; break;
             case 0x4D: event.action = INPUT_RIGHT; break;
             case 0x50: event.action = INPUT_DOWN; break;
-            case 0x48: event.action = INPUT_UP; break;
+            case 0x48: event.action = INPUT_ROTATE_LEFT; break;
         }
         event.pressed = !is_break_code;
     } else {
         is_break_code = (scancode[0] & 0x80) != 0;
-        uint8_t key = scancode[0] & 0x7F;
+        const uint8_t key = scancode[0] & 0x7F;
 
         switch (key) {
-            case 0x39: event.action = INPUT_DROP; break;
-            case 0x1C: event.action = INPUT_ENTER; break;
-            case 0x01: event.action = INPUT_ESCAPE; break;
+            case 0x39: // Space
+                event.action = INPUT_DROP;
+                event.pressed = !is_break_code;
+                break;
+            case 0x1C: // Enter
+                event.action = INPUT_ENTER;
+                event.pressed = !is_break_code;
+                break;
+            case 0x01: // Escape
+                event.action = INPUT_ESCAPE;
+                event.pressed = !is_break_code;
+                break;
+            case 0x10: // Q
+                event.action = INPUT_Q;
+                event.pressed = !is_break_code;
+                break;
+                // NOVAS TECLAS WASD:
+            case 0x1E: // A - move left
+                event.action = INPUT_LEFT;
+                event.pressed = !is_break_code;
+                break;
+            case 0x20: // D - move right
+                event.action = INPUT_RIGHT;
+                event.pressed = !is_break_code;
+                break;
+            case 0x1F: // S - move down
+                event.action = INPUT_DOWN;
+                event.pressed = !is_break_code;
+                break;
+            case 0x11: // W - rotate
+                event.action = INPUT_ROTATE_LEFT;
+                event.pressed = !is_break_code;
+                break;
             case 0x0E: // Backspace
                 event.action = INPUT_CHAR;
                 event.character = '\b';
@@ -94,6 +124,6 @@ InputEvent input_process_mouse_packet(uint8_t packet[3]) {
     return event;
 }
 
-bool input_is_action_pressed(InputAction action) {
+bool input_is_action_pressed(const InputAction action) {
     return action_states[action];
 }

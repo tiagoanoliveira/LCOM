@@ -59,7 +59,7 @@ static const uint8_t PIECE_SHAPES[7][4][4][4] = {
 
 static const uint32_t PIECE_COLORS[7] = {COLOR_I,COLOR_O,COLOR_T,COLOR_S,COLOR_Z,COLOR_J,COLOR_L};
 
-void piece_init(Piece *piece, PieceType type, int x, int y) {
+void piece_init(Piece *piece, const PieceType type, const int x, const int y) {
     piece->type = type;
     piece->rotation = 0;
     piece->x = x;
@@ -68,7 +68,7 @@ void piece_init(Piece *piece, PieceType type, int x, int y) {
     piece_update_shape(piece);
 }
 
-void piece_rotate(Piece *piece, bool clockwise) {
+void piece_rotate(Piece *piece, const bool clockwise) {
     if (clockwise)
         piece->rotation = (piece->rotation + 1) % 4;
     else
@@ -90,12 +90,12 @@ uint32_t piece_get_color(PieceType type) {
     return 0xFFFFFF; // Default: white
 }
 
-bool piece_fits(const Piece* piece, int new_x, int new_y) {
+bool piece_fits(const Piece* piece, const int new_x, const int new_y) {
     for (int i = 0; i < PIECE_SIZE; i++) {
         for (int j = 0; j < PIECE_SIZE; j++) {
             if (piece->shape[i][j]) {
-                int gx = new_x + j;
-                int gy = new_y + i;
+                const int gx = new_x + j;
+                const int gy = new_y + i;
 
                 // Checks boundaries
                 if (gx < 0 || gx >= GRID_COLS || gy < 0 || gy >= GRID_ROWS)

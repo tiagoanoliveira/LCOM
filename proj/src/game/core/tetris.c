@@ -33,14 +33,14 @@ void fix_piece_to_grid(const Piece* piece) {
     for (int i = 0; i < PIECE_SIZE; i++) {
         for (int j = 0; j < PIECE_SIZE; j++) {
             if (piece->shape[i][j]) {
-                int gx = piece->x + j;
-                int gy = piece->y + i;
+                const int gx = piece->x + j;
+                const int gy = piece->y + i;
                 if (gx >= 0 && gx < GRID_COLS && gy >= 0 && gy < GRID_ROWS)
                     grid[gy][gx] = piece->color;
             }
         }
     }
-    int cleared = clear_full_lines(); // clears full lines and returns the number of lines cleared
+    const int cleared = clear_full_lines(); // clears full lines and returns the number of lines cleared
     if (cleared > 0) {
         scoreAddLines(&scoreData, cleared); // Updates score
     }

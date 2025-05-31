@@ -8,7 +8,7 @@ void instructions_state_init(InstructionsState* state) {
     state->active = true;
 }
 
-void instructions_state_handle_input(InstructionsState* state, InputEvent event) {
+void instructions_state_handle_input(InstructionsState* state, const InputEvent event) {
     if (!state || !state->active) return;
     if (!event.pressed) return;
     if (event.action == INPUT_ENTER || event.action == INPUT_ESCAPE) {

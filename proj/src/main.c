@@ -7,6 +7,7 @@
  * Developed for the LCOM course at FEUP.
  */
 
+#include <stdio.h>
 #include <lcom/lcf.h>
 #include "drivers/timer/timer.h"
 #include "drivers/graphics/graphics.h"
@@ -16,7 +17,7 @@
 #include "game/core/include/input.h"
 #include "game/core/include/config.h"
 #include "game/states/include/state.h"
-#include "game/states/include/menu_state.h"
+#include "drivers/keyboardMouse/i8042.h"
 
 int (proj_main_loop)(int argc, char *argv[]) {
     // Inicialização dos drivers

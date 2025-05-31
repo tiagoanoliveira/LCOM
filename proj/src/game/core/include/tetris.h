@@ -1,7 +1,6 @@
 #ifndef _TETRIS_H_
 #define _TETRIS_H_
 
-
 #include "../../objects/include/piece.h"
 #include "config.h"
 #include "../../objects/include/score.h"

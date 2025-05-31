@@ -2,7 +2,7 @@
 #include <string.h>  // For memset
 
 // Initialize the game over state
-void gameover_state_init(GameOverState* state, unsigned int score, int lines) {
+void gameover_state_init(GameOverState* state, const unsigned int score, const int lines) {
     if (!state) return;
 
     state->selected = GAMEOVER_PLAY_AGAIN;
@@ -15,7 +15,7 @@ void gameover_state_init(GameOverState* state, unsigned int score, int lines) {
 }
 
 // Handle game over menu navigation input
-void gameover_state_handle_input(GameOverState* state, InputEvent event) {
+void gameover_state_handle_input(GameOverState* state, const InputEvent event) {
     if (!state || !state->active || event.action == INPUT_NONE) return;
 
     switch (event.action) {

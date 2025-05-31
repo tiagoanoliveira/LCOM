@@ -6,7 +6,7 @@
 #include <string.h>
 #include <ctype.h>
 
-void draw_character(bool is_title, int x, int y, char c, uint32_t fg_color, uint32_t bg_color) {
+void draw_character(const bool is_title, const int x, const int y, const char c, const uint32_t fg_color, const uint32_t bg_color) {
     draw_rectangle(x, y, CHAR_WIDTH, CHAR_HEIGHT, bg_color); // Draw character background
     int letter_size=1;
     if (is_title) letter_size=TITLE_SCALE;
@@ -274,12 +274,12 @@ void draw_character(bool is_title, int x, int y, char c, uint32_t fg_color, uint
     }
 }
 
-void draw_text(bool is_title, int x, int y, const char* text, uint32_t fg_color, uint32_t bg_color) {
+void draw_text(const bool is_title, const int x, const int y, const char* text, const uint32_t fg_color, const uint32_t bg_color) {
     if (!text) return;
     int current_x = x;
     for (int i = 0; i < (int)strlen(text); i++) {
         if (!is_title) {
-            char upper = toupper((unsigned char)text[i]);
+            const char upper = toupper((unsigned char)text[i]);
             draw_character(is_title, current_x, y, upper, fg_color, bg_color);
             current_x += CHAR_WIDTH;
         }

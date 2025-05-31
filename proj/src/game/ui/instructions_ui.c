@@ -47,7 +47,7 @@ void instructions_ui_draw(const InstructionsState* state) {
 void instructions_ui_draw_title(void) {
     const char* title = INSTRUCTIONS_TITLE;
     int title_width = strlen(title) * TITLE_CHAR_WIDTH;
-    int title_x = (SCREEN_WIDTH - title_width) / 2;
+    const int title_x = (SCREEN_WIDTH - title_width) / 2;
 
     draw_text(true, title_x, TITLE_INSTRUCTIONS_ORIGIN_Y, title, COLOR_TITLE, COLOR_BACKGROUND);
 }
@@ -57,7 +57,7 @@ void instructions_ui_draw_content(void) {
 
     for (int i = 0; i < (int)INSTRUCTIONS_LINES; i++) {
         int text_width = strlen(INSTRUCTIONS_TEXT[i]) * CHAR_WIDTH;
-        int text_x = (SCREEN_WIDTH - text_width) / 2;
+        const int text_x = (SCREEN_WIDTH - text_width) / 2;
 
         uint32_t color = COLOR_NORMAL;
         if (strstr(INSTRUCTIONS_TEXT[i], "CONTROLS:") ||
