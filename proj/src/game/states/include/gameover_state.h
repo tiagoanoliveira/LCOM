@@ -24,6 +24,8 @@ typedef struct {
 } GameOverState;
 
 // Game over state management
+//static void handle_name_input(GameOverState* state, InputEvent event);
+//static void handle_menu_input(GameOverState* state, InputEvent event);
 void gameover_state_init(GameOverState* state,unsigned int score, int lines);
 void gameover_state_handle_input(GameOverState* state, InputEvent event);
 void gameover_state_update(GameOverState* state);

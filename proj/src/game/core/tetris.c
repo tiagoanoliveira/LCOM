@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "../ui/include/game_ui.h"
 #include "../core/include/game.h"
-#include "../ui/include/render.h"
 
 int grid[GRID_ROWS][GRID_COLS] = {{0}}; // 0 means empty cell
 static GameScore scoreData;
@@ -60,7 +59,6 @@ int clear_full_lines() {
         }
 
         if (full) {
-            animate_line_clear(row);
             for (int r = row; r > 0; r--) {
                 for (int c = 0; c < GRID_COLS; c++) {
                     grid[r][c] = grid[r - 1][c];
@@ -70,19 +68,8 @@ int clear_full_lines() {
                 grid[0][c] = 0;
             }
             lines_cleared++;
-            row++;
+            row++; // Re-check this row
         }
     }
     return lines_cleared;
 }
-
-void animate_line_clear(const int row) {
-    for (int col = 0; col < GRID_COLS; col++) {
-        draw_block(col, row, 0xFFFFFF); // Branco
-    }
-    swap_buffers();
-    for (volatile int i = 0; i < 400000; i++) {
-        // Loop vazio para criar delay
-    }
-}
-

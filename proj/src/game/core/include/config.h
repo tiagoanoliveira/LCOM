@@ -8,7 +8,7 @@
 #define GAME_FPS 60
 #define DROP_SPEED_FAST 5      // frames
 #define DROP_SPEED_INITIAL 50  // frames
-#define ANIMATION_DURATION 15
+#define ANIMATION_DURATION 30
 
 // Graphic configs
 #define SCREEN_MODE 0x105
@@ -28,7 +28,7 @@
 #define COLOR_SCORE 0x0A
 
 // Cores da área de jogo
-#define GRID_BORDER_COLOR 0x0F
+#define GRID_BORDER_COLOR 0x0F 
 #define GRID_BORDER_LINES_COLOR 0x38
 #define GRID_BACKGROUND_COLOR 0x00  // fundo da grelha
 #define GRID_COLOR 0x38
