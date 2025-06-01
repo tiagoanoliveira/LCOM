@@ -7,6 +7,7 @@
 
 extern int grid[GRID_ROWS][GRID_COLS];
 
+void animate_line_clear(int row);
 int clear_full_lines();
 void tetris_init();
 void tetris_draw();
