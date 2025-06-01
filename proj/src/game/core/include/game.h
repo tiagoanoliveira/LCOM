@@ -23,6 +23,7 @@ void game_logic_update(GameLogic* game);
 bool game_logic_move_piece(GameLogic* game, int deltaX, int deltaY);
 void game_logic_rotate_piece(GameLogic* game, bool clockwise);
 void game_logic_drop_piece(GameLogic* game);
+Piece game_logic_calculate_ghost_piece(const GameLogic* game);
 void game_logic_fix_piece(GameLogic* game);
 int game_logic_clear_lines(GameLogic* game);
 void game_logic_spawn_piece(GameLogic* game);

@@ -46,23 +46,6 @@ InputEvent input_process_scancode(uint8_t scancode[2], const bool twoByte) {
                 event.action = INPUT_Q;
                 event.pressed = !is_break_code;
                 break;
-                // NOVAS TECLAS WASD:
-            case 0x1E: // A - move left
-                event.action = INPUT_LEFT;
-                event.pressed = !is_break_code;
-                break;
-            case 0x20: // D - move right
-                event.action = INPUT_RIGHT;
-                event.pressed = !is_break_code;
-                break;
-            case 0x1F: // S - move down
-                event.action = INPUT_DOWN;
-                event.pressed = !is_break_code;
-                break;
-            case 0x11: // W - rotate
-                event.action = INPUT_ROTATE_LEFT;
-                event.pressed = !is_break_code;
-                break;
             case 0x0E: // Backspace
                 event.action = INPUT_CHAR;
                 event.character = '\b';

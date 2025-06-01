@@ -126,7 +126,7 @@ void state_manager_handle_input(const InputEvent event) {
             highscore_state_handle_input(&highscore_state, event);
 
             // Redraw if name changed or on any keypress
-            if (event.action == INPUT_CHAR || event.action == INPUT_ENTER) {
+            if (event.action == INPUT_CHAR || event.action == INPUT_ENTER || event.action == INPUT_ESCAPE) {
                 needs_redraw = true;
             }
 

@@ -16,6 +16,9 @@ void draw_block(int col, int row, uint32_t color);
 // Draws the current piece based on its position and shape
 void draw_current_piece(const Piece* piece);
 
+// Draws the ghost piece, which shows where the current piece will land
+void draw_ghost_piece(const Piece* piece);
+
 // Draws all occupied cells in the grid
 void draw_grid_contents(int grid[20][10]);
 

@@ -90,6 +90,17 @@ void game_logic_drop_piece(GameLogic* game) {
     }
 }
 
+Piece game_logic_calculate_ghost_piece(const GameLogic* game) {
+    if (!game || game->game_over || game->paused) {
+        return game->current_piece;
+    }
+    Piece ghost = game->current_piece;
+    while (piece_fits(&ghost, ghost.x, ghost.y + 1)) {
+        ghost.y++;
+    }
+    return ghost;
+}
+
 // ===== GESTÃO DA GRELHA =====
 void game_logic_fix_piece(GameLogic* game) {
     if (!game) return;
@@ -98,6 +109,7 @@ void game_logic_fix_piece(GameLogic* game) {
 
 int game_logic_clear_lines(GameLogic* game) {
     if (!game) return 0;
+    game_logic_update_speed(game);
     return clear_full_lines();
 }
 
@@ -234,6 +246,10 @@ void game_logic_render(const GameLogic* game) {
     draw_game_infos(game);
 
     if (!game->game_over) {
+        const Piece ghost = game_logic_calculate_ghost_piece(game);
+        if (ghost.y != game->current_piece.y) {
+            draw_ghost_piece(&ghost);
+        }
         draw_current_piece(&game->current_piece);
     }
 
@@ -252,6 +268,7 @@ bool game_logic_is_game_over(const GameLogic* game) {
 void game_logic_update_speed(GameLogic* game) {
     if (!game) return;
 
+                // NOVAS TECLAS WA
     const GameScore* score = tetris_get_score();
     const int speed_reduction = (score->level - 1) * 5;
     game->current_drop_speed = DROP_SPEED_INITIAL - speed_reduction;
