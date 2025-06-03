@@ -1,0 +1,107 @@
+#ifndef _CONFIG_H_
+#define _CONFIG_H_
+
+#include "../../../drivers/graphics/graphics.h"
+#include "../../objects/include/piece.h"
+
+// Game configs
+#define GAME_FPS 60
+#define DROP_SPEED_FAST 5      // frames
+#define DROP_SPEED_INITIAL 50  // frames
+#define ANIMATION_DURATION 30
+
+// Graphic configs
+#define SCREEN_MODE 0x105
+#define SCREEN_WIDTH (int)mode_info.XResolution
+#define SCREEN_HEIGHT (int)mode_info.YResolution
+
+// Moldura externa do jogo
+#define COLOR_BORDER 0x03
+#define FRAME_THICKNESS 5
+#define SCREEN_BORDER_WIDTH 10
+
+// Cores do Menu, Jogo e GameOver
+#define COLOR_BACKGROUND 0x00
+#define COLOR_TITLE 0x0F
+#define COLOR_SELECTED 0x3E
+#define COLOR_NORMAL 0x07
+#define COLOR_SCORE 0x0A
+
+// Cores da área de jogo
+#define GRID_BORDER_COLOR 0x0F 
+#define GRID_BORDER_LINES_COLOR 0x38
+#define GRID_BACKGROUND_COLOR 0x00  // fundo da grelha
+#define GRID_COLOR 0x38
+
+// Configurações da grid
+#define GRID_COLS 10
+#define GRID_ROWS 20
+#define CELL_SIZE 30
+#define PIECE_WIDTH (CELL_SIZE * PIECE_SIZE)
+
+// Dimensões e Posições da grelha
+#define GRID_WIDTH (GRID_COLS * CELL_SIZE)
+#define GRID_HEIGHT (GRID_ROWS * CELL_SIZE)
+#define GRID_WITH_BORDER_WIDTH (GRID_WIDTH + 2 * CELL_SIZE)
+#define GRID_WITH_BORDER_HEIGHT (GRID_HEIGHT + 2 * CELL_SIZE)
+#define GRID_WITH_BORDER_ORIGIN_X (grid_origin_x - CELL_SIZE)
+#define GRID_WITH_BORDER_ORIGIN_Y (grid_origin_y - CELL_SIZE)
+
+// Dimensions and positions of infos
+#define LEFT_INFOS_WIDTH 230
+#define RIGHT_INFOS_WIDTH 250
+#define FRAME_INFOS_THICKNESS 5
+#define SCORE_HEIGHT 100
+#define LINES_CLEANED_HEIGHT 100
+#define HIGHSCORES_HEIGHT 250
+#define NEXT_PIECE_HEIGHT 300
+#define LEVEL_HEIGHT 100
+#define LEFT_INFOS_ORIGIN_X ((GRID_WITH_BORDER_ORIGIN_X-LEFT_INFOS_WIDTH+SCREEN_BORDER_WIDTH-FRAME_INFOS_THICKNESS)/2)
+#define RIGHT_INFOS_ORIGIN_X (GRID_WITH_BORDER_ORIGIN_X + GRID_WITH_BORDER_WIDTH + ((SCREEN_WIDTH - (SCREEN_BORDER_WIDTH + FRAME_INFOS_THICKNESS + GRID_WITH_BORDER_ORIGIN_X + GRID_WITH_BORDER_WIDTH+ RIGHT_INFOS_WIDTH)) / 2))
+#define SCORE_ORIGIN_Y GRID_WITH_BORDER_ORIGIN_Y
+#define LINES_CLEANED_ORIGIN_Y (SCORE_ORIGIN_Y + SCORE_HEIGHT + 50)
+#define HIGHSCORES_ORIGIN_Y (LINES_CLEANED_ORIGIN_Y + LINES_CLEANED_HEIGHT + 50)
+#define LEVEL_ORIGIN_Y SCORE_ORIGIN_Y
+#define NEXT_PIECE_ORIGIN_Y (LEVEL_ORIGIN_Y + 200)
+
+// Pause Screen
+#define PAUSE_WIDTH 300
+#define PAUSE_HEIGHT 200
+
+// Colours for the infos
+#define FRAME_INFOS_COLOR 0x03
+#define TEXT_INFOS_COLOR 0x07
+#define SCORE_BG_COLOR 0x3E
+#define LINES_BG_COLOR 0x0A
+#define HIGHSCORES_BG_COLOR 0x2E
+#define NEXT_PIECE_BG_COLOR 0x07
+#define LEVEL_BG_COLOR 0x0B
+
+// Font dimensions
+#define CHAR_WIDTH 16
+#define CHAR_HEIGHT 20
+
+// Title font dimensions
+#define TITLE_SCALE 3
+#define TITLE_CHAR_WIDTH  (CHAR_WIDTH * TITLE_SCALE)
+#define TITLE_CHAR_HEIGHT (CHAR_HEIGHT * TITLE_SCALE)
+
+// Instructions Screen
+#define SPACE_BETWEEN_FRAME_AND_TITLE 40
+#define SPACE_BETWEEN_TITLE_AND_INSTRUCTIONS 35
+#define SPACE_BETWEEN_EACH_LINE_OF_INSTRUCTIONS CHAR_HEIGHT+5
+#define TITLE_INSTRUCTIONS_ORIGIN_Y (SCREEN_BORDER_WIDTH+FRAME_THICKNESS+SPACE_BETWEEN_FRAME_AND_TITLE)
+#define INSTRUCTIONS_ORIGIN_Y (TITLE_INSTRUCTIONS_ORIGIN_Y+TITLE_CHAR_HEIGHT+30)
+#define BUTTON_EXIT_INSTRUCTIONS_ORIGIN_Y (SCREEN_HEIGHT - 80)
+
+// Piece colors
+#define COLOR_I 0x03  // Cyan
+#define COLOR_O 0x04  // Red
+#define COLOR_T 0x05  // Rose
+#define COLOR_S 0x0A  // Green
+#define COLOR_Z 0x3E  // Yellow
+#define COLOR_J 0x0B  // Blue
+#define COLOR_L 0x2E  // Orange
+
+
+#endif // _CONFIG_H_
